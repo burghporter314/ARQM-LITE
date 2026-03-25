@@ -1,0 +1,678 @@
+{
+  "train": [
+    {
+      "span": "under normal conditions",
+      "sentence": "Response time must be under 500 ms under normal conditions.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "files older than 48 hours in /tmp",
+      "sentence": "The system must remove files older than 48 hours in /tmp.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "under high load",
+      "sentence": "The system shall queue requests under high load.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "after 3 consecutive failures",
+      "sentence": "A backup node shall take over after 3 consecutive failures.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "within 30 days",
+      "sentence": "Logs must be retained within 30 days of generation.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "write to the audit log",
+      "sentence": "The system shall write to the audit log within 1 second.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "be restarted",
+      "sentence": "The service shall be restarted.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "shall",
+      "sentence": "The system shall respond within 200 ms.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "when free memory falls below 512 MB",
+      "sentence": "The GC shall run when free memory falls below 512 MB.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "gracefully",
+      "sentence": "The service must degrade gracefully under load.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "when queue depth exceeds 500",
+      "sentence": "Alerts fire when queue depth exceeds 500.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "be handled",
+      "sentence": "Errors must be handled.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "the RFC 7807 error schema",
+      "sentence": "Error responses must conform to the RFC 7807 error schema.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "adequate resources",
+      "sentence": "The scheduler must allocate adequate resources.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "the system",
+      "sentence": "The system must handle errors.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "be processed",
+      "sentence": "Requests shall be processed.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "appropriately",
+      "sentence": "Errors must be handled appropriately.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "after each successful deployment",
+      "sentence": "Smoke tests must run after each successful deployment.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "compress using gzip",
+      "sentence": "Payloads larger than 1 KB must compress using gzip.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "read and write permissions only",
+      "sentence": "The module must request read and write permissions only.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "efficiently",
+      "sentence": "The scheduler must process tasks efficiently.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "the application",
+      "sentence": "The application shall manage sessions.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "after 5 failed login attempts",
+      "sentence": "The account shall be locked after 5 failed login attempts.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "when CPU utilisation exceeds 85%",
+      "sentence": "Autoscaling shall trigger when CPU utilisation exceeds 85%.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "an ISO 8601 timestamp",
+      "sentence": "Each log entry must include an ISO 8601 timestamp.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "sometimes",
+      "sentence": "The system shall sometimes prefetch data.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "a confirmation email within 2 minutes",
+      "sentence": "The system shall send a confirmation email within 2 minutes.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "during the maintenance window 02:00-04:00 UTC",
+      "sentence": "Deploys occur during the maintenance window 02:00-04:00 UTC.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "every 5 minutes",
+      "sentence": "Metrics must be updated every 5 minutes.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "relevant data",
+      "sentence": "The API shall return relevant data.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "under stress",
+      "sentence": "Performance must not degrade under stress.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "must",
+      "sentence": "Passwords must be hashed using bcrypt with cost factor 12.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "reasonable defaults",
+      "sentence": "The config must provide reasonable defaults.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "could",
+      "sentence": "The API could support pagination.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "all fields defined in schema v2.3",
+      "sentence": "The export must include all fields defined in schema v2.3.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "sufficiently",
+      "sentence": "Logs must be retained sufficiently for auditing.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "adequately",
+      "sentence": "The buffer must be sized adequately.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "push notifications via FCM",
+      "sentence": "The system may send push notifications via FCM.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "it",
+      "sentence": "It must respond quickly.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "sufficient feedback",
+      "sentence": "The system shall provide sufficient feedback to the user.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "should",
+      "sentence": "The UI should be responsive.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "as needed",
+      "sentence": "The cache shall be flushed as needed.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "may",
+      "sentence": "The system may cache responses.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "within 3 retry attempts",
+      "sentence": "Failed transactions must be retried within 3 retry attempts.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "high priority items",
+      "sentence": "The queue must process high priority items first.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "be managed",
+      "sentence": "Sessions shall be managed.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "between 08:00 and 20:00 UTC",
+      "sentence": "Rate limiting applies between 08:00 and 20:00 UTC.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "substantially",
+      "sentence": "Latency must be substantially reduced after the upgrade.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "when request rate exceeds 1000 RPS",
+      "sentence": "The system shall queue requests when request rate exceeds 1000 RPS.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "optimally",
+      "sentence": "Memory must be allocated optimally.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "soon",
+      "sentence": "Notifications shall be dispatched soon after the event.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "in case of failure",
+      "sentence": "A backup node shall take over in case of failure.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "up to 4 vCPUs and 8 GB RAM",
+      "sentence": "The scheduler must allocate up to 4 vCPUs and 8 GB RAM.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "when disk usage exceeds 90%",
+      "sentence": "Archival starts when disk usage exceeds 90%.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "within 200 ms",
+      "sentence": "The system shall respond within 200 ms to user input.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "the DataPipeline",
+      "sentence": "The DataPipeline shall process each batch within 10 minutes.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "should",
+      "sentence": "Errors should be logged.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "be optimised",
+      "sentence": "Queries must be optimised.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "within 5 seconds",
+      "sentence": "Notifications shall be dispatched within 5 seconds of the event.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "eventually",
+      "sentence": "Deleted records shall eventually be purged from the archive.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "shall",
+      "sentence": "Data shall be encrypted at rest using AES-256.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "optional notifications",
+      "sentence": "The system may send optional notifications.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "in a timely manner",
+      "sentence": "Alerts must be delivered in a timely manner.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "the AuthService",
+      "sentence": "The AuthService must validate tokens within 50 ms.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "after 90 days",
+      "sentence": "Deleted records shall be purged from the archive after 90 days.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "the NotificationService",
+      "sentence": "The NotificationService must send emails via SendGrid.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "the top 10 ranked results",
+      "sentence": "The search must return the top 10 ranked results.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "regularly",
+      "sentence": "Backups must be performed regularly.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "when heavily loaded",
+      "sentence": "Requests shall be dropped when heavily loaded.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "reasonably",
+      "sentence": "The UI must respond reasonably to user interactions.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "in degraded conditions",
+      "sentence": "The API must respond in degraded conditions.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "encrypt using AES-256-GCM",
+      "sentence": "The service must encrypt using AES-256-GCM before storage.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "when error rate exceeds 5% over 60 seconds",
+      "sentence": "An alert shall fire when error rate exceeds 5% over 60 seconds.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "an HTTP 4xx error code and message",
+      "sentence": "The service must log an HTTP 4xx error code and message.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "should",
+      "sentence": "The system should respond within an acceptable time.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "every 24 hours",
+      "sentence": "Backups must be performed every 24 hours at 02:00 UTC.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "at least once per hour",
+      "sentence": "Health checks must run at least once per hour.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "the component",
+      "sentence": "The component must be available.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "during high demand",
+      "sentence": "The autoscaler shall activate during high demand.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "they",
+      "sentence": "They shall archive old records.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "minimally",
+      "sentence": "Resource usage shall be minimally impactful.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "frequently",
+      "sentence": "Health checks must run frequently.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "retry with exponential backoff",
+      "sentence": "The client shall retry with exponential backoff up to 3 times.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "significant results",
+      "sentence": "The search must return significant results.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "authenticate via OAuth 2.0",
+      "sentence": "Users must authenticate via OAuth 2.0 before accessing any endpoint.",
+      "slot": "action",
+      "label": 0
+    }
+  ],
+  "val": [
+    {
+      "span": "quickly",
+      "sentence": "The system shall respond quickly to user input.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "at least 4 GB",
+      "sentence": "The buffer must be sized at least 4 GB.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "the user's full name and email address",
+      "sentence": "The profile endpoint must return the user's full name and email address.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "deploy via blue-green strategy",
+      "sentence": "Releases must deploy via blue-green strategy.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "if necessary",
+      "sentence": "The system shall retry if necessary.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "appropriate errors",
+      "sentence": "The service must log appropriate errors.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "the ReportingService",
+      "sentence": "The ReportingService shall generate PDF exports within 10 seconds.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "within 60 seconds",
+      "sentence": "Alerts must be delivered within 60 seconds of the trigger.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "hash using bcrypt",
+      "sentence": "The system must hash using bcrypt with cost 12.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "should",
+      "sentence": "The system should handle edge cases gracefully.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "a 200 OK response with JSON body",
+      "sentence": "The API shall return a 200 OK response with JSON body.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "be validated",
+      "sentence": "All inputs shall be validated before processing.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "must",
+      "sentence": "The cache must be invalidated on every logout.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "be scaled",
+      "sentence": "The worker pool shall be scaled.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "often",
+      "sentence": "The index must be refreshed often.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "could",
+      "sentence": "The dashboard could display usage trends.",
+      "slot": "modal",
+      "label": 1
+    },
+    {
+      "span": "when memory is low",
+      "sentence": "The GC shall run when memory is low.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "near real-time",
+      "sentence": "Metrics must be updated near real-time.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "if the primary node is unreachable for 10 seconds",
+      "sentence": "Failover activates if the primary node is unreachable for 10 seconds.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "temporary files",
+      "sentence": "The system must remove temporary files.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "the BackupJob",
+      "sentence": "The BackupJob must run every night at 02:00 UTC.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "the module",
+      "sentence": "The module must handle retries.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "during peak traffic",
+      "sentence": "Caching shall be enabled during peak traffic.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "promptly",
+      "sentence": "Failed transactions must be retried promptly.",
+      "slot": "qualifier",
+      "label": 1
+    },
+    {
+      "span": "it",
+      "sentence": "It should process requests as soon as possible.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "necessary permissions",
+      "sentence": "The module must request necessary permissions.",
+      "slot": "object",
+      "label": 1
+    },
+    {
+      "span": "shall",
+      "sentence": "The AuthService shall expire tokens after 24 hours.",
+      "slot": "modal",
+      "label": 0
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.env
+
+# ── Testing & coverage ────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.log
+
+# ── IDE / editor ──────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Generated output ──────────────────────────────────────────────────────────
+ARQM_Report*.pdf
+*.xlsx
+
+# ── NLP model caches (large; re-downloaded on demand) ────────────────────────
+# Hugging Face / SentenceTransformers cache
+.cache/
+models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# spaCy model data downloaded locally
+en_core_web_*/
+
+# ── Secrets / local config ────────────────────────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+.claude/
