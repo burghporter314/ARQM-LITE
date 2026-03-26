@@ -378,6 +378,47 @@ class SlotParser:
     def __init__(self, nlp):
         self.nlp = nlp
 
+    # Sentence-level discourse adverbs that don't qualify a specific action slot
+    _DISCOURSE_ADVERBS = {
+        "additionally", "furthermore", "however", "moreover", "therefore",
+        "consequently", "alternatively", "finally", "overall", "generally",
+        "typically", "normally", "usually", "currently", "initially",
+        "subsequently", "previously", "accordingly", "thus", "hence",
+        "notably", "importantly", "specifically", "particularly",
+    }
+
+    @staticmethod
+    def _join_tokens(tokens) -> str:
+        """Join spaCy tokens, collapsing hyphens so 'paper - based' becomes 'paper-based'."""
+        parts: list[str] = []
+        for t in tokens:
+            if t.text == "-":
+                if parts:
+                    parts[-1] += "-"
+            elif parts and parts[-1].endswith("-"):
+                parts[-1] += t.text
+            else:
+                parts.append(t.text)
+        return " ".join(parts)
+
+    @staticmethod
+    def _largest_contiguous(tokens) -> list:
+        """Return the largest group of tokens with consecutive (or near-consecutive) indices.
+        Prevents non-adjacent adverbs from being joined into phantom phrases."""
+        if not tokens:
+            return []
+        sorted_toks = sorted(tokens, key=lambda t: t.i)
+        groups: list[list] = []
+        current = [sorted_toks[0]]
+        for t in sorted_toks[1:]:
+            if t.i <= current[-1].i + 2:  # allow 1-index gap for punctuation
+                current.append(t)
+            else:
+                groups.append(current)
+                current = [t]
+        groups.append(current)
+        return max(groups, key=len)
+
     def parse(self, sentence: str) -> RequirementSlots:
         doc = self.nlp(sentence)
         slots = RequirementSlots(raw=sentence)
@@ -389,7 +430,7 @@ class SlotParser:
         subj_token = next((t for t in doc if t.dep_ in {"nsubj", "nsubjpass"}), None)
         if subj_token:
             subtree_tokens = sorted(subj_token.subtree, key=lambda x: x.i)
-            slots.subject = " ".join(t.text for t in subtree_tokens)
+            slots.subject = self._join_tokens(subtree_tokens)
 
         modal_token = next(
             (t for t in doc if t.lemma_.lower() in self.MODAL_LEMMAS and t.pos_ in {"AUX", "VERB"}), None
@@ -403,7 +444,7 @@ class SlotParser:
         if verb:
             aux_tokens = [t for t in doc if t.dep_ in {"aux", "auxpass"} and t.head == verb]
             action_tokens = sorted(aux_tokens + [verb], key=lambda x: x.i)
-            slots.action = " ".join(t.text for t in action_tokens)
+            slots.action = self._join_tokens(action_tokens)
 
         obj_token = next((t for t in doc if t.dep_ in {"dobj", "attr", "oprd"}), None)
         if obj_token:
@@ -411,7 +452,7 @@ class SlotParser:
                 t for t in sorted(obj_token.subtree, key=lambda x: x.i)
                 if t.dep_ not in {"prep", "relcl", "advcl"}
             ]
-            slots.object = " ".join(t.text for t in subtree_tokens)
+            slots.object = self._join_tokens(subtree_tokens)
 
         cond_tokens = []
         for token in doc:
@@ -427,7 +468,7 @@ class SlotParser:
                 if t.i not in seen:
                     seen.add(t.i)
                     ordered.append(t)
-            slots.condition = " ".join(t.text for t in sorted(ordered, key=lambda x: x.i))
+            slots.condition = self._join_tokens(sorted(ordered, key=lambda x: x.i))
 
         condition_indices = {t.i for t in (cond_tokens or [])}
         qual_tokens = [
@@ -436,9 +477,12 @@ class SlotParser:
             and t.head.pos_ in {"VERB", "ADJ"}
             and t.i not in condition_indices
             and t.text.lower() not in {"not", "also", "only", "just", "even"}
+            and t.text.lower() not in self._DISCOURSE_ADVERBS
+            and not (t.i + 1 < len(doc) and doc[t.i + 1].text == "-")
+            and not (t.i > 0 and doc[t.i - 1].text == "-")
         ]
         if qual_tokens:
-            slots.qualifier = " ".join(t.text for t in sorted(qual_tokens, key=lambda x: x.i))
+            slots.qualifier = self._join_tokens(self._largest_contiguous(qual_tokens))
 
         return slots
 
@@ -737,6 +781,11 @@ def detect_syntactic_ambiguities(sentence: str, doc) -> list[AmbiguousSpan]:
     for tok in doc:
         if tok.lower_ == "should":
             head_verb = tok.head
+            # "should be able to X" defines an actor capability — not ambiguous
+            if head_verb.lower_ == "be" and any(
+                c.lower_ == "able" for c in head_verb.children
+            ):
+                continue
             if head_verb.i not in claimed_verbs:
                 phrase = f"should {head_verb.text}"
                 found.append(AmbiguousSpan(
@@ -933,7 +982,8 @@ if __name__ == "__main__":
         "Data must be encrypted before transmission.",
         "The system must support downloading PDF files to disk.",
         "The system must print with 3.75 mm P.L.A. filament.",
-        "The application will provide users with a recommended route based on user preferences"
+        "The application will provide users with a recommended route based on user preferences",
+        "Most clubs rely on paper-based exams and manual grading, which can be time-consuming, prone to errors, and resource-intensive."
     ]
 
     detector = AmbiguityDetector(calibration_data="calibration_data.json")

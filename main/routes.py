@@ -1,12 +1,14 @@
 import base64
 import io
 
-from flask import Blueprint, render_template, request, send_file, jsonify
+from flask import Blueprint, render_template, request, send_file, jsonify, Response
 
-from util.ingestion          import extract_text, extract_sentences
-from util.identification     import identify_requirements
-from util.analyzer           import analyze_requirements
-from generate_quality_report import generate_pdf_bytes as generate_report
+from util.ingestion              import extract_text
+from util.identification         import identify_requirements
+from util.analyzer               import analyze_requirements
+from requirements_preprocessor   import preprocess
+from generate_quality_report     import generate_pdf_bytes as generate_report
+from generate_html_report        import generate_html_bytes as generate_html_report
 
 main_bp = Blueprint('main', __name__)
 
@@ -51,8 +53,8 @@ def analyze_quality():
     except Exception as exc:
         return jsonify({"error": f"Failed to extract text: {exc}"}), 422
 
-    # ── 2. Sentence tokenisation ─────────────────────────────────────────────
-    sentences = extract_sentences(text)
+    # ── 2. Preprocess (split tables, filter Gherkin blocks, clean boilerplate) ──
+    sentences = preprocess(text)
     if not sentences:
         return jsonify({"error": "No sentences could be extracted from the document."}), 422
 
@@ -68,10 +70,20 @@ def analyze_quality():
     # ── 4. Quality analysis ──────────────────────────────────────────────────
     results = analyze_requirements(requirements, document_text=text)
 
-    # ── 5. PDF report generation ─────────────────────────────────────────────
-    pdf_bytes = generate_report(results)
-
     stem = Path(filename).stem
+    fmt  = request.args.get("format", "pdf").lower()
+
+    # ── 5a. HTML report ───────────────────────────────────────────────────────
+    if fmt == "html":
+        html_bytes = generate_html_report(results)
+        return Response(
+            html_bytes,
+            mimetype="text/html",
+            headers={"Content-Disposition": f'attachment; filename="ARQM_Report_{stem}.html"'},
+        )
+
+    # ── 5b. PDF report generation ─────────────────────────────────────────────
+    pdf_bytes   = generate_report(results)
     report_name = f"ARQM_Report_{stem}.pdf"
 
     # ── 6. Optional JSON response with highlights ─────────────────────────────

@@ -9,6 +9,7 @@ with a small set of unambiguous examples.
 from __future__ import annotations
 
 import os
+import re
 
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -32,6 +33,39 @@ _BATCH_SIZE = 64
 _model      = None
 _tokenizer  = None
 _req_label  = None   # int: label index that corresponds to "requirement"
+
+# ── Post-classification filter ────────────────────────────────────────────────
+# Sentences where the only modal verb is a weak one (can/could/may/might)
+# appearing inside a relative/subordinate clause ("which/that can be …") are
+# almost always descriptive, not prescriptive.  Reject them even if TinyBERT
+# classifies them as requirements.
+_STRONG_MODAL_RE = re.compile(r"\b(shall|must|should|will)\b", re.IGNORECASE)
+_RELATIVE_MODAL_RE = re.compile(
+    r"\b(which|that)\b.{0,40}\b(can|could|may|might)\b", re.IGNORECASE
+)
+
+# Gherkin clause starters — these are test assertions, not requirements
+_GHERKIN_RE = re.compile(r"^\s*(given|when|then|and|but)\b", re.IGNORECASE)
+
+# Common document boilerplate openings that are never requirements
+_BOILERPLATE_RE = re.compile(
+    r"^\s*(the\s+purpose\s+of|the\s+goal\s+of|the\s+mission\s+(of|is)|"
+    r"in\s+order\s+to|it\s+is\s+important\s+to|this\s+document\s+will|"
+    r"the\s+following\s+is|the\s+intent\s+of)",
+    re.IGNORECASE,
+)
+
+
+def _is_descriptive(sentence: str) -> bool:
+    """Return True when the sentence is almost certainly descriptive, not a requirement."""
+    if _GHERKIN_RE.match(sentence):
+        return True
+    if _BOILERPLATE_RE.match(sentence):
+        return True
+    if _STRONG_MODAL_RE.search(sentence):
+        return False  # strong modal present — keep as requirement candidate
+    return bool(_RELATIVE_MODAL_RE.search(sentence))
+
 
 _PROBE_REQS = [
     "The system shall validate user credentials before granting access.",
@@ -95,4 +129,4 @@ def identify_requirements(
 
         flags.extend(p == _req_label for p in preds)
 
-    return [s for s, flag in zip(sentences, flags) if flag]
+    return [s for s, flag in zip(sentences, flags) if flag and not _is_descriptive(s)]
