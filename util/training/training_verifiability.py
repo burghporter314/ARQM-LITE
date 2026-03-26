@@ -174,7 +174,29 @@ NEUTRAL_WORDS = {
     "writing", "reading", "sending", "receiving", "processing",
     "disk", "memory", "network", "database", "cache", "queue",
     "transmission", "storage", "retrieval", "delivery",
+    # Additional modals / auxiliaries
+    "would", "could", "might", "ought",
+    # Light verbs with no domain meaning
+    "have", "has", "had", "want", "wants", "wanted",
+    "let", "lets", "get", "gets", "got",
+    "make", "makes", "made", "go", "goes", "went",
+    "do", "does", "did", "be", "is", "are", "was", "were", "been",
+    "seem", "seems", "felt", "feel", "look", "looks",
+    # BDD / Gherkin keywords that appear as slot values after PDF extraction
+    "given", "then", "and", "but", "scenario", "feature", "background",
+    "story", "acceptance", "criteria", "as", "so", "that",
+    "priority", "estimation", "description", "mapped", "requirement",
+    "high", "medium", "low",
+    # Common adverbs / particles that land in qualifier slots with no signal
+    "up", "down", "out", "on", "off", "in", "back", "away", "along",
+    "together", "easily", "quickly", "simply", "also", "here", "there",
+    "now", "still", "just", "even", "only", "not", "never",
 }
+
+# Pre-compiled pattern for detecting section-number / bullet artifacts in slot
+# values.  A slot that matches this is not a requirement fragment and must be
+# skipped before semantic scoring.
+_ARTIFACT_RE = re.compile(r"^\s*[\d\.\•\-\*]+\s*$")
 
 
 # ─────────────────────────────────────────────
@@ -445,52 +467,73 @@ def render_html(results: list[VerifiabilityResult], title: str = "Verifiability 
 # ─────────────────────────────────────────────
 
 UNVERIFIABLE_PROTOTYPES = [
-    # No acceptance criteria
-    "easy to use", "user-friendly", "intuitive", "simple", "straightforward",
-    "pleasant", "enjoyable", "nice", "good", "better", "improved",
-    "as needed", "appropriately", "suitably", "where necessary",
-    "in a reasonable manner", "to a satisfactory level",
-    # Subjective success
-    "users should be satisfied", "users will be happy", "meets user expectations",
-    "looks professional", "feels responsive", "seems fast", "appears correct",
-    "stakeholders are pleased", "customers are happy", "management approves",
-    "positive user experience", "good user experience", "great experience",
-    # Missing actor / passive unverifiable
-    "handled appropriately", "dealt with correctly", "managed properly",
-    "errors are handled", "exceptions are managed", "issues are resolved",
-    "problems are addressed", "failures are dealt with",
-    # Untestable negatives
-    "must never lose", "must never fail", "must never crash",
-    "shall not lose data", "should not have bugs", "must not have errors",
+    # No observable outcome — success condition is undefined
+    "the system should work well", "the application must function correctly",
+    "the service must behave as expected", "the system must perform as intended",
+    "the feature must work properly", "the module must operate correctly",
+    "as needed", "where necessary", "as appropriate", "where applicable",
+    "in a reasonable manner", "to a satisfactory level", "appropriately",
+    "to an acceptable standard", "in a suitable way",
+    # Subjective success — outcome depends on human judgement
+    "users should be satisfied", "users will be happy",
+    "meets user expectations", "stakeholders are pleased",
+    "customers are happy", "management approves",
+    "looks professional", "feels responsive", "seems intuitive",
+    "appears correct to the user", "gives a good impression",
+    "positive user experience", "pleasant to interact with",
+    # Missing actor or verification mechanism — passive with no agent
+    "errors must be handled", "exceptions must be managed",
+    "failures must be dealt with", "issues must be resolved",
+    "problems must be addressed", "incidents must be escalated",
+    "data must be validated", "access must be controlled",
+    "notifications must be sent", "alerts must be delivered",
+    # Untestable negatives — absolute prohibition with no bound
+    "must never lose data", "shall never fail", "must never crash",
+    "should not have any bugs", "must not produce any errors",
     "will never be unavailable", "must never be slow",
+    "shall not expose any vulnerabilities",
     # General unverifiability signal
-    "unverifiable requirement", "no test criteria", "subjective requirement",
-    "unmeasurable condition", "no observable outcome", "cannot be tested",
-    "vague acceptance condition", "no pass fail criterion",
+    "no test criteria defined", "cannot be objectively measured",
+    "no observable pass fail condition", "subjective acceptance criterion",
+    "no automated test possible", "depends on reviewer judgement",
+    "outcome cannot be reproduced", "no baseline for comparison",
 ]
 
 VERIFIABLE_PROTOTYPES = [
-    # Clear acceptance criteria with numbers
-    "response time under 200 milliseconds", "error rate below 0.1 percent",
-    "99.9 percent uptime SLA", "process at least 1000 requests per second",
-    "task completed within 3 steps", "measured by automated test suite",
-    "verified by integration test", "confirmed by unit test passing",
-    # Observable, objective outcomes
-    "returns HTTP 200 status code", "log entry written within 1 second",
-    "user redirected to dashboard on success", "alert sent within 60 seconds",
-    "field highlighted in red when invalid", "button disabled after submission",
-    # Clear actor and trigger
-    "when user clicks submit", "after payment is confirmed",
-    "when CPU usage exceeds 80 percent", "triggered by scheduled job at 03:00 UTC",
-    "verified by QA engineer using test script",
-    # Testable negatives with bounds
-    "MTBF greater than 1000 hours", "maximum 1 data loss event per year",
-    "fewer than 5 unhandled exceptions per day",
-    "zero data loss under normal operating conditions as defined in test plan",
-    # General verifiability signal
-    "specific measurable acceptance criterion", "automated test verifies outcome",
-    "observable system behaviour", "quantified pass fail threshold",
-    "defined test procedure", "auditable log entry produced",
+    # Performance — concrete and measurable
+    "response time under 200 milliseconds for 95 percent of requests",
+    "error rate below 0.1 percent measured over a 24-hour window",
+    "99.9 percent uptime verified by synthetic monitoring",
+    "batch job completes within 2 hours of scheduled trigger",
+    # UI and interaction — observable state changes
+    "button is disabled after form submission",
+    "field border turns red and error message appears when input is invalid",
+    "user is redirected to dashboard within 500ms of successful login",
+    "modal closes and confirmation toast appears after save",
+    "spinner is visible while request is in flight",
+    # Security — concrete test outcomes
+    "zero P1 or P2 findings in annual penetration test report",
+    "session token invalidated within 100ms of logout",
+    "all API endpoints return 401 for requests without a valid token",
+    "password rejected if fewer than 12 characters",
+    # Data integrity — observable and auditable
+    "log entry written within 1 second of each authentication event",
+    "audit trail records user ID timestamp and action for every write",
+    "deleted records are soft-deleted and retained for 30 days",
+    "export file matches source data to 6 decimal places",
+    # Process and actor — who does what and when
+    "verified by QA engineer executing test script TC-042",
+    "alert email sent to on-call engineer within 60 seconds of breach",
+    "after payment confirmed order status changes to processing",
+    "when CPU exceeds 80 percent autoscaler adds one instance within 30 seconds",
+    # Reliability — testable bounds
+    "MTBF greater than 2000 hours measured in staging environment",
+    "fewer than 5 unhandled exceptions per day in production logs",
+    "maximum 1 data loss event per year under conditions defined in DR plan",
+    # Test mechanism — explicitly references how verification happens
+    "confirmed by passing all 847 regression tests in CI pipeline",
+    "measured by automated load test with 1000 virtual users",
+    "verified by accessibility audit achieving WCAG 2.1 AA compliance",
 ]
 
 
@@ -878,7 +921,9 @@ class VerifiabilityDetector:
         filtered = {
             slot: text for slot, text in filled.items()
             if slot not in NEUTRAL_SLOTS
+            and not _ARTIFACT_RE.match(text)
             and not all(w.lower() in NEUTRAL_WORDS for w in text.split())
+            and sum(1 for w in text.split() if w.lower() not in NEUTRAL_WORDS) >= 2
         }
         if not filtered:
             return []

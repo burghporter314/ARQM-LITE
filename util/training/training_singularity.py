@@ -173,7 +173,29 @@ NEUTRAL_WORDS = {
     "writing", "reading", "sending", "receiving", "processing",
     "disk", "memory", "network", "database", "cache", "queue",
     "transmission", "storage", "retrieval", "delivery",
+    # Additional modals / auxiliaries
+    "would", "could", "might", "ought",
+    # Light verbs with no domain meaning
+    "have", "has", "had", "want", "wants", "wanted",
+    "let", "lets", "get", "gets", "got",
+    "make", "makes", "made", "go", "goes", "went",
+    "do", "does", "did", "be", "is", "are", "was", "were", "been",
+    "seem", "seems", "felt", "feel", "look", "looks",
+    # BDD / Gherkin keywords that appear as slot values after PDF extraction
+    "given", "then", "and", "but", "scenario", "feature", "background",
+    "story", "acceptance", "criteria", "as", "so", "that",
+    "priority", "estimation", "description", "mapped", "requirement",
+    "high", "medium", "low",
+    # Common adverbs / particles that land in qualifier slots with no signal
+    "up", "down", "out", "on", "off", "in", "back", "away", "along",
+    "together", "easily", "quickly", "simply", "also", "here", "there",
+    "now", "still", "just", "even", "only", "not", "never",
 }
+
+# Pre-compiled pattern for detecting section-number / bullet artifacts in slot
+# values.  A slot that matches this is not a requirement fragment and must be
+# skipped before semantic scoring.
+_ARTIFACT_RE = re.compile(r"^\s*[\d\.\•\-\*]+\s*$")
 
 
 # ─────────────────────────────────────────────
@@ -446,56 +468,76 @@ def render_html(results: list["SingularityResult"], title: str = "Singularity An
 # ─────────────────────────────────────────────
 
 NON_SINGULAR_PROTOTYPES = [
-    # Multiple actions
+    # Multiple coordinated actions — explicit conjunctions
     "must validate input and encrypt data and log the result",
     "shall authenticate and authorise and audit the request",
     "must save the file and notify the user and update the index",
-    "should check permissions and apply rate limiting and return a response",
     "must parse the request and validate the schema and store the record",
-    # Compound subjects
-    "the admin and the user must both confirm",
-    "the client and the server shall negotiate",
-    "users and administrators and auditors must all have access",
-    "the frontend and the backend must both validate",
-    # Conjunctive conditions
-    "when login fails or timeout occurs or session expires",
+    # Multiple actions — implicit bundling without explicit "and"
+    "the system must handle login, session management, and token refresh",
+    "the service must support creating, editing, and deleting records",
+    "the module is responsible for scheduling, execution, and reporting",
+    # Compound subjects — explicit
+    "the admin and the user must both confirm the deletion",
+    "the client and the server shall negotiate the protocol version",
+    "users and administrators and auditors must all have read access",
+    "the frontend and the backend must both validate the input",
+    # Compound subjects — implicit dual audience
+    "all users and system processes must comply with the rate limit",
+    "both internal and external callers must supply a valid token",
+    # Conjunctive conditions — multiple independent triggers
+    "when login fails or the session expires or the token is revoked",
     "if the user is unauthenticated or unauthorised or suspended",
-    "when memory is high or CPU is high or disk is full",
-    "when request is malformed or missing or duplicate",
-    # Mixed concerns
+    "when memory usage is high or CPU is high or disk is full",
+    "when the request is malformed or missing or a duplicate",
+    "if payment fails or times out or is declined by the processor",
+    # Mixed concerns — functional + non-functional
     "must encrypt all data and respond within 200ms",
-    "shall authenticate the user and maintain 99.9% uptime",
+    "shall authenticate the user and maintain 99.9 percent uptime",
     "must validate input and use no more than 256MB of memory",
     "should log errors and complete within 100 milliseconds",
+    # Mixed concerns — two distinct functional concerns
+    "must manage user accounts and send transactional emails",
+    "shall handle file uploads and generate thumbnail previews",
+    "must track inventory and generate monthly usage reports",
     # General non-singularity signal
-    "multiple requirements in one sentence",
-    "compound requirement with multiple obligations",
-    "several distinct concerns combined",
-    "more than one testable condition",
+    "requirement addressing multiple independent obligations",
+    "single sentence containing more than one testable condition",
+    "two distinct actors sharing one requirement statement",
+    "functional requirement bundled with a performance constraint",
 ]
 
 SINGULAR_PROTOTYPES = [
-    # Single clear action
+    # Single system action
     "the system must encrypt all data before writing to disk",
-    "the API must respond within 200ms for 95% of requests",
+    "the API must respond within 200ms for 95 percent of requests",
     "the service must return HTTP 400 for invalid input",
-    "the user must confirm their email address before logging in",
-    "the job must run every Monday at 08:00 UTC",
-    # Single subject
-    "the payment service must process refunds within 3 business days",
-    "the admin must approve requests before they are published",
-    "the load balancer must distribute traffic across all healthy nodes",
-    # Single condition
-    "when the session expires the user must be redirected to the login page",
-    "if input is invalid the system must return a 400 error",
-    "after payment is confirmed the order must be created",
-    # Single concern
-    "the system must support PDF file downloads",
     "the cache must invalidate entries after 24 hours",
-    "the log must record the user ID timestamp and action",
-    # General singularity signal
-    "single atomic requirement", "one testable obligation",
-    "single actor single action", "one clear success condition",
+    "the job must run every Monday at 08:00 UTC",
+    # Single actor, single obligation
+    "the payment service must process refunds within 3 business days",
+    "the admin must approve each request before it is published",
+    "the load balancer must distribute traffic across all healthy nodes",
+    "the scheduler must retry failed jobs up to 3 times",
+    # Single condition, single outcome
+    "when the session expires the user must be redirected to the login page",
+    "if input is invalid the system must return a 422 error with a field map",
+    "after payment is confirmed the order status must change to processing",
+    "when CPU exceeds 80 percent the autoscaler must add one instance",
+    # Single data or storage obligation
+    "the system must retain audit logs for exactly 90 days",
+    "the database must store each transaction with a UTC timestamp",
+    "deleted records must be soft-deleted and excluded from queries",
+    # Single security obligation
+    "all session tokens must expire after 30 minutes of inactivity",
+    "the API must reject requests that do not include a valid bearer token",
+    # Single user-facing obligation
+    "the user must confirm their email address before their account is activated",
+    "the form must display an inline error message when a required field is empty",
+    "the dashboard must show the user's last login time and location",
+    # Single policy or compliance obligation
+    "the application must comply with GDPR Article 17 right to erasure",
+    "all exported data must be in CSV format with UTF-8 encoding",
 ]
 
 
@@ -729,6 +771,27 @@ def detect_mixed_concerns(sentence: str) -> list[SingularityViolation]:
     if not has_functional or not nfr_match:
         return found
 
+    # Guard 1: sentence length — inputs longer than 200 chars are almost
+    # certainly preprocessing artifacts (concatenated blocks) rather than
+    # genuine single requirements; skip them entirely.
+    if len(sentence) > 200:
+        return found
+
+    # Pre-compute func_match here so the distance guard can use it, and
+    # the span annotation below can reuse it without a second search.
+    func_match = next(
+        (re.search(r"\b" + re.escape(v) + r"\b", sentence, re.IGNORECASE)
+         for v in _FUNCTIONAL_VERBS if v in lower),
+        None,
+    )
+
+    # Guard 2: conjunction distance — the functional verb and the NFR pattern
+    # must be within 120 characters of each other.  Farther apart means the
+    # two pieces are embedded in different clauses of a long run-on, not a
+    # genuine mixed-concern requirement.
+    if func_match and abs(func_match.start() - nfr_match.start()) > 120:
+        return found
+
     # Require a conjunction between the functional and NFR parts — avoids
     # flagging sentences like "must encrypt data within 50ms" where the NFR
     # directly qualifies the single action rather than adding a second concern.
@@ -740,13 +803,6 @@ def detect_mixed_concerns(sentence: str) -> list[SingularityViolation]:
     phrase_start = max(0, conjunction.start() - 30)
     phrase_end   = min(len(sentence), nfr_match.end() + 10)
     phrase = sentence[phrase_start:phrase_end].strip(" ,")
-
-    # Find the functional verb for the other highlight
-    func_match = next(
-        (re.search(r"\b" + re.escape(v) + r"\b", sentence, re.IGNORECASE)
-         for v in _FUNCTIONAL_VERBS if v in lower),
-        None,
-    )
 
     spans = [TokenSpan(nfr_match.start(), nfr_match.end(), nfr_match.group())]
     if func_match:
@@ -946,7 +1002,9 @@ class SingularityDetector:
         filtered = {
             slot: text for slot, text in filled.items()
             if slot not in NEUTRAL_SLOTS
+            and not _ARTIFACT_RE.match(text)
             and not all(w.lower() in NEUTRAL_WORDS for w in text.split())
+            and sum(1 for w in text.split() if w.lower() not in NEUTRAL_WORDS) >= 2
         }
         if not filtered:
             return []

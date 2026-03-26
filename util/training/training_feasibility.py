@@ -171,7 +171,29 @@ NEUTRAL_WORDS = {
     "writing", "reading", "sending", "receiving", "processing",
     "disk", "memory", "network", "database", "cache", "queue",
     "transmission", "storage", "retrieval", "delivery",
+    # Additional modals / auxiliaries
+    "would", "could", "might", "ought",
+    # Light verbs with no domain meaning
+    "have", "has", "had", "want", "wants", "wanted",
+    "let", "lets", "get", "gets", "got",
+    "make", "makes", "made", "go", "goes", "went",
+    "do", "does", "did", "be", "is", "are", "was", "were", "been",
+    "seem", "seems", "felt", "feel", "look", "looks",
+    # BDD / Gherkin keywords that appear as slot values after PDF extraction
+    "given", "then", "and", "but", "scenario", "feature", "background",
+    "story", "acceptance", "criteria", "as", "so", "that",
+    "priority", "estimation", "description", "mapped", "requirement",
+    "high", "medium", "low",
+    # Common adverbs / particles that land in qualifier slots with no signal
+    "up", "down", "out", "on", "off", "in", "back", "away", "along",
+    "together", "easily", "quickly", "simply", "also", "here", "there",
+    "now", "still", "just", "even", "only", "not", "never",
 }
+
+# Pre-compiled pattern for detecting section-number / bullet artifacts in slot
+# values.  A slot that matches this is not a requirement fragment and must be
+# skipped before semantic scoring.
+_ARTIFACT_RE = re.compile(r"^\s*[\d\.\•\-\*]+\s*$")
 
 
 # ─────────────────────────────────────────────
@@ -448,35 +470,64 @@ def render_html(results: list[FeasibilityResult], title: str = "Feasibility Anal
 # ─────────────────────────────────────────────
 
 INFEASIBLE_PROTOTYPES = [
-    "100% uptime", "zero downtime", "always available", "never fails",
-    "zero latency", "instantaneous response", "instant processing",
-    "unlimited throughput", "infinite scalability", "zero errors",
-    "100% accuracy", "perfect reliability", "zero packet loss",
-    "zero memory usage", "process infinite requests", "never crashes",
-    "100% availability", "absolute guarantee of delivery",
-    "real-time with zero delay", "no performance overhead",
-    "synchronous and non-blocking", "stateless and maintain session",
-    "real-time and batch processed", "encrypted and stored in plaintext",
-    "sequential and parallel execution", "single-threaded and concurrent",
-    "immutable and writable", "lossless and lossy",
-    "physically impossible requirement", "unachievable constraint",
-    "perfect performance", "simultaneous strong consistency and high availability",
+    # Availability absolutes
+    "100% uptime", "100% availability", "zero downtime",
+    "always available without exception", "never experiences outages",
+    # Latency absolutes
+    "zero latency", "zero response time", "instantaneous response",
+    "real-time with zero delay", "no processing overhead",
+    # Throughput / capacity absolutes
+    "unlimited throughput", "infinite capacity", "unbounded scalability",
+    "process infinite requests", "support unlimited concurrent users",
+    # Reliability absolutes
+    "never fails", "never crashes", "absolute guarantee of delivery",
+    "zero failures under any conditions",
+    # Correctness absolutes
+    "100% accuracy", "zero errors", "zero defects", "perfect reliability",
+    "no bugs under any circumstances",
+    # Resource absolutes
+    "zero memory usage", "zero CPU overhead", "zero packet loss",
+    "no performance degradation under any load",
+    # General infeasibility signal
+    "physically impossible constraint", "unachievable system requirement",
+    "perfect performance under all conditions",
+    "system that never degrades",
 ]
 
 FEASIBLE_PROTOTYPES = [
-    "99.9% uptime SLA", "99.99% availability", "four nines availability",
-    "maximum 8.7 hours downtime per year", "five nines 99.999% uptime",
+    # Availability — realistic SLAs
+    "99.9% uptime SLA", "99.99% availability", "five nines 99.999% uptime",
+    "maximum 8.7 hours downtime per year",
     "planned maintenance window of 4 hours per month",
-    "response time under 200 milliseconds", "p99 latency below 500ms",
-    "round-trip latency under 50ms on LAN", "sub-second response time",
-    "median latency of 20ms", "95th percentile latency under 300ms",
-    "process 1000 requests per second", "500 transactions per second",
+    "MTBF greater than 2000 hours",
+    # Latency — realistic bounds
+    "response time under 200 milliseconds",
+    "p99 latency below 500ms",
+    "round-trip latency under 50ms on LAN",
+    "median latency of 20ms",
+    "95th percentile response time under 2 seconds",
+    # Throughput — realistic bounds
+    "process 1000 requests per second",
+    "500 transactions per second on commodity hardware",
     "throughput of 10000 messages per minute",
-    "memory usage under 512 MB", "CPU usage below 80 percent",
-    "error rate below 0.1 percent", "maximum 5 seconds recovery time",
-    "200ms latency at 1000 requests per second",
-    "achievable performance target", "measurable and testable SLA",
-    "realistic throughput requirement with defined hardware",
+    "200ms latency sustained at 1000 RPS",
+    # Error and recovery — realistic bounds
+    "error rate below 0.1 percent of requests",
+    "fewer than 5 unhandled exceptions per day",
+    "maximum 30 seconds recovery time after restart",
+    "RPO of 1 hour and RTO of 4 hours",
+    # Resource usage — realistic bounds
+    "memory usage under 512 MB under normal load",
+    "CPU usage below 80 percent at peak",
+    "disk usage grows by no more than 10 GB per month",
+    # Security — realistic, testable constraints
+    "zero P1 vulnerabilities found in penetration test",
+    "all tokens expire after 24 hours of inactivity",
+    "AES-256 encryption applied to data at rest",
+    # Correctness — realistic, testable constraints
+    "output matches expected result in 99.5 percent of test cases",
+    "passes all regression tests in CI pipeline",
+    "defect density below 1 critical bug per 1000 lines of code",
 ]
 
 
@@ -920,7 +971,9 @@ class FeasibilityDetector:
         filtered = {
             slot: text for slot, text in filled.items()
             if slot not in NEUTRAL_SLOTS
+            and not _ARTIFACT_RE.match(text)
             and not all(w.lower() in NEUTRAL_WORDS for w in text.split())
+            and sum(1 for w in text.split() if w.lower() not in NEUTRAL_WORDS) >= 2
         }
         if not filtered:
             return []
@@ -987,6 +1040,7 @@ if __name__ == "__main__":
         "The service must maintain 99.9% uptime with planned maintenance windows.",
         "The system must support downloading PDF files to disk.",
         "The system must encrypt all data before writing to disk.",
+        "User enters their username and password on the login page"
     ]
 
     detector = FeasibilityDetector(calibration_data="feasibility_calibration_data.json")

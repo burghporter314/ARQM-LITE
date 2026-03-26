@@ -1,11 +1,12 @@
+import base64
 import io
 
 from flask import Blueprint, render_template, request, send_file, jsonify
 
-from util.ingestion       import extract_text, extract_sentences
-from util.identification  import identify_requirements
-from util.analyzer        import analyze_requirements
-from util.report          import generate_report
+from util.ingestion          import extract_text, extract_sentences
+from util.identification     import identify_requirements
+from util.analyzer           import analyze_requirements
+from generate_quality_report import generate_pdf_bytes as generate_report
 
 main_bp = Blueprint('main', __name__)
 
@@ -68,10 +69,40 @@ def analyze_quality():
     results = analyze_requirements(requirements)
 
     # ── 5. PDF report generation ─────────────────────────────────────────────
-    pdf_bytes = generate_report(results, filename=filename)
+    pdf_bytes = generate_report(results)
 
     stem = Path(filename).stem
     report_name = f"ARQM_Report_{stem}.pdf"
+
+    # ── 6. Optional JSON response with highlights ─────────────────────────────
+    # Add ?json=1 to the request URL to receive a JSON body containing the
+    # base64-encoded PDF and per-requirement highlight data instead of a direct
+    # file download.
+    if request.args.get("json"):
+        highlights = []
+        for r in results:
+            entry = {"sentence": r["sentence"]}
+            for dim in ("ambiguity", "feasibility", "singularity", "verifiability"):
+                d = r[dim].to_dict()
+                # Collect only the highlighted strings from each violation/span
+                viols_key = "spans" if dim == "ambiguity" else "violations"
+                entry[dim] = [
+                    {
+                        "text":        v["text"],
+                        "highlighted": v.get("highlighted", r["sentence"]),
+                        "reason":      v["reason"],
+                        "score":       v["score"],
+                        "suggestion":  v.get("suggestion"),
+                    }
+                    for v in d.get(viols_key, [])
+                ]
+            highlights.append(entry)
+
+        return jsonify({
+            "report_name": report_name,
+            "pdf":         base64.b64encode(pdf_bytes).decode(),
+            "highlights":  highlights,
+        })
 
     return send_file(
         io.BytesIO(pdf_bytes),

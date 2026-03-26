@@ -135,11 +135,32 @@ def _xml_escape(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def _tint_hex(hex_color: str, opacity: float = 0.22) -> str:
+    """
+    Blend *hex_color* with white at *opacity* and return the resulting hex.
+    Used to produce a light background tint for inline highlights.
+    """
+    h = hex_color.lstrip("#")
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    tr = int(r * opacity + 255 * (1 - opacity))
+    tg = int(g * opacity + 255 * (1 - opacity))
+    tb = int(b * opacity + 255 * (1 - opacity))
+    return f"#{tr:02x}{tg:02x}{tb:02x}"
+
+
 def _parse_highlighted(text: str, hl_color: str = "#d97706") -> str:
     """
-    Convert the ``>>span<<`` markers produced by Violation.highlight() into
-    ReportLab Paragraph bold markup, XML-escaping everything else.
+    Convert ``>>span<<`` markers from Violation.highlight() into ReportLab
+    Paragraph markup with a coloured background highlight.
+
+    Highlighted spans receive:
+      • a light tint of the dimension colour as their background (backColor)
+      • the dimension colour itself as the foreground text colour
+      • bold weight
+
+    Everything outside the markers is XML-escaped plain text.
     """
+    bg = _tint_hex(hl_color)
     parts = _HIGHLIGHT_RE.split(text)
     out: list[str] = []
     for i, part in enumerate(parts):
@@ -147,7 +168,9 @@ def _parse_highlighted(text: str, hl_color: str = "#d97706") -> str:
             out.append(_xml_escape(part))
         else:
             out.append(
-                f"<b><font color='{hl_color}'>{_xml_escape(part)}</font></b>"
+                f"<font backColor='{bg}' color='{hl_color}'>"
+                f"<b>{_xml_escape(part)}</b>"
+                f"</font>"
             )
     return "".join(out)
 
@@ -156,18 +179,59 @@ def _truncate(text: str, n: int = 80) -> str:
     return text if len(text) <= n else text[: n - 1] + "\u2026"
 
 
-def _render_req(highlighted: str, sentence: str, hl_color: str, max_plain: int = 95) -> str:
+def _render_req(highlighted: str, sentence: str, hl_color: str,
+                max_plain: int = 120) -> str:
     """
-    Return Paragraph markup for a requirement cell.
+    Return Paragraph markup for a requirement cell with inline highlighting.
 
-    If the highlighted string fits within *max_plain* plain-text chars, the
-    flagged spans are rendered bold in the dimension colour.  Otherwise the
-    sentence is plain-truncated for space efficiency.
+    Flagged spans (marked ``>>…<<``) are rendered with a coloured background
+    highlight and bold text.  If the plain text fits within *max_plain*
+    characters the full sentence is shown; otherwise it is truncated while
+    preserving any highlighted spans that fall inside the truncation window.
     """
     plain = _HIGHLIGHT_RE.sub(r"\1", highlighted)
     if len(plain) <= max_plain:
         return _parse_highlighted(highlighted, hl_color)
-    return _xml_escape(_truncate(sentence, max_plain))
+
+    # Sentence is too long — iterate over segments, keeping highlights that
+    # fit within the character budget and truncating at the boundary.
+    bg = _tint_hex(hl_color)
+    parts = _HIGHLIGHT_RE.split(highlighted)
+    # split gives: [plain0, span0, plain1, span1, …]
+
+    out: list[str] = []
+    plain_count = 0
+    done = False
+
+    for i, part in enumerate(parts):
+        if done:
+            break
+        remaining = max_plain - plain_count
+        if remaining <= 0:
+            out.append("\u2026")
+            done = True
+            break
+
+        if i % 2 == 0:                    # non-highlighted segment
+            if len(part) <= remaining:
+                out.append(_xml_escape(part))
+                plain_count += len(part)
+            else:
+                out.append(_xml_escape(part[:remaining]) + "\u2026")
+                done = True
+        else:                              # highlighted span
+            span_text = part[:remaining]
+            suffix = "\u2026" if len(part) > remaining else ""
+            out.append(
+                f"<font backColor='{bg}' color='{hl_color}'>"
+                f"<b>{_xml_escape(span_text)}{suffix}</b>"
+                f"</font>"
+            )
+            plain_count += len(span_text)
+            if suffix:
+                done = True
+
+    return "".join(out)
 
 
 # ── Styles ────────────────────────────────────────────────────────────────────
@@ -386,11 +450,13 @@ def _quality_profile_bar(dim_stats: dict[str, dict], total: int,
                        fillColor=colors.HexColor(hex_color),
                        strokeColor=None))
 
-        # Percentage text (white when bar is full enough, dark otherwise)
+        # Percentage text — white only when the bar fill covers the text
+        # centre (≥ 50 % of segment width); dark otherwise so it is always
+        # legible against the grey track background.
         pct_text = f"{frac * 100:.0f}%"
         text_x   = x + seg_w / 2
         text_y   = label_h + gap + (bar_h / 2) - 4
-        text_clr = colors.white if frac > 0.25 else colors.HexColor("#6b7280")
+        text_clr = colors.white if frac >= 0.5 else colors.HexColor("#374151")
         d.add(GStr(text_x, text_y, pct_text,
                    textAnchor="middle", fontSize=9, fillColor=text_clr))
 
@@ -410,6 +476,48 @@ def _quality_profile_bar(dim_stats: dict[str, dict], total: int,
 
 
 # ── Violations table ──────────────────────────────────────────────────────────
+
+def _build_combined_highlighted(viols: list[dict], sentence: str) -> str:
+    """
+    Return *sentence* with >>…<< markers around EVERY occurrence of EVERY
+    violation text.  This ensures the requirement cell in the violations table
+    highlights all flagged spans—not just the first violation's span and not
+    just the first occurrence of each repeated term.
+    """
+    spans: list[tuple[int, int]] = []
+    for v in viols:
+        vtext = v.get("text", "")
+        if not vtext:
+            continue
+        try:
+            pat = re.compile(re.escape(vtext), re.IGNORECASE)
+        except re.error:
+            continue
+        for m in pat.finditer(sentence):
+            spans.append((m.start(), m.end()))
+
+    if not spans:
+        # Nothing matched by text search; fall back to pre-built field
+        return viols[0].get("highlighted", sentence) if viols else sentence
+
+    # Sort and merge overlapping / adjacent spans
+    spans.sort()
+    merged: list[list[int]] = [list(spans[0])]
+    for start, end in spans[1:]:
+        if start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+
+    result: list[str] = []
+    prev = 0
+    for start, end in merged:
+        result.append(sentence[prev:start])
+        result.append(">>" + sentence[start:end] + "<<")
+        prev = end
+    result.append(sentence[prev:])
+    return "".join(result)
+
 
 # Column widths: Requirement, Violation Type, Flagged Span, Score, Suggestion
 _VIOLS_COL_W = [
@@ -461,11 +569,14 @@ def _violations_table(flagged_dicts: list[dict], dim_key: str,
         if not uniq:
             continue
 
+        # Build one combined highlighted string covering all violations so the
+        # requirement cell shows every flagged span at once.
+        combined_hl = _build_combined_highlighted(uniq, sentence)
+
         for j, v in enumerate(uniq):
             # ── Requirement cell ──
             if j == 0:
-                highlighted = v.get("highlighted", sentence)
-                req_markup  = _render_req(highlighted, sentence, hex_color, 90)
+                req_markup = _render_req(combined_hl, sentence, f"#{hex_color}", 90)
             else:
                 # Subsequent violations for same requirement: blank to avoid
                 # repetition; indent signals continuation.
@@ -732,7 +843,64 @@ def generate_pdf(
         author="ARQM-LITE",
     )
     doc.build(story)
-    print(f"[generate_quality_report] Report saved \u2192 {output_path}")
+    print(f"[generate_quality_report] Report saved -> {output_path}")
+
+
+def generate_pdf_bytes(results: list[dict]) -> bytes:
+    """
+    Convenience wrapper for the Flask route.
+
+    Accepts the list-of-per-requirement-dicts produced by
+    ``util.analyzer.analyze_requirements`` (each dict has keys
+    "sentence", "ambiguity", "feasibility", "singularity", "verifiability"),
+    reshapes it into the per-dimension dict expected by ``generate_pdf``,
+    renders the PDF into an in-memory buffer, and returns the raw bytes.
+    """
+    import io as _io
+
+    dim_keys = [k for k, *_ in _DIMS]
+
+    # Transpose: list-of-requirement-dicts → dict-of-dimension-lists
+    dim_results: dict[str, list] = {k: [r[k] for r in results] for k in dim_keys}
+
+    # Convert result objects → plain dicts
+    dicts: dict[str, list[dict]] = {
+        k: [r.to_dict() for r in dim_results[k]]
+        for k in dim_keys
+    }
+
+    total         = len(dicts[dim_keys[0]])
+    all_sentences = [d["sentence"] for d in dicts["ambiguity"]]
+
+    dim_stats: dict[str, dict] = {}
+    for k in dim_keys:
+        n_flagged    = sum(1 for d in dicts[k] if _is_flagged(k, d))
+        dim_stats[k] = {"flagged": n_flagged, "passing": total - n_flagged}
+
+    styles = _build_styles()
+    story: list = []
+
+    story.extend(_cover_page(dim_stats, total, styles))
+    story.append(PageBreak())
+
+    for i, (dim_key, *_) in enumerate(_DIMS):
+        story.extend(_dimension_section(dim_key, dicts[dim_key], styles))
+        if i < len(_DIMS) - 1:
+            story.append(PageBreak())
+
+    story.extend(_appendix(all_sentences, styles))
+
+    buf = _io.BytesIO()
+    doc = SimpleDocTemplate(
+        buf,
+        pagesize=letter,
+        leftMargin=_MARGIN, rightMargin=_MARGIN,
+        topMargin=_MARGIN,  bottomMargin=_MARGIN,
+        title="Software Requirements Quality Report",
+        author="ARQM-LITE",
+    )
+    doc.build(story)
+    return buf.getvalue()
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────

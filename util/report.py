@@ -209,6 +209,28 @@ def _violation_text(span, dimension: str) -> tuple[str, str]:
     return (span.reason.replace("_", " ").title(), f'"{text}"')
 
 
+def _select_display_spans(spans, dimension: str) -> list[tuple[str, str, str]]:
+    """
+    Filter *spans* to remove noise and return a deduplicated list of
+    ``(title, detail, fix)`` triples ready for rendering.
+
+    *fix* is the span's suggestion text (empty string if absent).
+    """
+    seen: set[tuple[str, str]] = set()
+    result: list[tuple[str, str, str]] = []
+    for span in spans:
+        if _is_noise(span):
+            continue
+        title, detail = _violation_text(span, dimension)
+        key = (title, detail)
+        if key in seen:
+            continue
+        seen.add(key)
+        fix = getattr(span, "suggestion", None) or ""
+        result.append((title, detail, fix))
+    return result
+
+
 # ── styles ────────────────────────────────────────────────────────────────────
 
 def _build_styles() -> dict:

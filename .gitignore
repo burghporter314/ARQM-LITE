@@ -41,6 +41,9 @@ Thumbs.db
 ARQM_Report*.pdf
 *.xlsx
 
+# ── Datasets (large; not for version control) ────────────────────────────────
+datasets/
+
 # ── NLP model caches (large; re-downloaded on demand) ────────────────────────
 # Hugging Face / SentenceTransformers cache
 .cache/

@@ -527,44 +527,121 @@ class ThresholdCalibrator:
 # ─────────────────────────────────────────────
 
 VAGUE_PROTOTYPES = [
-    "quickly", "soon", "fast", "often", "sometimes", "occasionally", "regularly",
-    "frequently", "rarely", "as soon as possible", "near real-time", "in a timely manner",
-    "without unnecessary delay", "promptly", "immediately", "eventually",
-    "sufficient", "adequate", "minimal", "significant", "reasonable", "acceptable",
-    "appropriate", "optimal", "efficient", "high", "low", "good enough", "fast enough",
-    "user-friendly", "intuitive", "easy to use", "seamless", "robust", "reliable",
-    "flexible", "scalable", "maintainable", "secure enough", "stable",
-    "optional", "temporary", "configurable", "as needed", "where applicable",
-    "if necessary", "in most cases", "under normal conditions", "typically",
-    "generally", "usually", "normally",
+    # Time vagueness
+    "quickly", "soon", "fast", "promptly", "immediately", "eventually",
+    "as soon as possible", "near real-time", "in a timely manner",
+    "in a timely fashion", "without unnecessary delay", "often",
+    "sometimes", "occasionally", "regularly", "frequently", "rarely",
+    "at all times", "whenever possible",
+    # Quantity / degree vagueness
+    "sufficient", "adequate", "minimal", "significant", "reasonable",
+    "acceptable", "appropriate", "optimal", "good enough", "fast enough",
+    "many", "few", "several", "large", "small", "some", "various",
+    # Quality / correctness vagueness
+    "accurate", "correct", "valid", "complete", "consistent", "precise",
+    "reliable", "stable", "robust", "secure", "safe", "protected",
+    "user-friendly", "intuitive", "easy to use", "seamless",
+    "flexible", "scalable", "maintainable", "efficient",
+    # Process adverb vagueness (extremely common in SRS documents)
+    "properly", "appropriately", "correctly", "suitably", "adequately",
+    "gracefully", "effectively", "successfully",
+    # Conditionality vagueness
+    "optional", "temporary", "as needed", "where applicable",
+    "if necessary", "in most cases", "under normal conditions",
+    "where possible", "as appropriate", "typically", "generally",
+    "usually", "normally",
+    # Meta-description anchors
     "vague requirement", "imprecise wording", "uncertain specification",
     "subjective description", "approximate value", "undefined behavior",
     "requirement without measurable criteria", "ambiguous statement",
+    "no measurable threshold", "cannot be objectively tested",
 ]
 
 PRECISE_PROTOTYPES = [
-    "response time under 200 milliseconds", "99.9 percent uptime SLA",
-    "maximum 5 retry attempts", "exactly 3 decimal places",
-    "log entry within 1 second of event", "process at least 1000 requests per second",
-    "store up to 10 gigabytes of data", "timeout after 30 seconds",
-    "notify within 60 seconds of failure", "scheduled weekly on Monday at 08:00 UTC",
-    "specific measurable requirement", "exact numeric threshold",
-    "clearly defined behavior", "quantified performance requirement",
-    "explicit system condition", "well defined constraint",
-    "error rate below 0.1 percent", "memory usage under 512 MB",
-    "available 24 hours a day 7 days a week",
+    # Performance
+    "response time under 200 milliseconds",
+    "p99 latency below 500 milliseconds",
+    "process at least 1000 requests per second",
+    "throughput of 10000 messages per minute",
+    "timeout after 30 seconds",
+    # Availability and reliability
+    "99.9 percent uptime SLA",
+    "MTBF greater than 2000 hours",
+    "maximum 5 retry attempts with exponential backoff",
+    "recovery time objective of 4 hours",
+    # Error and correctness
+    "error rate below 0.1 percent of requests",
+    "output matches expected value to 3 decimal places",
+    "passes all 847 regression tests in CI pipeline",
+    "fewer than 1 critical defect per 1000 lines of code",
+    # Data and storage
+    "store up to 10 gigabytes of data per user",
+    "log entry written within 1 second of event",
+    "data retained for exactly 90 days then deleted",
+    "maximum file upload size of 25 megabytes",
+    # Security — concrete and testable
+    "AES-256 encryption applied to all data at rest",
+    "all session tokens expire after 30 minutes of inactivity",
+    "zero P1 or P2 findings in annual penetration test",
+    "password must be at least 12 characters with one symbol",
+    # Scheduling and frequency
+    "scheduled weekly on Monday at 08:00 UTC",
+    "notify within 60 seconds of threshold breach",
+    "batch job completes within 2 hours of trigger",
+    # UI and usability — concrete
+    "task completed by target user in 3 steps or fewer",
+    "SUS usability score of 70 or above",
+    "page load time under 3 seconds on a 10 Mbps connection",
+    # Resource usage
+    "memory usage under 512 MB under peak load",
+    "CPU utilisation below 80 percent at 1000 concurrent users",
 ]
 
 NEUTRAL_SINGLE_WORDS = {
+    # Structural verbs with no requirement-quality signal
     "respond", "provide", "deliver", "allow", "ensure", "handle", "support",
     "enable", "include", "contain", "display", "show", "use", "perform",
     "process", "send", "receive", "create", "update", "delete", "return",
     "call", "run", "execute", "store", "save", "load", "read", "write",
+    "maintain", "manage", "monitor", "log", "notify", "trigger", "generate",
+    "encrypt", "decrypt", "compress", "validate", "authenticate", "authorise",
+    "offer", "print", "download", "upload", "import", "export", "parse",
+    "apply", "check", "verify", "confirm", "submit", "cancel", "open", "close",
+    # Domain nouns
     "system", "application", "interface", "user", "data", "file", "task",
     "report", "request", "response", "error", "event", "module", "service",
     "component", "function", "feature", "option", "setting", "value",
     "algorithm", "transmission", "usage", "generated", "restarted",
+    "database", "server", "client", "api", "endpoint", "record", "entry",
+    # Modals and auxiliaries
+    "must", "shall", "should", "may", "will", "can",
+    "would", "could", "might", "ought",
+    # Determiners and quantifiers
+    "all", "every", "each", "any", "some", "no", "the", "a", "an",
+    # Conjunctions and prepositions
+    "before", "after", "when", "while", "during", "until", "unless",
+    "and", "but", "or", "so", "as", "that", "with", "for", "to", "of",
+    # Light verbs
+    "have", "has", "had", "want", "wants", "let", "lets",
+    "get", "gets", "got", "make", "makes", "made",
+    "go", "goes", "went", "do", "does", "did",
+    "be", "is", "are", "was", "were", "been",
+    "seem", "seems", "feel", "look", "looks",
+    # BDD / Gherkin extraction artifacts
+    "given", "then", "scenario", "feature", "background",
+    "story", "acceptance", "criteria", "priority", "estimation",
+    "description", "mapped", "requirement",
+    # Adverbs and particles with no signal value in qualifier slots
+    "up", "down", "out", "on", "off", "in", "back", "away", "along",
+    "together", "also", "here", "there", "now", "still", "just", "even",
+    # NOTE: "never", "not", "high", "low" intentionally excluded —
+    # these carry meaningful signal and should be scored.
 }
+
+# Pre-compiled pattern for detecting section-number / bullet artifacts in slot
+# values.  A slot that matches this is not a requirement fragment and must be
+# skipped before semantic scoring.
+_ARTIFACT_RE = re.compile(r"^\s*[\d\.\•\-\*]+\s*$")
 
 REWRITE_HINTS: dict[str, str] = {
     "quickly":       "within N ms/s (e.g. under 200 ms)",
@@ -778,9 +855,13 @@ class AmbiguityDetector:
 
         filtered = {
             slot: text for slot, text in filled.items()
-            if slot not in {"subject"}
-            or not any(w.lower() in NEUTRAL_SINGLE_WORDS for w in text.split())
+            if (slot not in {"subject"}
+                or not any(w.lower() in NEUTRAL_SINGLE_WORDS for w in text.split()))
+            and not _ARTIFACT_RE.match(text)
+            and sum(1 for w in text.split() if w.lower() not in NEUTRAL_SINGLE_WORDS) >= 2
         }
+        if not filtered:
+            return []
 
         items  = list(filtered.items())
         scores = self.scorer.score_slots_batch(
@@ -844,6 +925,7 @@ if __name__ == "__main__":
         "Data must be encrypted before transmission.",
         "The system must support downloading PDF files to disk.",
         "The system must print with 3.75 mm P.L.A. filament.",
+        "The application will provide users with a recommended route based on user preferences"
     ]
 
     detector = AmbiguityDetector(calibration_data="calibration_data.json")

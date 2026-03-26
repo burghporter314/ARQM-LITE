@@ -1,55 +1,98 @@
 """
-Requirement identification: filter sentences that are likely software requirements
-using spaCy pattern matching for modal + verb constructs.
+Requirement identification using a fine-tuned TinyBERT sequence classifier.
+
+Loads the local BertForSequenceClassification model and runs batched inference.
+The requirement label index is determined once at startup by probing the model
+with a small set of unambiguous examples.
 """
 
-import spacy
-from spacy.matcher import Matcher
+from __future__ import annotations
 
-MODAL_KEYWORDS = ["shall", "must", "should", "will", "may", "can"]
+import os
 
-_nlp_instance = None
+import torch
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+_MODEL_DIR = os.path.join(
+    _BASE_DIR,
+    "../models/requirement_identification/bert-base-requirements-identification-generative-ai",
+)
+_TOKENIZER_DIR = os.path.join(
+    _BASE_DIR,
+    "../models/bert-base-requirements-identification-generative-ai-siamese",
+)
+
+# ── Hyperparameters ───────────────────────────────────────────────────────────
+_BATCH_SIZE = 64
+
+# ── Singleton state ───────────────────────────────────────────────────────────
+_model      = None
+_tokenizer  = None
+_req_label  = None   # int: label index that corresponds to "requirement"
+
+_PROBE_REQS = [
+    "The system shall validate user credentials before granting access.",
+    "The application must support concurrent users without performance degradation.",
+    "The software shall encrypt all data transmitted over the network.",
+]
 
 
-def _get_nlp():
-    global _nlp_instance
-    if _nlp_instance is None:
-        _nlp_instance = spacy.load("en_core_web_sm")
-    return _nlp_instance
+def _init() -> None:
+    global _model, _tokenizer, _req_label
+
+    if _model is not None:
+        return
+
+    print("[Identification] Loading TinyBERT classifier …")
+
+    _tokenizer = AutoTokenizer.from_pretrained(_TOKENIZER_DIR)
+    _model     = AutoModelForSequenceClassification.from_pretrained(_MODEL_DIR)
+    _model.eval()
+
+    # Determine which output index corresponds to "requirement"
+    with torch.no_grad():
+        enc = _tokenizer(
+            _PROBE_REQS,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=128,
+        )
+        preds = _model(**enc).logits.argmax(dim=-1).tolist()
+
+    _req_label = max(set(preds), key=preds.count)
+    print(f"[Identification] TinyBERT ready. Requirement label index: {_req_label}")
 
 
-def identify_requirements(sentences: list[str], nlp=None) -> list[str]:
+def identify_requirements(
+    sentences: list[str],
+    batch_size: int = _BATCH_SIZE,
+) -> list[str]:
     """
-    Filter sentences to those that contain a modal verb followed by a main verb,
-    which is the canonical form of a software requirement.
+    Return the subset of *sentences* identified as software requirements.
 
-    Returns the subset of input sentences that are identified as requirements.
+    Each sentence is classified by the fine-tuned TinyBERT model.
     """
-    if nlp is None:
-        nlp = _get_nlp()
+    _init()
 
-    matcher = Matcher(nlp.vocab)
+    flags: list[bool] = []
 
-    # Pattern A: modal immediately followed by a verb
-    matcher.add("MODAL_VERB", [[
-        {"LOWER": {"IN": MODAL_KEYWORDS}},
-        {"POS": "VERB", "OP": "+"},
-    ]])
+    for i in range(0, len(sentences), batch_size):
+        batch = sentences[i : i + batch_size]
 
-    # Pattern B: subject + modal + verb (the system shall provide …)
-    matcher.add("SUBJ_MODAL_VERB", [[
-        {"POS": {"IN": ["NOUN", "PROPN"]}, "OP": "+"},
-        {"LOWER": {"IN": MODAL_KEYWORDS}},
-        {"POS": "VERB", "OP": "+"},
-    ]])
+        with torch.no_grad():
+            enc = _tokenizer(
+                batch,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=128,
+            )
+            preds = _model(**enc).logits.argmax(dim=-1).tolist()
 
-    requirements = []
-    for sentence in sentences:
-        sentence = sentence.strip()
-        if len(sentence.split()) < 4:
-            continue
-        doc = nlp(sentence)
-        if matcher(doc):
-            requirements.append(sentence)
+        flags.extend(p == _req_label for p in preds)
 
-    return requirements
+    return [s for s, flag in zip(sentences, flags) if flag]
