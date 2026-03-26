@@ -12,12 +12,16 @@ Improvements over v1:
 
 import re
 import json
+import sys
 import spacy
 import numpy as np
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
 from sentence_transformers import SentenceTransformer
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from domain_kb import DomainKnowledgeBase
 
 # ─────────────────────────────────────────────
 # Slot definitions
@@ -841,6 +845,7 @@ class AmbiguityDetector:
 
         self.slot_parser = SlotParser(self.nlp)
         self.scorer = ContextualSemanticScorer(self.encoder, self._vague_embs, self._precise_embs)
+        self.domain_kb = DomainKnowledgeBase.load(self.encoder)
 
         if slot_thresholds:
             self.thresholds = slot_thresholds
@@ -850,7 +855,7 @@ class AmbiguityDetector:
 
         print(f"[Detector] Thresholds: {self.thresholds}")
 
-    def _slots_to_spans(self, slots: RequirementSlots, sentence: str) -> list[AmbiguousSpan]:
+    def _slots_to_spans(self, slots: RequirementSlots, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> list[AmbiguousSpan]:
         filled = slots.filled_slots()
         if not filled:
             return []
@@ -873,7 +878,8 @@ class AmbiguityDetector:
         result: list[AmbiguousSpan] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.50)
-            if score >= threshold:
+            if score >= threshold and not self.domain_kb.is_domain_term(text) \
+                    and not (doc_kb and doc_kb.is_domain_term(text)):
                 result.append(AmbiguousSpan(
                     text=text,
                     score=round(score, 4),
@@ -884,11 +890,11 @@ class AmbiguityDetector:
                 ))
         return result
 
-    def analyze(self, sentence: str) -> AnalysisResult:
+    def analyze(self, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> AnalysisResult:
         doc   = self.nlp(sentence)
         slots = self.slot_parser.parse(sentence)
 
-        semantic_spans  = self._slots_to_spans(slots, sentence)
+        semantic_spans  = self._slots_to_spans(slots, sentence, doc_kb=doc_kb)
         syntactic_spans = detect_syntactic_ambiguities(sentence, doc)
 
         seen   = {s.text.lower() for s in syntactic_spans}

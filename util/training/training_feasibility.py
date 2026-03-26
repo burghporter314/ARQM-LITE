@@ -21,12 +21,16 @@ Architecture mirrors ambiguity_detector_v2.py:
 
 import re
 import json
+import sys
 import numpy as np
 import spacy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
 from sentence_transformers import SentenceTransformer
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from domain_kb import DomainKnowledgeBase
 
 # ─────────────────────────────────────────────
 # Slot definitions
@@ -954,6 +958,7 @@ class FeasibilityDetector:
 
         self.slot_parser = SlotParser(self.nlp)
         self.scorer      = ContextualFeasibilityScorer(self.encoder, self._infeasible_embs, self._feasible_embs)
+        self.domain_kb   = DomainKnowledgeBase.load(self.encoder)
 
         if slot_thresholds:
             self.thresholds = slot_thresholds
@@ -963,7 +968,7 @@ class FeasibilityDetector:
 
         print(f"[FeasibilityDetector] Thresholds: {self.thresholds}")
 
-    def _slots_to_violations(self, slots: RequirementSlots, sentence: str) -> list[FeasibilityViolation]:
+    def _slots_to_violations(self, slots: RequirementSlots, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> list[FeasibilityViolation]:
         filled = slots.filled_slots()
         if not filled:
             return []
@@ -984,14 +989,15 @@ class FeasibilityDetector:
         result: list[FeasibilityViolation] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.60)
-            if score >= threshold:
+            if score >= threshold and not self.domain_kb.is_domain_term(text) \
+                    and not (doc_kb and doc_kb.is_domain_term(text)):
                 result.append(FeasibilityViolation(
                     text=text, score=round(score, 4), slot=slot, reason="semantic",
                     token_spans=find_token_spans(text, sentence), suggestion=None,
                 ))
         return result
 
-    def analyze(self, sentence: str) -> FeasibilityResult:
+    def analyze(self, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> FeasibilityResult:
         slots = self.slot_parser.parse(sentence)
 
         rule_violations: list[FeasibilityViolation] = []
@@ -999,7 +1005,7 @@ class FeasibilityDetector:
         rule_violations.extend(detect_internal_contradictions(sentence))
         rule_violations.extend(detect_unrealistic_thresholds(sentence))
 
-        semantic_violations = self._slots_to_violations(slots, sentence)
+        semantic_violations = self._slots_to_violations(slots, sentence, doc_kb=doc_kb)
 
         seen: set[str] = {v.text.lower() for v in rule_violations}
         merged = list(rule_violations)

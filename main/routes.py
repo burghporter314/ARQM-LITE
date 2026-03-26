@@ -66,7 +66,7 @@ def analyze_quality():
         }), 422
 
     # ── 4. Quality analysis ──────────────────────────────────────────────────
-    results = analyze_requirements(requirements)
+    results = analyze_requirements(requirements, document_text=text)
 
     # ── 5. PDF report generation ─────────────────────────────────────────────
     pdf_bytes = generate_report(results)

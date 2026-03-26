@@ -23,12 +23,16 @@ Architecture mirrors feasibility_detector.py:
 
 import re
 import json
+import sys
 import numpy as np
 import spacy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Optional
 from sentence_transformers import SentenceTransformer
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from domain_kb import DomainKnowledgeBase
 
 # ─────────────────────────────────────────────
 # Slot definitions
@@ -900,6 +904,7 @@ class VerifiabilityDetector:
         self.scorer      = ContextualVerifiabilityScorer(
             self.encoder, self._unverifiable_embs, self._verifiable_embs
         )
+        self.domain_kb   = DomainKnowledgeBase.load(self.encoder)
 
         if slot_thresholds:
             self.thresholds = slot_thresholds
@@ -912,7 +917,7 @@ class VerifiabilityDetector:
         print(f"[VerifiabilityDetector] Thresholds: {self.thresholds}")
 
     def _slots_to_violations(
-        self, slots: RequirementSlots, sentence: str
+        self, slots: RequirementSlots, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None
     ) -> list[VerifiabilityViolation]:
         filled = slots.filled_slots()
         if not filled:
@@ -936,7 +941,8 @@ class VerifiabilityDetector:
         result: list[VerifiabilityViolation] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.55)
-            if score >= threshold:
+            if score >= threshold and not self.domain_kb.is_domain_term(text) \
+                    and not (doc_kb and doc_kb.is_domain_term(text)):
                 result.append(VerifiabilityViolation(
                     text=text,
                     score=round(score, 4),
@@ -947,7 +953,7 @@ class VerifiabilityDetector:
                 ))
         return result
 
-    def analyze(self, sentence: str) -> VerifiabilityResult:
+    def analyze(self, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> VerifiabilityResult:
         slots = self.slot_parser.parse(sentence)
 
         rule_violations: list[VerifiabilityViolation] = []
@@ -956,7 +962,7 @@ class VerifiabilityDetector:
         rule_violations.extend(detect_missing_actor(sentence))
         rule_violations.extend(detect_untestable_negatives(sentence))
 
-        semantic_violations = self._slots_to_violations(slots, sentence)
+        semantic_violations = self._slots_to_violations(slots, sentence, doc_kb=doc_kb)
 
         seen: set[str] = {v.text.lower() for v in rule_violations}
         merged = list(rule_violations)

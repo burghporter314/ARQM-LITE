@@ -23,12 +23,16 @@ Architecture mirrors feasibility_detector.py and verifiability_detector.py:
 
 import re
 import json
+import sys
 import numpy as np
 import spacy
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 from sentence_transformers import SentenceTransformer
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from domain_kb import DomainKnowledgeBase
 
 # ─────────────────────────────────────────────
 # Slot definitions
@@ -981,6 +985,7 @@ class SingularityDetector:
         self.scorer      = ContextualSingularityScorer(
             self.encoder, self._non_singular_embs, self._singular_embs
         )
+        self.domain_kb   = DomainKnowledgeBase.load(self.encoder)
 
         if slot_thresholds:
             self.thresholds = slot_thresholds
@@ -993,7 +998,7 @@ class SingularityDetector:
         print(f"[SingularityDetector] Thresholds: {self.thresholds}")
 
     def _slots_to_violations(
-        self, slots: RequirementSlots, sentence: str
+        self, slots: RequirementSlots, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None
     ) -> list[SingularityViolation]:
         filled = slots.filled_slots()
         if not filled:
@@ -1017,7 +1022,8 @@ class SingularityDetector:
         result: list[SingularityViolation] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.55)
-            if score >= threshold:
+            if score >= threshold and not self.domain_kb.is_domain_term(text) \
+                    and not (doc_kb and doc_kb.is_domain_term(text)):
                 result.append(SingularityViolation(
                     text=text,
                     score=round(score, 4),
@@ -1028,7 +1034,7 @@ class SingularityDetector:
                 ))
         return result
 
-    def analyze(self, sentence: str) -> SingularityResult:
+    def analyze(self, sentence: str, doc_kb: "DomainKnowledgeBase | None" = None) -> SingularityResult:
         doc   = self.nlp(sentence)
         slots = self.slot_parser.parse(sentence)
 
@@ -1038,7 +1044,7 @@ class SingularityDetector:
         rule_violations.extend(detect_conjunctive_conditions(sentence))
         rule_violations.extend(detect_mixed_concerns(sentence))
 
-        semantic_violations = self._slots_to_violations(slots, sentence)
+        semantic_violations = self._slots_to_violations(slots, sentence, doc_kb=doc_kb)
 
         seen: set[str] = {v.text.lower() for v in rule_violations}
         merged = list(rule_violations)
