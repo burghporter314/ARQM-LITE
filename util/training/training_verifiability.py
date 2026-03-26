@@ -653,7 +653,7 @@ MISSING_ACTOR_RULES: list[tuple[re.Pattern, str]] = [
 
 _NEG_RAW: list[tuple[str, str]] = [
     (
-        r"\b(?:(?:must|shall|will|should)\s+never\s+(?:lose|drop|delete|corrupt|overwrite)\s+(?:data|records?|messages?|events?|files?))\b",
+        r"\b(?:(?:must|shall|will|should)\s+never\s+(?:lose|drop|delete|corrupt|overwrite)(?:\s+\w+)?\s+(?:data|records?|messages?|events?|files?))\b",
         "Absolute data-loss prohibition is untestable; replace with a measurable bound (e.g. 'zero data loss under conditions defined in DR test plan' or 'RPO <= 1 hour')",
     ),
     (

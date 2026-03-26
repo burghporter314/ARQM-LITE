@@ -59,6 +59,9 @@
     {"span": "when load exceeds 1000 RPS", "sentence": "The autoscaler must trigger when load exceeds 1000 RPS.",                "slot": "condition",  "label": 0},
     {"span": "zero packet loss",     "sentence": "The network layer must guarantee zero packet loss.",                             "slot": "object",     "label": 1},
     {"span": "perfect reliability",  "sentence": "The storage system must offer perfect reliability.",                            "slot": "object",     "label": 1},
-    {"span": "within 1 second",      "sentence": "The search index must return results within 1 second.",                        "slot": "qualifier",  "label": 0}
+    {"span": "within 1 second",      "sentence": "The search index must return results within 1 second.",                        "slot": "qualifier",  "label": 0},
+    {"span": "PDF files",            "sentence": "The system must support downloading PDF files to disk.",                          "slot": "object",     "label": 0},
+    {"span": "configuration files",  "sentence": "The installer must copy configuration files to the target directory.",            "slot": "object",     "label": 0},
+    {"span": "log files",            "sentence": "The system must archive log files after 90 days.",                                "slot": "object",     "label": 0}
   ]
 }

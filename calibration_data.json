@@ -673,6 +673,48 @@
       "sentence": "The AuthService shall expire tokens after 24 hours.",
       "slot": "modal",
       "label": 0
+    },
+    {
+      "span": "at least once per hour",
+      "sentence": "Health checks must run at least once per hour.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "every 24 hours",
+      "sentence": "The system must perform backups every 24 hours at 02:00 UTC.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "appropriate team",
+      "sentence": "The appropriate team must review each change request.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "relevant personnel",
+      "sentence": "Relevant personnel must be notified within 1 hour.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "Health checks",
+      "sentence": "Health checks must run at least once per hour.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "Redis cache",
+      "sentence": "The Redis cache must expire entries after 30 minutes.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "CI pipeline",
+      "sentence": "The CI pipeline must complete within 10 minutes.",
+      "slot": "subject",
+      "label": 0
     }
   ]
 }

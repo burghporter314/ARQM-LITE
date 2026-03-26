@@ -613,6 +613,8 @@ NEUTRAL_SINGLE_WORDS = {
     "component", "function", "feature", "option", "setting", "value",
     "algorithm", "transmission", "usage", "generated", "restarted",
     "database", "server", "client", "api", "endpoint", "record", "entry",
+    "health", "checks", "monitor", "monitoring", "job", "jobs", "worker",
+    "scheduler", "pipeline", "workflow", "batch", "daemon", "agent",
     # Modals and auxiliaries
     "must", "shall", "should", "may", "will", "can",
     "would", "could", "might", "ought",

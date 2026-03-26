@@ -54,6 +54,11 @@
     {"span": "error rate below 0.1%",     "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",            "slot": "qualifier",  "label": 0},
     {"span": "access must be controlled",  "sentence": "Access must be controlled at the API gateway.",                                          "slot": "action",     "label": 1},
     {"span": "log entry within 1 second", "sentence": "A log entry must be written within 1 second of each authentication event.",              "slot": "qualifier",  "label": 0},
-    {"span": "best effort",               "sentence": "The sync service must deliver messages on a best effort basis.",                         "slot": "qualifier",  "label": 1}
+    {"span": "best effort",               "sentence": "The sync service must deliver messages on a best effort basis.",                         "slot": "qualifier",  "label": 1},
+    {"span": "all PII fields",            "sentence": "The system must encrypt all PII fields before storage.",                                   "slot": "object",     "label": 0},
+    {"span": "when all dependencies are reachable", "sentence": "The health endpoint must return HTTP 200 when all dependencies are reachable.",  "slot": "condition",  "label": 0},
+    {"span": "in usability testing",      "sentence": "The wizard must achieve a task success rate of 90% in usability testing.",                 "slot": "condition",  "label": 0},
+    {"span": "when required",             "sentence": "The system must apply security patches when required.",                                     "slot": "condition",  "label": 1},
+    {"span": "under certain conditions",  "sentence": "The service must restart under certain conditions.",                                        "slot": "condition",  "label": 1}
   ]
 }
