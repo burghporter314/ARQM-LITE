@@ -1,0 +1,235 @@
+# ── Verifiability soft-match terms ───────────────────────────────────────────
+# Words and short phrases that indicate a requirement has no objective,
+# testable pass/fail condition — relying instead on subjective judgement,
+# undefined criteria, or passive constructions with no verification mechanism.
+
+# ── Subjective user experience ────────────────────────────────────────────────
+user-friendly
+user friendly
+intuitive
+easy to use
+easy-to-use
+pleasant
+comfortable
+satisfied
+satisfaction
+user satisfaction
+happy
+pleased
+delightful
+enjoyable
+engaging
+appealing
+inviting
+welcoming
+polished
+elegant
+beautiful
+attractive
+nice
+clean
+neat
+tidy
+modern
+professional
+contemporary
+sleek
+smooth
+responsive
+feel responsive
+feels responsive
+feels fast
+feels natural
+feels intuitive
+looks professional
+looks modern
+looks clean
+looks good
+appears correct
+seems correct
+gives a good impression
+positive experience
+good experience
+great experience
+positive user experience
+pleasant to use
+pleasant to interact with
+nice to use
+
+# ── Vague success criteria ────────────────────────────────────────────────────
+work well
+works well
+working well
+function correctly
+functions correctly
+functioning correctly
+function properly
+functions properly
+perform well
+performs well
+performing well
+behave correctly
+behaves correctly
+behave as expected
+behaves as expected
+behave appropriately
+operate correctly
+operates correctly
+operate as intended
+operates as intended
+perform as intended
+performs as intended
+run correctly
+runs correctly
+run smoothly
+runs smoothly
+run as expected
+runs as expected
+work as expected
+works as expected
+work as intended
+works as intended
+function as expected
+functions as expected
+function as intended
+functions as intended
+work properly
+works properly
+do its job
+do what it is supposed to
+meet expectations
+meet user expectations
+meets expectations
+meets user expectations
+meet requirements
+meets requirements
+satisfy requirements
+satisfies requirements
+satisfy user needs
+satisfies user needs
+
+# ── Passive constructions with no agent ──────────────────────────────────────
+must be handled
+must be managed
+must be resolved
+must be addressed
+must be dealt with
+must be taken care of
+must be maintained
+must be ensured
+must be guaranteed
+must be validated
+must be verified
+must be checked
+must be reviewed
+must be monitored
+must be tracked
+must be controlled
+must be enforced
+must be supported
+must be provided
+should be handled
+should be managed
+should be resolved
+should be addressed
+should be dealt with
+should be taken care of
+should be maintained
+should be ensured
+will be handled
+will be managed
+will be resolved
+errors must be handled
+exceptions must be managed
+failures must be dealt with
+issues must be resolved
+problems must be addressed
+incidents must be escalated
+data must be validated
+access must be controlled
+notifications must be sent
+alerts must be delivered
+
+# ── Undefined / unmeasurable criteria ────────────────────────────────────────
+as needed
+as appropriate
+where necessary
+where applicable
+if needed
+if required
+when needed
+when required
+properly
+correctly
+appropriately
+adequately
+sufficiently
+suitably
+effectively
+in an appropriate manner
+in a suitable way
+in a correct manner
+in a proper way
+to an acceptable standard
+to a satisfactory level
+to an appropriate degree
+to a sufficient degree
+to a reasonable standard
+at an acceptable level
+in a reasonable manner
+in a timely and accurate manner
+efficiently and effectively
+safely and securely
+reliably and consistently
+
+# ── Subjective assessment language ───────────────────────────────────────────
+high quality
+high-quality
+good quality
+good performance
+acceptable quality
+acceptable performance
+reasonable performance
+adequate response
+adequate performance
+appropriate behavior
+correct behavior
+correct output
+valid results
+expected results
+expected behavior
+desired behavior
+desired outcome
+intended behavior
+intended outcome
+satisfactory
+satisfactorily
+unsatisfactory
+substandard
+below expectations
+above expectations
+meets the standard
+up to standard
+up to par
+acceptable level of
+appropriate level of
+reasonable level of
+sufficient level of
+
+# ── Untestable negatives ──────────────────────────────────────────────────────
+must never lose data
+must never fail
+shall never fail
+must never crash
+should not have any bugs
+must not produce any errors
+will never be unavailable
+must never be slow
+shall not expose any vulnerabilities
+must not allow any unauthorized
+should not degrade
+must not deteriorate
+should not break
+must not break
+must not cause issues
+must not cause problems

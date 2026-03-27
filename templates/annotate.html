@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARQM-LITE — Annotation Tool</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f8fafc;
+      --card:   #ffffff;
+      --border: #e2e8f0;
+      --text:   #1e293b;
+      --muted:  #64748b;
+      --blue:   #2563eb;
+      --green:  #16a34a;
+      --red:    #dc2626;
+      --radius: 8px;
+    }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text);
+           font-size: 14px; min-height: 100vh; }
+
+    /* ── Top bar ── */
+    #topbar {
+      background: #1e293b; color: #f1f5f9;
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 24px; height: 52px;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    #topbar h1 { font-size: 15px; font-weight: 700; flex: 1; }
+    #progress-label { font-size: 12px; color: #94a3b8; white-space: nowrap; }
+
+    /* ── Main layout ── */
+    main { max-width: 860px; margin: 32px auto; padding: 0 24px 64px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── Card ── */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .card-title { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: .6px; color: var(--muted); margin-bottom: 12px; }
+
+    /* ── Navigation ── */
+    #nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nav-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px;
+               background: var(--card); cursor: pointer; font-size: 13px; font-weight: 600;
+               color: var(--text); transition: background .1s; }
+    .nav-btn:hover { background: var(--bg); }
+    .nav-btn:disabled { opacity: .4; cursor: default; }
+    #req-counter { font-size: 13px; color: var(--muted); flex: 1; text-align: center; }
+    #skip-label { display: flex; align-items: center; gap: 6px; font-size: 13px;
+                  cursor: pointer; color: var(--muted); white-space: nowrap; user-select: none; }
+    #skip-label input { accent-color: var(--green); cursor: pointer; }
+    #skip-label:has(input:checked) { color: var(--green); font-weight: 600; }
+    #jump-input { width: 70px; padding: 5px 8px; border: 1px solid var(--border);
+                  border-radius: 6px; font-size: 13px; text-align: center; }
+    #jump-btn { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px;
+                background: var(--card); cursor: pointer; font-size: 13px; }
+
+    /* ── Requirement display ── */
+    #req-box {
+      background: var(--bg); border: 2px solid var(--border); border-radius: 6px;
+      padding: 16px 20px; line-height: 2; font-size: 15px;
+      min-height: 80px; transition: border-color .15s;
+      user-select: none; cursor: default;
+    }
+    #req-box.has-selection { border-color: var(--blue); }
+    #req-hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Tokens ── */
+    .token {
+      display: inline;
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 1px 0;
+      transition: background .1s;
+    }
+    .token:hover { background: #dbeafe; }
+    .token.selected {
+      background: #2563eb;
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 2px;
+    }
+    /* Connect adjacent selected tokens visually */
+    .token.selected + .token-space + .token.selected,
+    .token.selected + .token.selected {
+      border-radius: 0;
+    }
+
+    /* ── Selected spans summary ── */
+    #spans-row { display: flex; align-items: flex-start; gap: 10px; min-height: 30px; margin-top: 12px; flex-wrap: wrap; }
+    #spans-label { font-size: 12px; color: var(--muted); white-space: nowrap; padding-top: 3px; }
+    #spans-chips { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+    .span-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px;
+      padding: 2px 8px; font-size: 12px; font-weight: 600; color: var(--blue);
+      font-style: italic;
+    }
+    #spans-empty { font-size: 13px; color: var(--muted); padding-top: 3px; }
+    #deselect-all-btn { padding: 3px 10px; border: 1px solid var(--border); border-radius: 4px;
+                        background: none; cursor: pointer; font-size: 12px; color: var(--muted); flex-shrink: 0; }
+    #deselect-all-btn:hover { color: var(--red); border-color: var(--red); }
+
+    /* ── Annotated badge ── */
+    #annotated-badge {
+      display: none; align-items: center; gap: 6px;
+      margin-bottom: 10px; padding: 6px 12px;
+      background: #dcfce7; border: 1px solid #86efac; border-radius: 6px;
+      font-size: 12px; font-weight: 700; color: #166534;
+    }
+    #annotated-badge.visible { display: flex; }
+    #req-box.annotated { border-color: #86efac; background: #f0fdf4; }
+
+    /* ── Quick mark row ── */
+    #quick-row { display: flex; align-items: center; gap: 10px; margin-top: 14px;
+                 padding-top: 14px; border-top: 1px solid var(--border); }
+    #quick-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: .5px; color: var(--muted); white-space: nowrap; }
+    #quick-viol-btn { padding: 5px 14px; background: #fee2e2; border: 1px solid #fca5a5;
+                      border-radius: 6px; font-size: 12px; font-weight: 700; color: #991b1b;
+                      cursor: pointer; transition: background .15s; }
+    #quick-viol-btn:hover { background: #fecaca; }
+    #quick-ok-btn { padding: 5px 14px; background: #dcfce7; border: 1px solid #86efac;
+                    border-radius: 6px; font-size: 12px; font-weight: 700; color: #166534;
+                    cursor: pointer; transition: background .15s; }
+    #quick-ok-btn:hover { background: #bbf7d0; }
+    #quick-hint { font-size: 11px; color: var(--muted); }
+
+    /* ── Controls grid ── */
+    #controls { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ctrl-group { display: flex; flex-direction: column; gap: 6px; }
+    .ctrl-label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: .5px; color: var(--muted); }
+    select { padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px;
+             font-size: 13px; background: var(--card); color: var(--text); width: 100%; }
+    .radio-group { display: flex; gap: 16px; padding-top: 4px; }
+    .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
+    .radio-group input[type=radio] { accent-color: var(--blue); }
+
+    /* ── Action row ── */
+    #action-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+    #add-btn { padding: 9px 20px; background: var(--blue); color: #fff;
+               border: none; border-radius: 6px; font-size: 14px; font-weight: 700;
+               cursor: pointer; transition: background .15s; }
+    #add-btn:hover { background: #1d4ed8; }
+    #add-btn:disabled { opacity: .4; cursor: default; }
+
+    /* ── Queue ── */
+    #queue-card { display: none; }
+    #queue-card.visible { display: block; }
+    #queue-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    #queue-header .card-title { margin-bottom: 0; flex: 1; }
+    #save-all-btn { padding: 7px 18px; background: var(--green); color: #fff;
+                    border: none; border-radius: 6px; font-size: 13px; font-weight: 700;
+                    cursor: pointer; transition: background .15s; }
+    #save-all-btn:hover { background: #15803d; }
+    #save-all-btn:disabled { opacity: .5; cursor: default; }
+    #clear-queue-btn { padding: 7px 14px; border: 1px solid var(--border); border-radius: 6px;
+                       background: none; font-size: 13px; cursor: pointer; color: var(--muted); }
+    #clear-queue-btn:hover { color: var(--red); border-color: var(--red); }
+    #queue-list { display: flex; flex-direction: column; gap: 8px; }
+    .queue-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+                  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+                  font-size: 13px; }
+    .qi-span { font-weight: 600; font-style: italic; flex: 1;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qi-tag { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 99px;
+              white-space: nowrap; }
+    .qi-meta { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .qi-remove { padding: 2px 8px; border: 1px solid var(--border); border-radius: 4px;
+                 background: none; cursor: pointer; font-size: 12px; color: var(--muted);
+                 flex-shrink: 0; }
+    .qi-remove:hover { color: var(--red); border-color: var(--red); }
+
+    /* ── Counts table ── */
+    #counts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    #counts-table th { text-align: left; font-size: 11px; text-transform: uppercase;
+                       letter-spacing: .5px; color: var(--muted); padding: 4px 8px; }
+    #counts-table td { padding: 6px 8px; border-top: 1px solid var(--border); }
+    #counts-table td:not(:first-child) { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .dim-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+               margin-right: 6px; vertical-align: middle; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 18px;
+             border-radius: 8px; font-size: 13px; font-weight: 600; color: #fff;
+             opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 100; }
+    #toast.show { opacity: 1; }
+    #toast.ok  { background: var(--green); }
+    #toast.err { background: var(--red); }
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>ARQM-LITE &mdash; Annotation Tool</h1>
+  <span id="progress-label"></span>
+</div>
+
+<main>
+
+  <!-- Navigation -->
+  <div class="card">
+    <div id="nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; Prev</button>
+      <span id="req-counter"></span>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">Next &#8594;</button>
+      <label id="skip-label" title="When checked, Prev/Next only visit unannotated requirements">
+        <input type="checkbox" id="skip-annotated-chk" onchange="onSkipChange()">
+        Skip annotated <span id="skip-count" style="font-weight:400;color:var(--muted)"></span>
+      </label>
+      <input id="jump-input" type="number" min="1" placeholder="#" title="Jump to requirement">
+      <button id="jump-btn" onclick="jumpTo()">Go</button>
+    </div>
+  </div>
+
+  <!-- Requirement + word selection -->
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div class="card-title" style="margin-bottom:0">Requirement <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— click words to select spans</span></div>
+    </div>
+    <div id="annotated-badge">&#10003; Already annotated</div>
+    <div id="req-box"></div>
+    <div id="req-hint">Click individual words to select them. Click again to deselect. Consecutive selected words become one span.</div>
+    <div id="spans-row">
+      <span id="spans-label">Selected:</span>
+      <div id="spans-chips"><span style="font-size:13px;color:var(--muted);padding-top:3px">— click words above —</span></div>
+      <button id="deselect-all-btn" onclick="deselectAll()" style="display:none">Deselect All</button>
+    </div>
+    <div id="quick-row">
+      <span id="quick-label">Whole sentence:</span>
+      <button id="quick-viol-btn" onclick="quickMark(1)">Violation</button>
+      <button id="quick-ok-btn"   onclick="quickMark(0)">Not a Violation</button>
+      <span id="quick-hint">Queues entire sentence with current quality &amp; split</span>
+    </div>
+  </div>
+
+  <!-- Annotation controls -->
+  <div class="card">
+    <div class="card-title">Annotation</div>
+    <div id="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Quality Attribute</span>
+        <select id="quality-sel">
+          <option value="ambiguity">Ambiguity</option>
+          <option value="feasibility">Feasibility</option>
+          <option value="singularity">Singularity</option>
+          <option value="verifiability">Verifiability</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Slot</span>
+        <select id="slot-sel">
+          <option value="qualifier">qualifier</option>
+          <option value="action">action</option>
+          <option value="object">object</option>
+          <option value="condition">condition</option>
+          <option value="subject">subject</option>
+          <option value="modal">modal</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Label</span>
+        <div class="radio-group">
+          <label><input type="radio" name="label" value="1" checked> Violation (1)</label>
+          <label><input type="radio" name="label" value="0"> Not a violation (0)</label>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Split</span>
+        <div class="radio-group">
+          <label><input type="radio" name="split" value="train" checked> train</label>
+          <label><input type="radio" name="split" value="val"> val</label>
+        </div>
+      </div>
+    </div>
+    <div id="action-row">
+      <button id="add-btn" onclick="addToQueue()" disabled>+ Add to Queue</button>
+    </div>
+  </div>
+
+  <!-- Queue -->
+  <div class="card" id="queue-card">
+    <div id="queue-header">
+      <span class="card-title">Pending Annotations</span>
+      <button id="clear-queue-btn" onclick="clearQueue()">Clear All</button>
+      <button id="save-all-btn" onclick="saveAll()">Save All</button>
+    </div>
+    <div id="queue-list"></div>
+  </div>
+
+  <!-- Counts -->
+  <div class="card">
+    <div class="card-title">Calibration Data Counts</div>
+    <table id="counts-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Train</th>
+          <th>Val</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="counts-body"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+const REQUIREMENTS = {{ requirements | tojson }};
+var counts = {{ counts | tojson }};
+
+const DIM_COLORS = {
+  ambiguity:     '#d97706',
+  feasibility:   '#dc2626',
+  singularity:   '#7c3aed',
+  verifiability: '#2563eb',
+};
+
+var currentIndex = 0;
+var queue = [];  // [{span, sentence, quality, slot, label, split}, ...]
+
+// ── Annotated tracking (persisted in localStorage) ──────────────────────────
+var LS_KEY = 'arqm_annotated_v1';
+
+function loadAnnotated() {
+  try { return new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]')); }
+  catch(e) { return new Set(); }
+}
+
+function saveAnnotated() {
+  localStorage.setItem(LS_KEY, JSON.stringify(Array.from(annotatedSet)));
+}
+
+var annotatedSet = loadAnnotated();
+
+// ── Tokenizer ───────────────────────────────────────────────────────────────
+// Split text into alternating [word, whitespace/punct] tokens.
+// Each word gets a clickable .token span; spaces/punct are inert .token-space spans.
+
+function tokenize(text) {
+  // Split on word boundaries, keeping delimiters
+  return text.split(/(\s+|[,;:.!?()\[\]{}"']+)/);
+}
+
+// ── Render requirement ──────────────────────────────────────────────────────
+
+function render() {
+  var req = REQUIREMENTS[currentIndex] || '';
+  var box = document.getElementById('req-box');
+
+  var parts = tokenize(req);
+  var html = '';
+  parts.forEach(function(part, i) {
+    if (!part) return;
+    // Word tokens: no whitespace and not pure punctuation run
+    if (/\S/.test(part) && !/^[,;:.!?()\[\]{}"']+$/.test(part)) {
+      html += '<span class="token" data-idx="' + i + '" onclick="toggleToken(this)">' +
+              escHtml(part) + '</span>';
+    } else {
+      html += '<span class="token-space">' + escHtml(part) + '</span>';
+    }
+  });
+  box.innerHTML = html;
+
+  document.getElementById('req-counter').textContent =
+    'Requirement ' + (currentIndex + 1) + ' of ' + REQUIREMENTS.length;
+  renderProgress();
+  var skip = document.getElementById('skip-annotated-chk').checked;
+  document.getElementById('prev-btn').disabled = skip ? !hasPrevUnannotated() : currentIndex <= 0;
+  document.getElementById('next-btn').disabled = skip ? !hasNextUnannotated() : currentIndex >= REQUIREMENTS.length - 1;
+
+  var isAnnotated = annotatedSet.has(req);
+  var badge = document.getElementById('annotated-badge');
+  badge.classList.toggle('visible', isAnnotated);
+  document.getElementById('req-box').classList.toggle('annotated', isAnnotated);
+
+  updateSpansDisplay();
+}
+
+function renderProgress() {
+  var n = annotatedSet.size;
+  document.getElementById('progress-label').textContent =
+    (currentIndex + 1) + ' / ' + REQUIREMENTS.length +
+    (n ? '  \u2022  ' + n + ' annotated' : '');
+}
+
+
+// ── Token toggle ────────────────────────────────────────────────────────────
+
+function toggleToken(el) {
+  el.classList.toggle('selected');
+  updateSpansDisplay();
+}
+
+function deselectAll() {
+  document.querySelectorAll('#req-box .token.selected').forEach(function(t) {
+    t.classList.remove('selected');
+  });
+  updateSpansDisplay();
+}
+
+// ── Collect contiguous spans from selected tokens ───────────────────────────
+
+function getSelectedSpans() {
+  // Walk all children of req-box in DOM order, collecting runs of .selected tokens
+  var children = document.getElementById('req-box').childNodes;
+  var spans = [];
+  var currentRun = [];
+
+  children.forEach(function(node) {
+    if (node.nodeType === 1 && node.classList.contains('token')) {
+      if (node.classList.contains('selected')) {
+        currentRun.push(node.textContent);
+      } else {
+        if (currentRun.length) { spans.push(currentRun.join('')); currentRun = []; }
+      }
+    } else if (node.nodeType === 1 && node.classList.contains('token-space')) {
+      // Include space between two selected tokens in the run
+      if (currentRun.length) currentRun.push(node.textContent);
+    }
+  });
+  if (currentRun.length) spans.push(currentRun.join('').trim());
+
+  // Trim each span
+  return spans.map(function(s) { return s.trim(); }).filter(Boolean);
+}
+
+function updateSpansDisplay() {
+  var spans = getSelectedSpans();
+  var chipsEl = document.getElementById('spans-chips');
+  var deselectBtn = document.getElementById('deselect-all-btn');
+  var addBtn = document.getElementById('add-btn');
+  var box = document.getElementById('req-box');
+
+  if (!spans.length) {
+    chipsEl.innerHTML = '<span style="font-size:13px;color:var(--muted);padding-top:3px">\u2014 click words above \u2014</span>';
+    deselectBtn.style.display = 'none';
+    addBtn.disabled = true;
+    box.classList.remove('has-selection');
+    return;
+  }
+
+  deselectBtn.style.display = '';
+  addBtn.disabled = false;
+  box.classList.add('has-selection');
+
+  var html = '';
+  spans.forEach(function(s) {
+    html += '<span class="span-chip">\u201c' + escHtml(s) + '\u201d</span>';
+  });
+  chipsEl.innerHTML = html;
+
+  // Auto-detect slot from first selected span
+  applyDetectedSlot(spans, REQUIREMENTS[currentIndex] || '');
+}
+
+// ── Navigation ──────────────────────────────────────────────────────────────
+
+function navigate(delta) {
+  var skip = document.getElementById('skip-annotated-chk').checked;
+  if (skip) {
+    var i = currentIndex + delta;
+    while (i >= 0 && i < REQUIREMENTS.length) {
+      if (!annotatedSet.has(REQUIREMENTS[i])) { currentIndex = i; render(); return; }
+      i += delta;
+    }
+    return; // no unannotated in that direction
+  }
+  currentIndex = Math.max(0, Math.min(REQUIREMENTS.length - 1, currentIndex + delta));
+  render();
+}
+
+function hasNextUnannotated() {
+  for (var i = currentIndex + 1; i < REQUIREMENTS.length; i++) {
+    if (!annotatedSet.has(REQUIREMENTS[i])) return true;
+  }
+  return false;
+}
+
+function hasPrevUnannotated() {
+  for (var i = currentIndex - 1; i >= 0; i--) {
+    if (!annotatedSet.has(REQUIREMENTS[i])) return true;
+  }
+  return false;
+}
+
+function onSkipChange() {
+  // If skip is now on and current req is annotated, jump to next unannotated
+  var skip = document.getElementById('skip-annotated-chk').checked;
+  if (skip && annotatedSet.has(REQUIREMENTS[currentIndex] || '')) {
+    if (hasNextUnannotated()) { navigate(1); return; }
+  }
+  render(); // refresh button states
+}
+
+function jumpTo() {
+  var val = parseInt(document.getElementById('jump-input').value, 10);
+  if (!isNaN(val) && val >= 1 && val <= REQUIREMENTS.length) {
+    currentIndex = val - 1;
+    render();
+  }
+  document.getElementById('jump-input').value = '';
+}
+
+document.getElementById('jump-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') jumpTo();
+});
+
+// ── Queue ───────────────────────────────────────────────────────────────────
+
+function addToQueue() {
+  var spans = getSelectedSpans();
+  if (!spans.length) { showToast('Select at least one word', 'err'); return; }
+
+  var labelEl = document.querySelector('input[name="label"]:checked');
+  var splitEl = document.querySelector('input[name="split"]:checked');
+  var quality = document.getElementById('quality-sel').value;
+  var slot    = document.getElementById('slot-sel').value;
+  var label   = parseInt(labelEl.value, 10);
+  var split   = splitEl.value;
+  var sentence = REQUIREMENTS[currentIndex];
+
+  spans.forEach(function(span) {
+    // Auto-detect slot per span; fall back to selector value if detection returns the same as current
+    var detectedSlot = detectSlot(span, sentence);
+    queue.push({ span: span, sentence: sentence, quality: quality, slot: detectedSlot, label: label, split: split });
+  });
+
+  renderQueue();
+  deselectAll();
+  showToast('Added ' + spans.length + ' span(s) to queue (' + queue.length + ' total)', 'ok');
+}
+
+function removeFromQueue(i) {
+  queue.splice(i, 1);
+  renderQueue();
+}
+
+function clearQueue() {
+  queue = [];
+  renderQueue();
+}
+
+function renderQueue() {
+  var card = document.getElementById('queue-card');
+  var list = document.getElementById('queue-list');
+  if (!queue.length) { card.classList.remove('visible'); return; }
+  card.classList.add('visible');
+
+  var html = '';
+  queue.forEach(function(item, i) {
+    var color = DIM_COLORS[item.quality] || '#64748b';
+    var labelStr = item.label === 1 ? 'violation' : 'not violation';
+    html += '<div class="queue-item">' +
+      '<span class="qi-span">\u201c' + escHtml(item.span) + '\u201d</span>' +
+      '<span class="qi-tag" style="background:' + color + '22;color:' + color + '">' + item.quality + '</span>' +
+      '<span class="qi-meta">' + item.slot + ' &middot; ' + labelStr + ' &middot; ' + item.split + '</span>' +
+      '<button class="qi-remove" onclick="removeFromQueue(' + i + ')">&#10005;</button>' +
+      '</div>';
+  });
+  list.innerHTML = html;
+
+  document.getElementById('save-all-btn').textContent = 'Save All (' + queue.length + ')';
+}
+
+// ── Save All ────────────────────────────────────────────────────────────────
+
+function saveAll() {
+  if (!queue.length) return;
+  document.getElementById('save-all-btn').disabled = true;
+
+  var promises = queue.map(function(item) {
+    return fetch('/api/annotate', {
+      method:  'POST',
+      headers: {'Content-Type': 'application/json'},
+      body:    JSON.stringify({
+        quality: item.quality,
+        split:   item.split,
+        entry: { span: item.span, sentence: item.sentence, slot: item.slot, label: item.label }
+      }),
+    }).then(function(r) { return r.json(); });
+  });
+
+  Promise.all(promises).then(function(results) {
+    document.getElementById('save-all-btn').disabled = false;
+    var allOk = results.every(function(r) { return r.ok; });
+
+    results.forEach(function(r, i) {
+      if (r.ok) counts[queue[i].quality] = r.total;
+    });
+    renderCounts();
+
+    var saved = results.filter(function(r) { return r.ok; }).length;
+    showToast('Saved ' + saved + ' of ' + queue.length + ' annotations', allOk ? 'ok' : 'err');
+
+    // Mark saved sentences as annotated
+    if (saved > 0) {
+      results.forEach(function(r, i) {
+        if (r.ok) annotatedSet.add(queue[i].sentence);
+      });
+      saveAnnotated();
+      var curReq = REQUIREMENTS[currentIndex] || '';
+      document.getElementById('annotated-badge').classList.toggle('visible', annotatedSet.has(curReq));
+      document.getElementById('req-box').classList.toggle('annotated', annotatedSet.has(curReq));
+      renderProgress();
+    }
+
+    queue = [];
+    renderQueue();
+
+    if (currentIndex < REQUIREMENTS.length - 1) {
+      setTimeout(function() { navigate(1); }, 500);
+    }
+  }).catch(function() {
+    document.getElementById('save-all-btn').disabled = false;
+    showToast('Network error', 'err');
+  });
+}
+
+// ── Counts ──────────────────────────────────────────────────────────────────
+
+function renderCounts() {
+  var dims = ['ambiguity', 'feasibility', 'singularity', 'verifiability'];
+  var html = '';
+  dims.forEach(function(dim) {
+    var c = counts[dim] || {train: 0, val: 0};
+    var total = c.train + c.val;
+    html += '<tr>' +
+      '<td><span class="dim-dot" style="background:' + DIM_COLORS[dim] + '"></span>' + dim + '</td>' +
+      '<td>' + c.train + '</td>' +
+      '<td>' + c.val + '</td>' +
+      '<td>' + total + '</td>' +
+      '</tr>';
+  });
+  document.getElementById('counts-body').innerHTML = html;
+}
+
+// ── Toast ───────────────────────────────────────────────────────────────────
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+var _toastTimer = null;
+function showToast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show ' + type;
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function() { el.className = ''; }, 2200);
+}
+
+// ── Keyboard shortcuts ──────────────────────────────────────────────────────
+
+document.addEventListener('keydown', function(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === 'ArrowLeft')  navigate(-1);
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'Enter' && e.ctrlKey) saveAll();
+  if (e.key === 'Escape') deselectAll();
+});
+
+// ── Quick sentence-level mark ───────────────────────────────────────────────
+
+function quickMark(label) {
+  var sentence = REQUIREMENTS[currentIndex];
+  if (!sentence) return;
+
+  var labelEl = document.querySelector('input[name="label"]:checked');
+  var splitEl = document.querySelector('input[name="split"]:checked');
+  var quality  = document.getElementById('quality-sel').value;
+  var split    = splitEl.value;
+  var slot     = detectSlot(sentence, sentence); // use full sentence for detection
+
+  queue.push({ span: sentence, sentence: sentence, quality: quality, slot: slot, label: label, split: split });
+  renderQueue();
+
+  var labelStr = label === 1 ? 'Violation' : 'Not a Violation';
+  showToast('Queued as ' + labelStr + ' (' + queue.length + ' pending)', label === 1 ? 'err' : 'ok');
+}
+
+// ── Slot auto-detection ─────────────────────────────────────────────────────
+
+var MODALS = ['shall not', 'must not', 'should not', 'will not', 'may not', 'cannot',
+              'shall', 'must', 'should', 'will', 'may', 'can', 'could', 'would', 'might'];
+
+var CONDITIONS = ['when', 'if', 'unless', 'until', 'before', 'after', 'while', 'during',
+                  'upon', 'once', 'provided', 'where', 'whenever', 'in case', 'as long as',
+                  'in the event', 'given that', 'assuming'];
+
+var QUALIFIERS = ['within', 'at least', 'at most', 'no more than', 'no less than',
+                  'not more than', 'not less than', 'approximately', 'between', 'up to',
+                  'at all times', 'always', 'never', 'continuously', 'minimum', 'maximum',
+                  'per ', 'every ', 'exactly', 'at most', 'at minimum', 'at maximum'];
+
+function detectSlot(span, sentence) {
+  var s    = span.toLowerCase().trim();
+  var sent = sentence.toLowerCase();
+
+  // 1. Is the span itself a modal verb?
+  for (var i = 0; i < MODALS.length; i++) {
+    if (s === MODALS[i]) return 'modal';
+  }
+
+  // 2. Find first modal in sentence as structural anchor
+  var modalPos = -1, modalLen = 0;
+  for (var i = 0; i < MODALS.length; i++) {
+    var re = new RegExp('\\b' + MODALS[i].replace(/ /g, '\\s+') + '\\b');
+    var m  = re.exec(sent);
+    if (m && (modalPos === -1 || m.index < modalPos)) {
+      modalPos = m.index;
+      modalLen = m[0].length;
+    }
+  }
+
+  // Position of span in sentence
+  var spanPos = sent.indexOf(s);
+  if (spanPos === -1) spanPos = 9999;
+
+  // 3. Subject: before the modal
+  if (modalPos !== -1 && spanPos < modalPos) return 'subject';
+
+  // 4. Condition: starts with a condition keyword
+  for (var j = 0; j < CONDITIONS.length; j++) {
+    if (s === CONDITIONS[j] || s.startsWith(CONDITIONS[j] + ' ')) return 'condition';
+  }
+
+  // 5. Qualifier: measurement / constraint keywords or numeric pattern
+  for (var k = 0; k < QUALIFIERS.length; k++) {
+    var q = QUALIFIERS[k].trim();
+    if (s === q || s.startsWith(q + ' ') || s.includes(' ' + q + ' ')) return 'qualifier';
+  }
+  if (/^\d/.test(s) ||
+      /\d+\s*(ms|s\b|sec|min|hour|hours|day|days|week|weeks|month|months|year|years|mb|gb|kb|%|hz|rpm|fps|px|em)/i.test(s)) {
+    return 'qualifier';
+  }
+
+  // 6. Action: the first word/phrase immediately after the modal
+  if (modalPos !== -1 && spanPos > modalPos) {
+    var afterModal = sent.substring(modalPos + modalLen).replace(/^\s+/, '');
+    if (afterModal.startsWith(s)) return 'action';
+  }
+
+  // 7. Object: other post-modal noun phrase
+  if (modalPos !== -1 && spanPos > modalPos) return 'object';
+
+  return 'qualifier'; // fallback
+}
+
+function applyDetectedSlot(spans, sentence) {
+  if (!spans.length) return;
+  // For single span (or first span), update the slot selector as a suggestion
+  var detected = detectSlot(spans[0], sentence);
+  document.getElementById('slot-sel').value = detected;
+}
+
+// ── Init ────────────────────────────────────────────────────────────────────
+
+render();
+renderCounts();
+</script>
+</body>
+</html>

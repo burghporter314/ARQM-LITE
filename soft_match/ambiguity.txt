@@ -1,0 +1,257 @@
+# ── Ambiguity soft-match terms ────────────────────────────────────────────────
+# Words and short phrases that indicate vague, imprecise, or unmeasurable
+# language in a requirement.  One term per line.  Lines starting with # or
+# blank lines are ignored.  Word-boundary matching is applied at runtime.
+
+# ── Time / frequency vagueness ────────────────────────────────────────────────
+quickly
+soon
+fast
+promptly
+immediately
+eventually
+timely
+rapidly
+swiftly
+without delay
+in a timely manner
+in a timely fashion
+as soon as possible
+ASAP
+near real-time
+near-real-time
+shortly
+periodically
+regularly
+frequently
+often
+sometimes
+occasionally
+rarely
+always
+constantly
+continuously
+from time to time
+at times
+sporadically
+now and then
+at all times
+whenever possible
+in due course
+at a later time
+in the future
+in a reasonable time
+within a reasonable period
+
+# ── Quantity / degree vagueness ───────────────────────────────────────────────
+all
+every
+everything
+many
+few
+several
+some
+any
+most
+various
+numerous
+multiple
+a number of
+a variety of
+a range of
+countless
+vast
+limited
+moderate
+substantial
+considerable
+certain
+relevant
+diverse
+sufficient
+adequate
+minimal
+significant
+reasonable
+acceptable
+appropriate
+optimal
+enough
+good enough
+fast enough
+large
+small
+large enough
+small enough
+as many as needed
+as few as possible
+at least some
+at most some
+a lot
+lots of
+
+# ── Quality / correctness adjectives ──────────────────────────────────────────
+good
+better
+best
+easy
+simple
+clear
+user-friendly
+intuitive
+seamless
+flexible
+reliable
+stable
+robust
+efficient
+effective
+scalable
+maintainable
+accurate
+consistent
+secure
+safe
+protected
+complete
+comprehensive
+suitable
+valid
+precise
+high quality
+high-quality
+good quality
+quality
+performant
+responsive
+clean
+elegant
+polished
+modern
+professional
+readable
+usable
+accessible
+intuitive
+straightforward
+minimal
+optimal
+rich
+powerful
+lightweight
+fast
+slow
+low
+high
+strong
+weak
+tight
+loose
+
+# ── Process adverbs ───────────────────────────────────────────────────────────
+properly
+appropriately
+correctly
+suitably
+adequately
+gracefully
+effectively
+successfully
+smoothly
+efficiently
+reliably
+safely
+securely
+accurately
+precisely
+carefully
+thoroughly
+systematically
+consistently
+coherently
+uniformly
+transparently
+intuitively
+easily
+simply
+cleanly
+efficiently
+robustly
+stably
+flexibly
+scalably
+correctly
+ideally
+optimally
+satisfactorily
+appropriately
+reasonably
+sufficiently
+
+# ── Conditionality / hedging ──────────────────────────────────────────────────
+as needed
+where applicable
+if necessary
+where possible
+as appropriate
+when necessary
+when needed
+as required
+when applicable
+under normal conditions
+in most cases
+typically
+generally
+usually
+normally
+in general
+for the most part
+where relevant
+if applicable
+if needed
+where needed
+in some cases
+in many cases
+under certain conditions
+in certain circumstances
+in typical use
+under typical conditions
+under standard conditions
+depending on context
+context-dependent
+situationally
+where appropriate
+when appropriate
+
+# ── Vague qualifiers / hedges ─────────────────────────────────────────────────
+somewhat
+fairly
+quite
+rather
+very
+extremely
+highly
+largely
+mostly
+mainly
+primarily
+broadly
+roughly
+approximately
+about
+around
+nearly
+almost
+practically
+virtually
+essentially
+basically
+fundamentally
+generally speaking
+in most situations
+to a large extent
+to some degree
+to a certain extent
+to an acceptable level
+to a satisfactory level
+to an appropriate degree

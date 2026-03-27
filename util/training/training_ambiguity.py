@@ -924,18 +924,29 @@ class AmbiguityDetector:
             [(text, sentence) for _, text in items]
         )
 
+        active_kb = doc_kb if doc_kb is not None else self.domain_kb
         result: list[AmbiguousSpan] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.50)
-            if score >= threshold and not self.domain_kb.is_domain_term(text) \
-                    and not (doc_kb and doc_kb.is_domain_term(text)):
+            # Graduated suppression: effective score is scaled down proportionally
+            # to how closely the text matches a known domain term.
+            # No effect below kb_sim=0.5; fully suppressed at kb_sim=1.0.
+            kb_sim = active_kb.max_similarity(text)
+            effective_score = score * max(0.0, 1.0 - max(0.0, kb_sim - 0.5) / 0.5)
+            if effective_score >= threshold:
+                # Enhance suggestion with nearest domain term when no static hint
+                sugg = get_suggestion(text, "semantic")
+                if sugg is None:
+                    nearest = active_kb.nearest_term(text)
+                    if nearest and 0.50 <= nearest[1] < active_kb.threshold:
+                        sugg = f'Consider the more specific term: "{nearest[0]}"'
                 result.append(AmbiguousSpan(
                     text=text,
-                    score=round(score, 4),
+                    score=round(effective_score, 4),
                     slot=slot,
                     reason="semantic",
                     token_spans=find_token_spans(text, sentence),
-                    suggestion=get_suggestion(text, "semantic"),
+                    suggestion=sugg,
                 ))
         return result
 

@@ -1,0 +1,159 @@
+# ── Singularity soft-match terms ─────────────────────────────────────────────
+# Words and short phrases that suggest a requirement bundles more than one
+# distinct concern, actor, action, or condition.  One term per line.
+# Note: "and" / "or" are intentionally included — nearly every compound
+# requirement uses them.
+
+# ── Core coordinating conjunctions ───────────────────────────────────────────
+and
+or
+nor
+but also
+yet also
+
+# ── Additive connectors ───────────────────────────────────────────────────────
+as well as
+along with
+in addition to
+additionally
+furthermore
+also
+moreover
+besides
+on top of that
+plus
+together with
+coupled with
+combined with
+alongside
+in conjunction with
+together with
+as well
+too
+equally
+likewise
+similarly
+in the same way
+by the same token
+not only
+not only that
+what is more
+beyond that
+over and above
+above and beyond
+in addition
+additionally
+extra
+supplementary
+added
+
+# ── Both / either / neither ───────────────────────────────────────────────────
+both
+either
+neither
+each
+every one of
+all of the above
+any of the following
+one or more
+one and the other
+
+# ── Simultaneity / parallel concerns ─────────────────────────────────────────
+while
+while also
+at the same time
+simultaneously
+concurrently
+in parallel
+at once
+together
+jointly
+in tandem
+side by side
+in sync
+synchronously
+
+# ── Enumeration / list signals ────────────────────────────────────────────────
+including
+including but not limited to
+such as
+for example
+for instance
+among others
+et al
+etc
+and so on
+and more
+and others
+and the like
+and similar
+and related
+and associated
+the following
+as follows
+a list of
+a set of
+a collection of
+multiple functions
+multiple features
+multiple responsibilities
+multiple capabilities
+multiple operations
+various functions
+various features
+
+# ── Scope expansion / bundling ────────────────────────────────────────────────
+manage
+handle
+oversee
+coordinate
+orchestrate
+be responsible for
+be in charge of
+take care of
+deal with
+cover
+encompass
+address
+support all
+support multiple
+provide all
+provide multiple
+handle all
+handle multiple
+manage all
+manage multiple
+perform all
+perform multiple
+execute all
+execute multiple
+implement all
+implement multiple
+
+# ── Compound action indicators ────────────────────────────────────────────────
+create and update
+create and delete
+read and write
+upload and download
+authenticate and authorize
+validate and store
+encrypt and transmit
+generate and send
+log and notify
+parse and validate
+schedule and execute
+monitor and alert
+backup and restore
+import and export
+search and filter
+sort and paginate
+add and remove
+assign and revoke
+approve and reject
+start and stop
+open and close
+lock and unlock
+enable and disable
+subscribe and unsubscribe
+register and login
+register and deregister

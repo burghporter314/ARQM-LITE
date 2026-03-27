@@ -1,47 +1,264 @@
 {
   "train": [
-    {"span": "validate and encrypt and log",          "sentence": "The system must validate input and encrypt the data and log the result.",              "slot": "action",     "label": 1},
-    {"span": "authenticate and apply and return",     "sentence": "The service must authenticate the user and apply rate limiting and return a token.",   "slot": "action",     "label": 1},
-    {"span": "back up and notify",                    "sentence": "The system must back up the database and notify the admin.",                            "slot": "action",     "label": 1},
-    {"span": "admin and user",                        "sentence": "The admin and the user must both confirm the deletion.",                                "slot": "subject",    "label": 1},
-    {"span": "frontend and backend",                  "sentence": "The frontend and the backend must validate the input.",                                 "slot": "subject",    "label": 1},
-    {"span": "when login fails or session expires",   "sentence": "When login fails or the session expires, the user must be redirected.",                 "slot": "condition",  "label": 1},
-    {"span": "if unauthenticated or unauthorised",    "sentence": "If the user is unauthenticated or unauthorised, the system must return HTTP 403.",      "slot": "condition",  "label": 1},
-    {"span": "encrypt and respond within 200ms",      "sentence": "The system must encrypt all data and respond within 200ms.",                            "slot": "action",     "label": 1},
-    {"span": "authenticate and maintain 99.9%",       "sentence": "The service must authenticate the user and maintain 99.9% uptime.",                    "slot": "action",     "label": 1},
-    {"span": "within 200ms",                          "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",                 "slot": "qualifier",  "label": 0},
-    {"span": "encrypt all data",                      "sentence": "The system must encrypt all data before writing to disk.",                              "slot": "object",     "label": 0},
-    {"span": "HTTP 400",                              "sentence": "The service must return HTTP 400 for invalid input.",                                   "slot": "object",     "label": 0},
-    {"span": "when the session expires",              "sentence": "When the session expires, the user must be redirected to the login page.",              "slot": "condition",  "label": 0},
-    {"span": "must support",                          "sentence": "The system must support downloading PDF files to disk.",                                "slot": "action",     "label": 0},
-    {"span": "must",                                  "sentence": "The API must respond within 200ms for 95% of requests.",                                "slot": "modal",      "label": 0},
-    {"span": "The system",                            "sentence": "The system must encrypt all data before writing to disk.",                              "slot": "subject",    "label": 0}
+    {
+      "span": "validate and encrypt and log",
+      "sentence": "The system must validate input and encrypt the data and log the result.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "authenticate and apply and return",
+      "sentence": "The service must authenticate the user and apply rate limiting and return a token.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "back up and notify",
+      "sentence": "The system must back up the database and notify the admin.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "admin and user",
+      "sentence": "The admin and the user must both confirm the deletion.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "frontend and backend",
+      "sentence": "The frontend and the backend must validate the input.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "when login fails or session expires",
+      "sentence": "When login fails or the session expires, the user must be redirected.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "if unauthenticated or unauthorised",
+      "sentence": "If the user is unauthenticated or unauthorised, the system must return HTTP 403.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "encrypt and respond within 200ms",
+      "sentence": "The system must encrypt all data and respond within 200ms.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "authenticate and maintain 99.9%",
+      "sentence": "The service must authenticate the user and maintain 99.9% uptime.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "within 200ms",
+      "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "encrypt all data",
+      "sentence": "The system must encrypt all data before writing to disk.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "HTTP 400",
+      "sentence": "The service must return HTTP 400 for invalid input.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "when the session expires",
+      "sentence": "When the session expires, the user must be redirected to the login page.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "must support",
+      "sentence": "The system must support downloading PDF files to disk.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "must",
+      "sentence": "The API must respond within 200ms for 95% of requests.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "The system",
+      "sentence": "The system must encrypt all data before writing to disk.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
+      "sentence": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "The help should be accessible to the users both in the offline and online mode.",
+      "sentence": "The help should be accessible to the users both in the offline and online mode.",
+      "slot": "subject",
+      "label": 1
+    }
   ],
   "val": [
-    {"span": "parse and validate and store",          "sentence": "The API must parse the request, validate the schema, and store the record.",           "slot": "action",     "label": 1},
-    {"span": "validate and log",                      "sentence": "The gateway must validate the token and log each request.",                             "slot": "action",     "label": 1},
-    {"span": "compress and encrypt",                  "sentence": "The pipeline must compress the payload and encrypt it before sending.",                 "slot": "action",     "label": 1},
-    {"span": "admin and operator",                    "sentence": "The admin and the operator must approve changes before deployment.",                    "slot": "subject",    "label": 1},
-    {"span": "users and administrators",              "sentence": "Users and administrators must have access to the audit log.",                           "slot": "subject",    "label": 1},
-    {"span": "when memory high or CPU high",          "sentence": "When memory usage is high or CPU usage is high, the service must scale out.",           "slot": "condition",  "label": 1},
-    {"span": "if missing or malformed or duplicate",  "sentence": "If the request is missing or malformed or duplicate, the system must reject it.",       "slot": "condition",  "label": 1},
-    {"span": "validate and use no more than 256MB",   "sentence": "The API must validate the token and use no more than 256MB of memory.",                "slot": "action",     "label": 1},
-    {"span": "sign and complete within 100ms",        "sentence": "The service must sign the payload and complete within 100ms.",                          "slot": "action",     "label": 1},
-    {"span": "must respond within 500ms",             "sentence": "The search endpoint must return results within 500ms for 99% of requests.",             "slot": "action",     "label": 0},
-    {"span": "HTTP 401",                              "sentence": "The login endpoint must return HTTP 401 for invalid tokens.",                           "slot": "object",     "label": 0},
-    {"span": "when input is invalid",                 "sentence": "When input is invalid, the system must return a 400 error.",                           "slot": "condition",  "label": 0},
-    {"span": "after payment is confirmed",            "sentence": "After payment is confirmed, the order must be created within 5 seconds.",               "slot": "condition",  "label": 0},
-    {"span": "encrypt before writing",                "sentence": "The system must encrypt all records before writing to the audit log.",                  "slot": "action",     "label": 0},
-    {"span": "must",                                  "sentence": "The service must never crash in production.",                                           "slot": "modal",      "label": 0},
-    {"span": "The service",                           "sentence": "The service must return HTTP 400 for invalid input.",                                   "slot": "subject",    "label": 0},
-    {"span": "notify and update",                     "sentence": "The scheduler must notify the admin and update the job status.",                        "slot": "action",     "label": 1},
-    {"span": "if expired or revoked",                 "sentence": "If the token is expired or revoked, the system must reject the request.",               "slot": "condition",  "label": 1},
-    {"span": "hash and store",                        "sentence": "The service must hash the password and store the digest.",                              "slot": "action",     "label": 1},
-    {"span": "generate and return within 50ms",       "sentence": "The report service must generate the PDF and return it within 50ms.",                   "slot": "action",     "label": 1},
-    {"span": "before the deadline",                   "sentence": "The batch job must complete before the deadline each night.",                           "slot": "condition",  "label": 0},
-    {"span": "error rate below 0.1%",                 "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",          "slot": "qualifier",  "label": 0},
-    {"span": "client and server",                     "sentence": "The client and the server must both support TLS 1.3.",                                  "slot": "subject",    "label": 1},
-    {"span": "download PDF files",                    "sentence": "The system must support downloading PDF files to disk.",                                "slot": "object",     "label": 0},
-    {"span": "audit and report",                      "sentence": "The compliance module must audit all access events and report weekly.",                  "slot": "action",     "label": 1}
+    {
+      "span": "parse and validate and store",
+      "sentence": "The API must parse the request, validate the schema, and store the record.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "validate and log",
+      "sentence": "The gateway must validate the token and log each request.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "compress and encrypt",
+      "sentence": "The pipeline must compress the payload and encrypt it before sending.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "admin and operator",
+      "sentence": "The admin and the operator must approve changes before deployment.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "users and administrators",
+      "sentence": "Users and administrators must have access to the audit log.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "when memory high or CPU high",
+      "sentence": "When memory usage is high or CPU usage is high, the service must scale out.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "if missing or malformed or duplicate",
+      "sentence": "If the request is missing or malformed or duplicate, the system must reject it.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "validate and use no more than 256MB",
+      "sentence": "The API must validate the token and use no more than 256MB of memory.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "sign and complete within 100ms",
+      "sentence": "The service must sign the payload and complete within 100ms.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "must respond within 500ms",
+      "sentence": "The search endpoint must return results within 500ms for 99% of requests.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "HTTP 401",
+      "sentence": "The login endpoint must return HTTP 401 for invalid tokens.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "when input is invalid",
+      "sentence": "When input is invalid, the system must return a 400 error.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "after payment is confirmed",
+      "sentence": "After payment is confirmed, the order must be created within 5 seconds.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "encrypt before writing",
+      "sentence": "The system must encrypt all records before writing to the audit log.",
+      "slot": "action",
+      "label": 0
+    },
+    {
+      "span": "must",
+      "sentence": "The service must never crash in production.",
+      "slot": "modal",
+      "label": 0
+    },
+    {
+      "span": "The service",
+      "sentence": "The service must return HTTP 400 for invalid input.",
+      "slot": "subject",
+      "label": 0
+    },
+    {
+      "span": "notify and update",
+      "sentence": "The scheduler must notify the admin and update the job status.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "if expired or revoked",
+      "sentence": "If the token is expired or revoked, the system must reject the request.",
+      "slot": "condition",
+      "label": 1
+    },
+    {
+      "span": "hash and store",
+      "sentence": "The service must hash the password and store the digest.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "generate and return within 50ms",
+      "sentence": "The report service must generate the PDF and return it within 50ms.",
+      "slot": "action",
+      "label": 1
+    },
+    {
+      "span": "before the deadline",
+      "sentence": "The batch job must complete before the deadline each night.",
+      "slot": "condition",
+      "label": 0
+    },
+    {
+      "span": "error rate below 0.1%",
+      "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",
+      "slot": "qualifier",
+      "label": 0
+    },
+    {
+      "span": "client and server",
+      "sentence": "The client and the server must both support TLS 1.3.",
+      "slot": "subject",
+      "label": 1
+    },
+    {
+      "span": "download PDF files",
+      "sentence": "The system must support downloading PDF files to disk.",
+      "slot": "object",
+      "label": 0
+    },
+    {
+      "span": "audit and report",
+      "sentence": "The compliance module must audit all access events and report weekly.",
+      "slot": "action",
+      "label": 1
+    }
   ]
 }

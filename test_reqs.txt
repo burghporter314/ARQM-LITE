@@ -1,0 +1,3 @@
+The system must be user-friendly and intuitive.
+The software shall process data efficiently at all times.
+The system must provide 100% uptime.

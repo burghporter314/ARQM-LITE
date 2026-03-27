@@ -1,0 +1,169 @@
+# ── Feasibility soft-match terms ─────────────────────────────────────────────
+# Words and short phrases that indicate physically impossible, contradictory,
+# or unrealistically absolute constraints.  One term per line.
+
+# ── Percentage absolutes ──────────────────────────────────────────────────────
+100%
+0%
+100 percent
+0 percent
+zero percent
+one hundred percent
+100% uptime
+100% availability
+100% accuracy
+100% reliability
+100% correctness
+100% coverage
+
+# ── Zero / none absolutes ──────────────────────────────────────────────────────
+zero latency
+zero downtime
+zero errors
+zero failures
+zero defects
+zero delay
+zero overhead
+zero packet loss
+zero data loss
+zero response time
+zero processing time
+zero memory usage
+zero CPU usage
+zero cost
+zero risk
+no downtime
+no errors
+no failures
+no latency
+no delay
+no bugs
+no issues
+no problems
+no exceptions
+no interruptions
+no data loss
+no data corruption
+no performance impact
+no overhead
+no degradation
+no outages
+no crashes
+no faults
+no dropped packets
+no missed events
+no message loss
+no lag
+
+# ── Never / always absolutes ─────────────────────────────────────────────────
+never fail
+never crash
+never lose
+never be unavailable
+never experience downtime
+never experience errors
+never have downtime
+never have failures
+never miss a request
+never drop data
+never timeout
+always available
+always on
+always running
+always responsive
+always consistent
+always accurate
+always correct
+always up
+at all times
+24/7
+around the clock
+non-stop
+uninterrupted
+continuously available
+perpetually available
+constantly available
+
+# ── Perfect / infinite ───────────────────────────────────────────────────────
+perfect
+perfectly
+flawless
+flawlessly
+infinite
+unlimited
+unbounded
+unrestricted
+without limit
+without bound
+without restriction
+limitless
+boundless
+unconstrained
+inexhaustible
+infinite capacity
+unlimited throughput
+unlimited users
+unlimited storage
+unlimited bandwidth
+infinite scalability
+unbounded scalability
+infinite performance
+
+# ── Impossible guarantees ─────────────────────────────────────────────────────
+instantaneous
+instantaneously
+real-time with zero delay
+immediate response
+without any delay
+without exception
+without fail
+in all cases
+every time
+under any conditions
+under any load
+under any circumstance
+regardless of load
+regardless of conditions
+regardless of scale
+regardless of usage
+under all circumstances
+no matter what
+at any scale
+at any volume
+for any number of users
+for any input
+for any request
+
+# ── Absolute performance superlatives ────────────────────────────────────────
+fastest possible
+best possible
+maximum performance
+minimum latency
+optimal performance
+peak performance
+highest throughput
+lowest latency
+zero-latency
+lossless
+loss-free
+error-free
+fault-free
+defect-free
+fail-safe always
+completely secure
+fully secure
+totally secure
+absolutely reliable
+completely reliable
+fully reliable
+totally reliable
+completely accurate
+fully accurate
+
+# ── Contradictory constraints ─────────────────────────────────────────────────
+simultaneously synchronous and asynchronous
+both blocking and non-blocking
+real-time and batch
+stateless yet persistent
+encrypted and plain text
+online and offline at the same time

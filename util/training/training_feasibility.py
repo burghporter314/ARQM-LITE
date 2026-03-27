@@ -1045,14 +1045,21 @@ class FeasibilityDetector:
         items  = list(filtered.items())
         scores = self.scorer.score_slots_batch([(text, sentence) for _, text in items])
 
+        active_kb = doc_kb if doc_kb is not None else self.domain_kb
         result: list[FeasibilityViolation] = []
         for (slot, text), score in zip(items, scores):
             threshold = self.thresholds.get(slot, 0.60)
-            if score >= threshold and not self.domain_kb.is_domain_term(text) \
-                    and not (doc_kb and doc_kb.is_domain_term(text)):
+            kb_sim = active_kb.max_similarity(text)
+            effective_score = score * max(0.0, 1.0 - max(0.0, kb_sim - 0.5) / 0.5)
+            if effective_score >= threshold:
+                sugg: Optional[str] = None
+                nearest = active_kb.nearest_term(text)
+                if nearest and 0.50 <= nearest[1] < active_kb.threshold:
+                    sugg = f'Consider the more specific term: "{nearest[0]}"'
                 result.append(FeasibilityViolation(
-                    text=text, score=round(score, 4), slot=slot, reason="semantic",
-                    token_spans=find_token_spans(text, sentence), suggestion=None,
+                    text=text, score=round(effective_score, 4), slot=slot,
+                    reason="semantic",
+                    token_spans=find_token_spans(text, sentence), suggestion=sugg,
                 ))
         return result
 

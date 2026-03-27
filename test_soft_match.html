@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARQM-LITE Quality Report — 2026-03-26 18:59</title>
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --amb:  #d97706;
+  --feas: #dc2626;
+  --ver:  #2563eb;
+  --sing: #7c3aed;
+  --bg:   #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --muted: #64748b;
+  --radius: 8px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── Top bar ── */
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1e293b;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 24px;
+  height: 52px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+#topbar h1 { font-size: 15px; font-weight: 700; letter-spacing: .4px; flex: 1; }
+#topbar .ts { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+
+/* ── Search bar ── */
+#search-bar {
+  background: #0f172a;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 52px;
+  z-index: 99;
+}
+#search-input {
+  flex: 1;
+  max-width: 480px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background: #1e293b;
+  color: #f1f5f9;
+  font-size: 13px;
+  outline: none;
+}
+#search-input:focus { border-color: #3b82f6; }
+#search-input::placeholder { color: #64748b; }
+#search-count { font-size: 12px; color: #94a3b8; min-width: 80px; }
+
+/* ── Dimension nav tabs ── */
+#dim-nav {
+  display: flex;
+  gap: 4px;
+  padding: 0 24px;
+  background: #0f172a;
+  border-bottom: 1px solid #334155;
+  overflow-x: auto;
+}
+.dim-tab {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.dim-tab:hover  { color: #f1f5f9; }
+.dim-tab.active { color: #f1f5f9; border-bottom-color: var(--tab-color, #3b82f6); }
+
+/* ── Main layout ── */
+main { max-width: 1200px; margin: 0 auto; padding: 24px 24px 48px; }
+
+/* ── Summary banner ── */
+#summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 4px solid var(--accent);
+}
+.stat-card .label { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                    letter-spacing: .6px; color: var(--muted); }
+.stat-card .counts { display: flex; align-items: baseline; gap: 8px; }
+.stat-card .big    { font-size: 28px; font-weight: 800; color: var(--accent); }
+.stat-card .of     { font-size: 13px; color: var(--muted); }
+.stat-card .bar    { height: 5px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+.stat-card .bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+
+/* ── Section ── */
+.dim-section { display: none; }
+.dim-section.active { display: block; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.section-header .dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+}
+.section-header h2 { font-size: 18px; font-weight: 700; }
+.section-header .def { color: var(--muted); font-size: 13px; }
+
+/* ── Requirement cards ── */
+.req-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: box-shadow .15s;
+}
+.req-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.req-card.hidden { display: none; }
+
+.req-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.req-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  min-width: 36px;
+  padding-top: 2px;
+}
+.req-sentence { flex: 1; font-size: 13px; line-height: 1.55; }
+.req-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-flagged { background: #fee2e2; color: #991b1b; }
+.badge-pass    { background: #dcfce7; color: #166534; }
+.chevron { color: var(--muted); font-size: 12px; padding-top: 3px; transition: transform .2s; }
+.req-card.open .chevron { transform: rotate(90deg); }
+
+.req-body {
+  display: none;
+  padding: 0 16px 14px 64px;
+  border-top: 1px solid var(--border);
+}
+.req-card.open .req-body { display: block; }
+
+.violation {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg);
+  font-size: 13px;
+}
+.violation .viol-text { font-weight: 600; margin-bottom: 4px; }
+.violation .viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
+.violation .viol-suggestion { margin-top: 6px; font-size: 12px; color: #475569;
+                               padding: 6px 10px; background: #f1f5f9; border-radius: 4px; }
+
+/* ── Appendix drill-down ── */
+#appendix { margin-top: 32px; }
+#appendix > h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+
+/* Level 1 — requirement row */
+.app-req {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+.app-req-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.app-req-header:hover { background: #f8fafc; }
+.app-req-num { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 32px; padding-top: 2px; }
+.app-req-text { flex: 1; font-size: 13px; line-height: 1.5; }
+.app-flag-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; align-items: center; }
+.app-flag-badge {
+  font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 99px;
+  white-space: nowrap;
+}
+.app-pass-badge { font-size: 11px; color: #86efac; }
+.app-chevron { color: var(--muted); font-size: 11px; padding-top: 3px; transition: transform .2s; flex-shrink: 0; }
+.app-req.open > .app-req-header .app-chevron { transform: rotate(90deg); }
+
+/* Level 2 — dimension groups */
+.app-dims { display: none; border-top: 1px solid var(--border); }
+.app-req.open > .app-dims { display: block; }
+
+.app-dim {
+  border-bottom: 1px solid var(--border);
+}
+.app-dim:last-child { border-bottom: none; }
+
+.app-dim-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 48px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+}
+.app-dim-header:hover { background: #f8fafc; }
+.app-dim-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.app-dim-name { font-weight: 600; flex: 1; }
+.app-dim-count { font-size: 11px; color: var(--muted); }
+.app-dim-pass { font-size: 11px; color: #16a34a; }
+.app-dim-chevron { color: var(--muted); font-size: 11px; transition: transform .2s; }
+.app-dim.open > .app-dim-header .app-dim-chevron { transform: rotate(90deg); }
+
+/* Level 3 — individual violations */
+.app-viols { display: none; padding: 6px 14px 10px 68px; background: var(--bg); }
+.app-dim.open > .app-viols { display: block; }
+
+.app-viol {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--viol-color, #94a3b8);
+  background: var(--card);
+  font-size: 13px;
+}
+.app-viol-sentence { margin-bottom: 5px; line-height: 1.55; }
+.app-viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
+.app-viol-sugg { margin-top: 6px; font-size: 12px; color: #475569;
+                 padding: 5px 9px; background: #f1f5f9; border-radius: 4px; }
+.app-no-issues { font-size: 12px; color: #16a34a; padding: 6px 0; }
+
+/* ── Paginator ── */
+.paginator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px 0 4px;
+}
+.pager-btn {
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .15s;
+}
+.pager-btn:hover:not(:disabled) { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+.pager-btn:disabled { opacity: .35; cursor: default; }
+.pager-info { font-size: 12px; color: var(--muted); min-width: 100px; text-align: center; }
+
+/* ── Search highlights ── */
+.search-match { background: #fef08a; border-radius: 2px; }
+
+/* ── Soft-match highlights ── */
+.soft-match {
+  background: #ecfdf5;
+  border-bottom: 2px dashed #059669;
+  border-radius: 2px;
+  padding: 0 1px;
+  color: #065f46;
+  font-weight: 500;
+}
+.badge-soft { background: #d1fae5; color: #065f46; }
+
+/* ── Soft-match toggle button (topbar) ── */
+#soft-btn {
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+}
+#soft-btn:hover { border-color: #94a3b8; color: #f1f5f9; }
+#soft-btn.active { background: #059669; border-color: #059669; color: #fff; }
+
+/* ── Soft-count inline label ── */
+.soft-count { font-size: 11px; color: #059669; font-weight: 600; margin-left: 8px; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>ARQM-LITE — Software Requirements Quality Report</h1>
+  <button id="soft-btn" onclick="toggleSoftMatch()" title="Highlight requirements containing vague/infeasible/unverifiable/non-singular terms from prototype lists">&#128269; Soft Match</button>
+  <span class="ts">Generated 2026-03-26 18:59 &nbsp;·&nbsp; 10 requirements</span>
+</div>
+
+<div id="search-bar">
+  <input id="search-input" type="search" placeholder="Search requirements…" autocomplete="off">
+  <span id="search-count"></span>
+</div>
+
+<div id="dim-nav">
+  <button class="dim-tab active" data-dim="ambiguity" style="--tab-color:#d97706" onclick="activateTab('ambiguity')">Ambiguity</button>
+<button class="dim-tab " data-dim="feasibility" style="--tab-color:#dc2626" onclick="activateTab('feasibility')">Feasibility</button>
+<button class="dim-tab " data-dim="verifiability" style="--tab-color:#2563eb" onclick="activateTab('verifiability')">Verifiability</button>
+<button class="dim-tab " data-dim="singularity" style="--tab-color:#7c3aed" onclick="activateTab('singularity')">Singularity</button>
+</div>
+
+<main>
+  <div id="summary">
+    
+        <div class="stat-card" style="--accent:#d97706">
+          <div class="label">Ambiguity</div>
+          <div class="counts">
+            <span class="big">2</span>
+            <span class="of">/ 10 flagged</span>
+          </div>
+          <div class="bar"><div class="bar-fill" style="width:20%"></div></div>
+        </div>
+
+        <div class="stat-card" style="--accent:#dc2626">
+          <div class="label">Feasibility</div>
+          <div class="counts">
+            <span class="big">2</span>
+            <span class="of">/ 10 flagged</span>
+          </div>
+          <div class="bar"><div class="bar-fill" style="width:20%"></div></div>
+        </div>
+
+        <div class="stat-card" style="--accent:#2563eb">
+          <div class="label">Verifiability</div>
+          <div class="counts">
+            <span class="big">4</span>
+            <span class="of">/ 10 flagged</span>
+          </div>
+          <div class="bar"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+
+        <div class="stat-card" style="--accent:#7c3aed">
+          <div class="label">Singularity</div>
+          <div class="counts">
+            <span class="big">4</span>
+            <span class="of">/ 10 flagged</span>
+          </div>
+          <div class="bar"><div class="bar-fill" style="width:40%"></div></div>
+        </div>
+  </div>
+
+  
+    <section class="dim-section active" id="sec-ambiguity" style="--accent:#d97706">
+      <div class="section-header">
+        <div class="dot"></div>
+        <h2>Ambiguity<span class="soft-count" id="soft-count-ambiguity"></span></h2>
+        <span class="def">Flags vague or imprecise language that cannot be objectively tested or measured.</span>
+      </div>
+      <div class="cards-container" id="cards-ambiguity">
+        
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#1</span>
+          <span class="req-sentence">The system shall respond quickly to all user requests.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#2</span>
+          <span class="req-sentence">The application must be user-friendly and intuitive.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#3</span>
+          <span class="req-sentence">The system must provide 100% uptime with zero downtime.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#4</span>
+          <span class="req-sentence">The module shall authenticate and authorise and audit the request.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#5</span>
+          <span class="req-sentence">The system must function correctly at all times.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#6</span>
+          <span class="req-sentence">The API shall return a 200 status code within 500 milliseconds.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#7</span>
+          <span class="req-sentence">Users must be able to create, update, and delete records.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-card-idx="0">
+        <div class="req-header">
+          <span class="req-num">#8</span>
+          <span class="req-sentence">The system must never fail <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#d97706">
+              <div class="viol-text">The system must never fail <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.84</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-card-idx="1">
+        <div class="req-header">
+          <span class="req-num">#9</span>
+          <span class="req-sentence">Data <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">must be validated</mark> and access must be controlled as needed.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#d97706">
+              <div class="viol-text">Data <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">must be validated</mark> and access must be controlled as needed.</div>
+              <div class="viol-meta">
+                <span>reason: syntactic</span>
+                <span>score: 0.45</span>
+              </div>
+              <div class="viol-suggestion">💡 specify who/what performs this action</div>
+            </div>
+            <div class="violation" style="--accent:#d97706">
+              <div class="viol-text">Data must be validated and access <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">must be controlled</mark> as needed.</div>
+              <div class="viol-meta">
+                <span>reason: syntactic</span>
+                <span>score: 0.45</span>
+              </div>
+              <div class="viol-suggestion">💡 specify who/what performs this action</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="ambiguity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#10</span>
+          <span class="req-sentence">The service shall process exactly 1000 requests per second.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+      </div>
+      <div class="paginator" id="pager-ambiguity" data-dim="ambiguity" data-total="2">
+        <button class="pager-btn" onclick="changePage('ambiguity',-1)">&#8592; Prev</button>
+        <span class="pager-info" id="pinfo-ambiguity"></span>
+        <button class="pager-btn" onclick="changePage('ambiguity',1)">Next &#8594;</button>
+      </div>
+    </section>
+
+    <section class="dim-section " id="sec-feasibility" style="--accent:#dc2626">
+      <div class="section-header">
+        <div class="dot"></div>
+        <h2>Feasibility<span class="soft-count" id="soft-count-feasibility"></span></h2>
+        <span class="def">Flags physically impossible constraints, internal contradictions, or unrealistic numeric thresholds.</span>
+      </div>
+      <div class="cards-container" id="cards-feasibility">
+        
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#1</span>
+          <span class="req-sentence">The system shall respond quickly to all user requests.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#2</span>
+          <span class="req-sentence">The application must be user-friendly and intuitive.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-card-idx="0">
+        <div class="req-header">
+          <span class="req-num">#3</span>
+          <span class="req-sentence">The system must provide <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">100%</mark> uptime with zero downtime.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must provide <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">100%</mark> uptime with zero downtime.</div>
+              <div class="viol-meta">
+                <span>reason: impossible_absolute</span>
+                <span>score: 0.95</span>
+              </div>
+              <div class="viol-suggestion">💡 100% uptime is unachievable; use 99.9% (three nines, ~8.7h/yr downtime) to 99.999% (five nines, ~5min/yr)</div>
+            </div>
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must provide <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">100% uptime</mark> with zero downtime.</div>
+              <div class="viol-meta">
+                <span>reason: impossible_absolute</span>
+                <span>score: 0.90</span>
+              </div>
+              <div class="viol-suggestion">💡 100% uptime is physically unachievable; use 99.9% (three nines) to 99.999% (five nines)</div>
+            </div>
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must provide 100% uptime with <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">zero downtime</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: impossible_absolute</span>
+                <span>score: 0.90</span>
+              </div>
+              <div class="viol-suggestion">💡 Zero downtime is an absolute no real system can guarantee; specify a maximum rate or MTBF</div>
+            </div>
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must provide 100% uptime with zero downtime.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.89</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#4</span>
+          <span class="req-sentence">The module shall authenticate and authorise and audit the request.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#5</span>
+          <span class="req-sentence">The system must function correctly at all times.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#6</span>
+          <span class="req-sentence">The API shall return a 200 status code within 500 milliseconds.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#7</span>
+          <span class="req-sentence">Users must be able to create, update, and delete records.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-card-idx="1">
+        <div class="req-header">
+          <span class="req-num">#8</span>
+          <span class="req-sentence">The system must <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">never fail</mark> under any conditions.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">never fail</mark> under any conditions.</div>
+              <div class="viol-meta">
+                <span>reason: impossible_absolute</span>
+                <span>score: 0.90</span>
+              </div>
+              <div class="viol-suggestion">💡 &#x27;never fail&#x27; is an absolute; replace with a maximum failure rate (e.g. MTBF &gt;= N hours)</div>
+            </div>
+            <div class="violation" style="--accent:#dc2626">
+              <div class="viol-text">The system must never fail <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.96</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#9</span>
+          <span class="req-sentence">Data must be validated and access must be controlled as needed.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="feasibility" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#10</span>
+          <span class="req-sentence">The service shall process exactly 1000 requests per second.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+      </div>
+      <div class="paginator" id="pager-feasibility" data-dim="feasibility" data-total="2">
+        <button class="pager-btn" onclick="changePage('feasibility',-1)">&#8592; Prev</button>
+        <span class="pager-info" id="pinfo-feasibility"></span>
+        <button class="pager-btn" onclick="changePage('feasibility',1)">Next &#8594;</button>
+      </div>
+    </section>
+
+    <section class="dim-section " id="sec-verifiability" style="--accent:#2563eb">
+      <div class="section-header">
+        <div class="dot"></div>
+        <h2>Verifiability<span class="soft-count" id="soft-count-verifiability"></span></h2>
+        <span class="def">Flags requirements that have no testable pass/fail condition or rely on subjective judgement.</span>
+      </div>
+      <div class="cards-container" id="cards-verifiability">
+        
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#1</span>
+          <span class="req-sentence">The system shall respond quickly to all user requests.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-card-idx="0">
+        <div class="req-header">
+          <span class="req-num">#2</span>
+          <span class="req-sentence">The application must be <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">user-friendly</mark> and intuitive.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">The application must be <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">user-friendly</mark> and intuitive.</div>
+              <div class="viol-meta">
+                <span>reason: subjective_success</span>
+                <span>score: 0.85</span>
+              </div>
+              <div class="viol-suggestion">💡 Define a measurable usability criterion (e.g. &#x27;target user completes task in &lt;= 3 steps without training&#x27;)</div>
+            </div>
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">The application must be user-friendly and <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">intuitive</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: subjective_success</span>
+                <span>score: 0.85</span>
+              </div>
+              <div class="viol-suggestion">💡 Define a testable learnability target (e.g. &#x27;new user completes primary task within 5 minutes without documentation&#x27;)</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#3</span>
+          <span class="req-sentence">The system must provide 100% uptime with zero downtime.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#4</span>
+          <span class="req-sentence">The module shall authenticate and authorise and audit the request.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-card-idx="1">
+        <div class="req-header">
+          <span class="req-num">#5</span>
+          <span class="req-sentence">The system must function <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">correctly</mark> at all times.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">The system must function <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">correctly</mark> at all times.</div>
+              <div class="viol-meta">
+                <span>reason: no_acceptance_criteria</span>
+                <span>score: 0.88</span>
+              </div>
+              <div class="viol-suggestion">💡 &#x27;correctly&#x27; has no testable meaning; define what correct behaviour looks like (e.g. &#x27;returns error code 400 for invalid input&#x27;)</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#6</span>
+          <span class="req-sentence">The API shall return a 200 status code within 500 milliseconds.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#7</span>
+          <span class="req-sentence">Users must be able to create, update, and delete records.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-card-idx="2">
+        <div class="req-header">
+          <span class="req-num">#8</span>
+          <span class="req-sentence">The system <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">must never fail</mark> under any conditions.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">The system <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">must never fail</mark> under any conditions.</div>
+              <div class="viol-meta">
+                <span>reason: untestable_negative</span>
+                <span>score: 0.90</span>
+              </div>
+              <div class="viol-suggestion">💡 Replace with a testable reliability target (e.g. MTBF &gt;= 2000 hours, availability &gt;= 99.9%)</div>
+            </div>
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">The system must never fail <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.93</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-card-idx="3">
+        <div class="req-header">
+          <span class="req-num">#9</span>
+          <span class="req-sentence">Data must be validated and access must be controlled <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">as needed</mark>.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">Data must be validated and access must be controlled <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">as needed</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: no_acceptance_criteria</span>
+                <span>score: 0.88</span>
+              </div>
+              <div class="viol-suggestion">💡 Replace &#x27;as needed&#x27; with a specific trigger condition (e.g. &#x27;when request queue exceeds N&#x27;)</div>
+            </div>
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text"><mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">Data must be validated</mark> and access must be controlled as needed.</div>
+              <div class="viol-meta">
+                <span>reason: missing_actor</span>
+                <span>score: 0.82</span>
+              </div>
+              <div class="viol-suggestion">💡 Specify: what validation rules apply, what happens on failure, and what tool/test confirms this</div>
+            </div>
+            <div class="violation" style="--accent:#2563eb">
+              <div class="viol-text">Data must be validated and <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">access must be controlled</mark> as needed.</div>
+              <div class="viol-meta">
+                <span>reason: missing_actor</span>
+                <span>score: 0.82</span>
+              </div>
+              <div class="viol-suggestion">💡 Define who enforces access control, what roles exist, and how access decisions are audited</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="verifiability" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#10</span>
+          <span class="req-sentence">The service shall process exactly 1000 requests per second.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+      </div>
+      <div class="paginator" id="pager-verifiability" data-dim="verifiability" data-total="4">
+        <button class="pager-btn" onclick="changePage('verifiability',-1)">&#8592; Prev</button>
+        <span class="pager-info" id="pinfo-verifiability"></span>
+        <button class="pager-btn" onclick="changePage('verifiability',1)">Next &#8594;</button>
+      </div>
+    </section>
+
+    <section class="dim-section " id="sec-singularity" style="--accent:#7c3aed">
+      <div class="section-header">
+        <div class="dot"></div>
+        <h2>Singularity<span class="soft-count" id="soft-count-singularity"></span></h2>
+        <span class="def">Flags requirements that bundle more than one distinct concern, actor, or action.</span>
+      </div>
+      <div class="cards-container" id="cards-singularity">
+        
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#1</span>
+          <span class="req-sentence">The system shall respond quickly to all user requests.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#2</span>
+          <span class="req-sentence">The application must be user-friendly and intuitive.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-card-idx="0">
+        <div class="req-header">
+          <span class="req-num">#3</span>
+          <span class="req-sentence">The system must provide 100% uptime with zero downtime.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#7c3aed">
+              <div class="viol-text">The system must provide 100% uptime with zero downtime.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.77</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-card-idx="1">
+        <div class="req-header">
+          <span class="req-num">#4</span>
+          <span class="req-sentence">The module shall <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">authenticate</mark> and authorise and <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">audit</mark> the request.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#7c3aed">
+              <div class="viol-text">The module shall <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">authenticate</mark> and authorise and <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">audit</mark> the request.</div>
+              <div class="viol-meta">
+                <span>reason: multiple_actions</span>
+                <span>score: 0.88</span>
+              </div>
+              <div class="viol-suggestion">💡 Split into one requirement per action: each &#x27;must X&#x27; becomes its own sentence</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#5</span>
+          <span class="req-sentence">The system must function correctly at all times.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#6</span>
+          <span class="req-sentence">The API shall return a 200 status code within 500 milliseconds.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#7</span>
+          <span class="req-sentence">Users must be able to create, update, and delete records.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-card-idx="2">
+        <div class="req-header">
+          <span class="req-num">#8</span>
+          <span class="req-sentence">The system must never fail <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#7c3aed">
+              <div class="viol-text">The system must never fail <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div>
+              <div class="viol-meta">
+                <span>reason: semantic</span>
+                <span>score: 0.70</span>
+              </div>
+              
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-card-idx="3">
+        <div class="req-header">
+          <span class="req-num">#9</span>
+          <span class="req-sentence">Data must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">validated</mark> and access must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">controlled</mark> as needed.</span>
+          <span class="req-badge badge-flagged">Flagged</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body">
+            <div class="violation" style="--accent:#7c3aed">
+              <div class="viol-text">Data must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">validated</mark> and access must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">controlled</mark> as needed.</div>
+              <div class="viol-meta">
+                <span>reason: multiple_actions</span>
+                <span>score: 0.88</span>
+              </div>
+              <div class="viol-suggestion">💡 Split into one requirement per action: each &#x27;must X&#x27; becomes its own sentence</div>
+            </div>
+            <div class="violation" style="--accent:#7c3aed">
+              <div class="viol-text">Data must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">validated and access must</mark> be controlled as needed.</div>
+              <div class="viol-meta">
+                <span>reason: compound_subject</span>
+                <span>score: 0.85</span>
+              </div>
+              <div class="viol-suggestion">💡 Assign each actor their own requirement; different actors may have different obligations</div>
+            </div></div>
+      </div>
+
+      <div class="req-card" data-dim="singularity" data-soft-only="true" style="display:none">
+        <div class="req-header">
+          <span class="req-num">#10</span>
+          <span class="req-sentence">The service shall process exactly 1000 requests per second.</span>
+          <span class="req-badge badge-pass">Pass</span>
+          <span class="chevron">&#9658;</span>
+        </div>
+        <div class="req-body"><p style="color:#16a34a;padding:8px 0">&#10003; No hard violations in this dimension. Shown because Soft Match found quality-indicator terms above.</p></div>
+      </div>
+      </div>
+      <div class="paginator" id="pager-singularity" data-dim="singularity" data-total="4">
+        <button class="pager-btn" onclick="changePage('singularity',-1)">&#8592; Prev</button>
+        <span class="pager-info" id="pinfo-singularity"></span>
+        <button class="pager-btn" onclick="changePage('singularity',1)">Next &#8594;</button>
+      </div>
+    </section>
+
+  
+  <section id="appendix">
+    <h2>All Requirements</h2>
+    
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#1</span>
+          <span class="app-req-text">The system shall respond quickly to all user requests.</span>
+          <span class="app-flag-badges"><span class="app-pass-badge">✓</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#2</span>
+          <span class="app-req-text">The application must be user-friendly and intuitive.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#2563eb22;color:#2563eb">Ver 2</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-count">2 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">The application must be <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">user-friendly</mark> and intuitive.</div><div class="app-viol-meta"><span>reason: subjective_success</span><span>score: 0.85</span></div><div class="app-viol-sugg">💡 Define a measurable usability criterion (e.g. &#x27;target user completes task in &lt;= 3 steps without training&#x27;)</div></div><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">The application must be user-friendly and <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">intuitive</mark>.</div><div class="app-viol-meta"><span>reason: subjective_success</span><span>score: 0.85</span></div><div class="app-viol-sugg">💡 Define a testable learnability target (e.g. &#x27;new user completes primary task within 5 minutes without documentation&#x27;)</div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#3</span>
+          <span class="app-req-text">The system must provide 100% uptime with zero downtime.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#dc262622;color:#dc2626">Fea 4</span><span class="app-flag-badge" style="background:#7c3aed22;color:#7c3aed">Sin 1</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-count">4 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must provide <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">100%</mark> uptime with zero downtime.</div><div class="app-viol-meta"><span>reason: impossible_absolute</span><span>score: 0.95</span></div><div class="app-viol-sugg">💡 100% uptime is unachievable; use 99.9% (three nines, ~8.7h/yr downtime) to 99.999% (five nines, ~5min/yr)</div></div><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must provide <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">100% uptime</mark> with zero downtime.</div><div class="app-viol-meta"><span>reason: impossible_absolute</span><span>score: 0.90</span></div><div class="app-viol-sugg">💡 100% uptime is physically unachievable; use 99.9% (three nines) to 99.999% (five nines)</div></div><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must provide 100% uptime with <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">zero downtime</mark>.</div><div class="app-viol-meta"><span>reason: impossible_absolute</span><span>score: 0.90</span></div><div class="app-viol-sugg">💡 Zero downtime is an absolute no real system can guarantee; specify a maximum rate or MTBF</div></div><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must provide 100% uptime with zero downtime.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.89</span></div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-count">1 violation</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#7c3aed"><div class="app-viol-sentence">The system must provide 100% uptime with zero downtime.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.77</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#4</span>
+          <span class="app-req-text">The module shall authenticate and authorise and audit the request.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#7c3aed22;color:#7c3aed">Sin 1</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-count">1 violation</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#7c3aed"><div class="app-viol-sentence">The module shall <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">authenticate</mark> and authorise and <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">audit</mark> the request.</div><div class="app-viol-meta"><span>reason: multiple_actions</span><span>score: 0.88</span></div><div class="app-viol-sugg">💡 Split into one requirement per action: each &#x27;must X&#x27; becomes its own sentence</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#5</span>
+          <span class="app-req-text">The system must function correctly at all times.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#2563eb22;color:#2563eb">Ver 1</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-count">1 violation</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">The system must function <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">correctly</mark> at all times.</div><div class="app-viol-meta"><span>reason: no_acceptance_criteria</span><span>score: 0.88</span></div><div class="app-viol-sugg">💡 &#x27;correctly&#x27; has no testable meaning; define what correct behaviour looks like (e.g. &#x27;returns error code 400 for invalid input&#x27;)</div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#6</span>
+          <span class="app-req-text">The API shall return a 200 status code within 500 milliseconds.</span>
+          <span class="app-flag-badges"><span class="app-pass-badge">✓</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#7</span>
+          <span class="app-req-text">Users must be able to create, update, and delete records.</span>
+          <span class="app-flag-badges"><span class="app-pass-badge">✓</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#8</span>
+          <span class="app-req-text">The system must never fail under any conditions.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#d9770622;color:#d97706">Amb 1</span><span class="app-flag-badge" style="background:#dc262622;color:#dc2626">Fea 2</span><span class="app-flag-badge" style="background:#2563eb22;color:#2563eb">Ver 2</span><span class="app-flag-badge" style="background:#7c3aed22;color:#7c3aed">Sin 1</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-count">1 violation</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#d97706"><div class="app-viol-sentence">The system must never fail <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.84</span></div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-count">2 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">never fail</mark> under any conditions.</div><div class="app-viol-meta"><span>reason: impossible_absolute</span><span>score: 0.90</span></div><div class="app-viol-sugg">💡 &#x27;never fail&#x27; is an absolute; replace with a maximum failure rate (e.g. MTBF &gt;= N hours)</div></div><div class="app-viol" style="--viol-color:#dc2626"><div class="app-viol-sentence">The system must never fail <mark style="background:#f6c8c8;color:#dc2626;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.96</span></div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-count">2 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">The system <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">must never fail</mark> under any conditions.</div><div class="app-viol-meta"><span>reason: untestable_negative</span><span>score: 0.90</span></div><div class="app-viol-sugg">💡 Replace with a testable reliability target (e.g. MTBF &gt;= 2000 hours, availability &gt;= 99.9%)</div></div><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">The system must never fail <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.93</span></div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-count">1 violation</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#7c3aed"><div class="app-viol-sentence">The system must never fail <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">under any conditions</mark>.</div><div class="app-viol-meta"><span>reason: semantic</span><span>score: 0.70</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#9</span>
+          <span class="app-req-text">Data must be validated and access must be controlled as needed.</span>
+          <span class="app-flag-badges"><span class="app-flag-badge" style="background:#d9770622;color:#d97706">Amb 2</span><span class="app-flag-badge" style="background:#2563eb22;color:#2563eb">Ver 3</span><span class="app-flag-badge" style="background:#7c3aed22;color:#7c3aed">Sin 2</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-count">2 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#d97706"><div class="app-viol-sentence">Data <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">must be validated</mark> and access must be controlled as needed.</div><div class="app-viol-meta"><span>reason: syntactic</span><span>score: 0.45</span></div><div class="app-viol-sugg">💡 specify who/what performs this action</div></div><div class="app-viol" style="--viol-color:#d97706"><div class="app-viol-sentence">Data must be validated and access <mark style="background:#f5ddc0;color:#d97706;font-weight:600;border-radius:3px;padding:0 2px">must be controlled</mark> as needed.</div><div class="app-viol-meta"><span>reason: syntactic</span><span>score: 0.45</span></div><div class="app-viol-sugg">💡 specify who/what performs this action</div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-count">3 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">Data must be validated and access must be controlled <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">as needed</mark>.</div><div class="app-viol-meta"><span>reason: no_acceptance_criteria</span><span>score: 0.88</span></div><div class="app-viol-sugg">💡 Replace &#x27;as needed&#x27; with a specific trigger condition (e.g. &#x27;when request queue exceeds N&#x27;)</div></div><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence"><mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">Data must be validated</mark> and access must be controlled as needed.</div><div class="app-viol-meta"><span>reason: missing_actor</span><span>score: 0.82</span></div><div class="app-viol-sugg">💡 Specify: what validation rules apply, what happens on failure, and what tool/test confirms this</div></div><div class="app-viol" style="--viol-color:#2563eb"><div class="app-viol-sentence">Data must be validated and <mark style="background:#c8d8fa;color:#2563eb;font-weight:600;border-radius:3px;padding:0 2px">access must be controlled</mark> as needed.</div><div class="app-viol-meta"><span>reason: missing_actor</span><span>score: 0.82</span></div><div class="app-viol-sugg">💡 Define who enforces access control, what roles exist, and how access decisions are audited</div></div></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-count">2 violations</span>
+              <span class="app-dim-chevron">&#9658;</span>
+            </div>
+            <div class="app-viols"><div class="app-viol" style="--viol-color:#7c3aed"><div class="app-viol-sentence">Data must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">validated</mark> and access must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">controlled</mark> as needed.</div><div class="app-viol-meta"><span>reason: multiple_actions</span><span>score: 0.88</span></div><div class="app-viol-sugg">💡 Split into one requirement per action: each &#x27;must X&#x27; becomes its own sentence</div></div><div class="app-viol" style="--viol-color:#7c3aed"><div class="app-viol-sentence">Data must be <mark style="background:#decdfa;color:#7c3aed;font-weight:600;border-radius:3px;padding:0 2px">validated and access must</mark> be controlled as needed.</div><div class="app-viol-meta"><span>reason: compound_subject</span><span>score: 0.85</span></div><div class="app-viol-sugg">💡 Assign each actor their own requirement; different actors may have different obligations</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="app-req">
+        <div class="app-req-header">
+          <span class="app-req-num">#10</span>
+          <span class="app-req-text">The service shall process exactly 1000 requests per second.</span>
+          <span class="app-flag-badges"><span class="app-pass-badge">✓</span></span>
+          <span class="app-chevron">&#9658;</span>
+        </div>
+        <div class="app-dims">
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#d97706"></span>
+              <span class="app-dim-name">Ambiguity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#dc2626"></span>
+              <span class="app-dim-name">Feasibility</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#2563eb"></span>
+              <span class="app-dim-name">Verifiability</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+          <div class="app-dim">
+            <div class="app-dim-header">
+              <span class="app-dim-dot" style="background:#7c3aed"></span>
+              <span class="app-dim-name">Singularity</span>
+              <span class="app-dim-pass">✓ Pass</span>
+              
+            </div>
+            <div class="app-viols"><p class="app-no-issues">✓ No issues detected.</p></div>
+          </div>
+        </div>
+      </div>
+  </section>
+</main>
+
+<script>var SOFT_PROTOTYPES={"ambiguity": ["quickly", "soon", "fast", "promptly", "immediately", "eventually", "as soon as possible", "near real-time", "in a timely manner", "in a timely fashion", "without unnecessary delay", "often", "sometimes", "occasionally", "regularly", "frequently", "rarely", "at all times", "whenever possible", "sufficient", "adequate", "minimal", "significant", "reasonable", "acceptable", "appropriate", "optimal", "good enough", "fast enough", "many", "few", "several", "large", "small", "some", "various", "accurate", "correct", "valid", "complete", "consistent", "precise", "reliable", "stable", "robust", "secure", "safe", "protected", "user-friendly", "intuitive", "easy to use", "seamless", "flexible", "scalable", "maintainable", "efficient", "properly", "appropriately", "correctly", "suitably", "adequately", "gracefully", "effectively", "successfully", "optional", "temporary", "as needed", "where applicable", "if necessary", "in most cases", "under normal conditions", "where possible", "as appropriate", "typically", "generally", "usually", "normally"], "feasibility": ["100% uptime", "100% availability", "zero downtime", "always available without exception", "never experiences outages", "zero latency", "zero response time", "instantaneous response", "real-time with zero delay", "no processing overhead", "unlimited throughput", "infinite capacity", "unbounded scalability", "process infinite requests", "support unlimited concurrent users", "never fails", "never crashes", "absolute guarantee of delivery", "zero failures under any conditions", "100% accuracy", "zero errors", "zero defects", "perfect reliability", "no bugs under any circumstances", "zero memory usage", "zero CPU overhead", "zero packet loss", "no performance degradation under any load"], "singularity": ["must validate input and encrypt data and log the result", "shall authenticate and authorise and audit the request", "must save the file and notify the user and update the index", "must parse the request and validate the schema and store the record", "the system must handle login, session management, and token refresh", "the service must support creating, editing, and deleting records", "the module is responsible for scheduling, execution, and reporting", "the admin and the user must both confirm the deletion", "the client and the server shall negotiate the protocol version", "users and administrators and auditors must all have read access", "the frontend and the backend must both validate the input", "all users and system processes must comply with the rate limit", "both internal and external callers must supply a valid token", "when login fails or the session expires or the token is revoked", "if the user is unauthenticated or unauthorised or suspended", "when memory usage is high or CPU is high or disk is full", "when the request is malformed or missing or a duplicate", "if payment fails or times out or is declined by the processor", "must encrypt all data and respond within 200ms", "shall authenticate the user and maintain 99.9 percent uptime", "must validate input and use no more than 256MB of memory", "should log errors and complete within 100 milliseconds", "must manage user accounts and send transactional emails", "shall handle file uploads and generate thumbnail previews", "must track inventory and generate monthly usage reports"], "verifiability": ["the system should work well", "the application must function correctly", "the service must behave as expected", "the system must perform as intended", "the feature must work properly", "the module must operate correctly", "as needed", "where necessary", "as appropriate", "where applicable", "in a reasonable manner", "to a satisfactory level", "appropriately", "to an acceptable standard", "in a suitable way", "users should be satisfied", "users will be happy", "meets user expectations", "stakeholders are pleased", "customers are happy", "management approves", "looks professional", "feels responsive", "seems intuitive", "appears correct to the user", "gives a good impression", "positive user experience", "pleasant to interact with", "errors must be handled", "exceptions must be managed", "failures must be dealt with", "issues must be resolved", "problems must be addressed", "incidents must be escalated", "data must be validated", "access must be controlled", "notifications must be sent", "alerts must be delivered", "must never lose data", "shall never fail", "must never crash", "should not have any bugs", "must not produce any errors", "will never be unavailable", "must never be slow", "shall not expose any vulnerabilities"]};</script>
+<script>
+// ── Tab switching ──
+function activateTab(dimKey) {
+  document.querySelectorAll('.dim-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dim-section').forEach(s => s.classList.remove('active'));
+  document.querySelector('.dim-tab[data-dim="' + dimKey + '"]').classList.add('active');
+  document.getElementById('sec-' + dimKey).classList.add('active');
+  currentDim = dimKey;
+  var q = document.getElementById('search-input').value;
+  if (q) { applySearch(q); } else { initPage(dimKey); }
+}
+
+// ── Card expand/collapse ──
+document.querySelectorAll('.req-header').forEach(h => {
+  h.addEventListener('click', () => h.closest('.req-card').classList.toggle('open'));
+});
+
+// ── Pagination ──
+var PAGE_SIZE  = 15;
+var pageState  = {};  // { dimKey: currentPage }
+
+function allCards(dimKey) {
+  return Array.from(document.querySelectorAll('#cards-' + dimKey + ' .req-card'));
+}
+
+function initPage(dimKey) {
+  if (!pageState[dimKey]) pageState[dimKey] = 1;
+  renderPage(dimKey);
+}
+
+function renderPage(dimKey) {
+  var searching = document.getElementById('search-input').value.trim() !== '';
+  var cards  = allCards(dimKey);
+  var pager  = document.getElementById('pager-' + dimKey);
+  var pinfo  = document.getElementById('pinfo-' + dimKey);
+
+  if (searching) {
+    // Search active — show all matching cards, hide paginator
+    pager.style.display = 'none';
+    return;
+  }
+
+  pager.style.display = cards.length > PAGE_SIZE ? 'flex' : 'none';
+  var page   = pageState[dimKey] || 1;
+  var total  = Math.ceil(cards.length / PAGE_SIZE) || 1;
+  page = Math.min(Math.max(page, 1), total);
+  pageState[dimKey] = page;
+
+  var start = (page - 1) * PAGE_SIZE;
+  var end   = start + PAGE_SIZE;
+
+  cards.forEach(function(c, idx) {
+    c.style.display = (idx >= start && idx < end) ? '' : 'none';
+  });
+
+  pinfo.textContent = 'Page ' + page + ' of ' + total + ' (' + cards.length + ' flagged)';
+  pager.querySelector('.pager-btn:first-child').disabled = page <= 1;
+  pager.querySelector('.pager-btn:last-child').disabled  = page >= total;
+}
+
+function changePage(dimKey, delta) {
+  pageState[dimKey] = (pageState[dimKey] || 1) + delta;
+  renderPage(dimKey);
+  document.getElementById('sec-' + dimKey).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ── Search / filter ──
+var currentDim = document.querySelector('.dim-tab.active').dataset.dim;
+
+function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function stripMark(node) {
+  node.querySelectorAll('.search-match').forEach(m => {
+    m.replaceWith(document.createTextNode(m.textContent));
+  });
+  node.normalize();
+}
+
+function highlightText(node, re) {
+  if (node.nodeType === 3) {
+    var m, text = node.nodeValue, frag = document.createDocumentFragment(), last = 0;
+    re.lastIndex = 0;
+    while ((m = re.exec(text)) !== null) {
+      frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var span = document.createElement('span');
+      span.className = 'search-match';
+      span.textContent = m[0];
+      frag.appendChild(span);
+      last = m.index + m[0].length;
+    }
+    if (last > 0) { frag.appendChild(document.createTextNode(text.slice(last))); node.parentNode.replaceChild(frag, node); }
+  } else if (node.nodeType === 1 && !['SCRIPT','STYLE'].includes(node.tagName)) {
+    Array.from(node.childNodes).forEach(c => highlightText(c, re));
+  }
+}
+
+function applySearch(query) {
+  var section = document.getElementById('sec-' + currentDim);
+  var cards   = section.querySelectorAll('.req-card');
+  var count   = 0;
+  var q       = query.trim().toLowerCase();
+
+  cards.forEach(card => {
+    stripMark(card);
+    if (!q) {
+      card.classList.remove('hidden');
+      card.style.display = '';
+      return;
+    }
+    var text = card.textContent.toLowerCase();
+    if (text.includes(q)) {
+      card.classList.remove('hidden');
+      card.style.display = '';
+      highlightText(card, new RegExp(escapeRe(query), 'gi'));
+      count++;
+    } else {
+      card.classList.add('hidden');
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide paginator based on whether search is active
+  renderPage(currentDim);
+
+  var el = document.getElementById('search-count');
+  if (q) {
+    el.textContent = count + ' match' + (count !== 1 ? 'es' : '');
+  } else {
+    el.textContent = cards.length + ' requirement' + (cards.length !== 1 ? 's' : '');
+    renderPage(currentDim);
+  }
+}
+
+document.getElementById('search-input').addEventListener('input', function() {
+  applySearch(this.value);
+});
+
+// ── Appendix drill-down toggles ──
+document.querySelectorAll('.app-req-header').forEach(function(h) {
+  h.addEventListener('click', function() {
+    h.closest('.app-req').classList.toggle('open');
+  });
+});
+
+document.querySelectorAll('.app-dim-header').forEach(function(h) {
+  h.addEventListener('click', function(e) {
+    e.stopPropagation();
+    h.closest('.app-dim').classList.toggle('open');
+  });
+});
+
+// Initialise pagination for all dims, activate first tab
+['ambiguity','feasibility','verifiability','singularity'].forEach(function(d) { initPage(d); });
+activateTab(currentDim);
+
+// ── Soft Match ──────────────────────────────────────────────────────────────
+var softActive = false;
+
+// Pagination must ignore soft-only cards (they sit outside the paged window)
+var _origAllCards = allCards;
+allCards = function(dimKey) {
+  return Array.from(document.querySelectorAll(
+    '#cards-' + dimKey + ' .req-card:not([data-soft-only])'
+  ));
+};
+
+function stripSoftMark(node) {
+  node.querySelectorAll('.soft-match').forEach(function(m) {
+    m.replaceWith(document.createTextNode(m.textContent));
+  });
+  node.normalize();
+}
+
+function highlightSoftNode(node, patterns) {
+  if (node.nodeType === 3) {
+    var text = node.nodeValue;
+    var ltext = text.toLowerCase();
+    var best = null;
+    patterns.forEach(function(p) {
+      var lp = p.toLowerCase();
+      var idx = ltext.indexOf(lp);
+      if (idx !== -1 && (best === null || idx < best.idx || (idx === best.idx && p.length > best.len))) {
+        best = { idx: idx, len: p.length };
+      }
+    });
+    if (!best) return;
+    var frag = document.createDocumentFragment();
+    if (best.idx > 0) frag.appendChild(document.createTextNode(text.slice(0, best.idx)));
+    var span = document.createElement('span');
+    span.className = 'soft-match';
+    span.textContent = text.slice(best.idx, best.idx + best.len);
+    frag.appendChild(span);
+    var restNode = document.createTextNode(text.slice(best.idx + best.len));
+    frag.appendChild(restNode);
+    node.parentNode.replaceChild(frag, node);
+    highlightSoftNode(restNode, patterns);
+  } else if (node.nodeType === 1 && !['SCRIPT','STYLE','MARK'].includes(node.tagName)) {
+    // Don't re-enter hard-match marks; do process other elements
+    Array.from(node.childNodes).forEach(function(c) { highlightSoftNode(c, patterns); });
+  }
+}
+
+function applySoftMatch() {
+  var dims = ['ambiguity','feasibility','verifiability','singularity'];
+  dims.forEach(function(dim) {
+    var prototypes = (SOFT_PROTOTYPES[dim] || []);
+    if (!prototypes.length) return;
+
+    var softCount = 0;
+    var cards = document.querySelectorAll('#cards-' + dim + ' .req-card');
+
+    cards.forEach(function(card) {
+      var sentEl = card.querySelector('.req-sentence');
+      if (!sentEl) return;
+      var text = sentEl.textContent.toLowerCase();
+      var matched = prototypes.some(function(p) { return text.includes(p.toLowerCase()); });
+
+      // Highlight soft matches in sentence text (for all matched cards)
+      if (matched) highlightSoftNode(sentEl, prototypes);
+
+      // Reveal soft-only (passing) cards that matched
+      if (card.dataset.softOnly === 'true') {
+        if (matched) {
+          card.style.display = '';
+          card.dataset.softMatched = 'true';
+          var badge = card.querySelector('.req-badge');
+          if (badge) { badge.textContent = 'Soft Match'; badge.className = 'req-badge badge-soft'; }
+          softCount++;
+        } else {
+          card.style.display = 'none';
+          delete card.dataset.softMatched;
+        }
+      }
+    });
+
+    // Update soft count label in section header
+    var countEl = document.getElementById('soft-count-' + dim);
+    if (countEl) countEl.textContent = softCount > 0 ? ' +' + softCount + ' soft' : '';
+  });
+}
+
+function clearSoftMatch() {
+  // Hide soft-only cards and restore badges
+  document.querySelectorAll('.req-card[data-soft-only="true"]').forEach(function(card) {
+    card.style.display = 'none';
+    delete card.dataset.softMatched;
+    var badge = card.querySelector('.req-badge');
+    if (badge) { badge.textContent = 'Pass'; badge.className = 'req-badge badge-pass'; }
+  });
+  // Strip soft-match highlights from all sentences
+  document.querySelectorAll('.req-sentence').forEach(function(el) { stripSoftMark(el); });
+  // Clear soft count labels
+  document.querySelectorAll('[id^="soft-count-"]').forEach(function(el) { el.textContent = ''; });
+}
+
+function toggleSoftMatch() {
+  softActive = !softActive;
+  var btn = document.getElementById('soft-btn');
+  if (softActive) {
+    btn.classList.add('active');
+    applySoftMatch();
+  } else {
+    btn.classList.remove('active');
+    clearSoftMatch();
+  }
+}
+</script>
+</body>
+</html>

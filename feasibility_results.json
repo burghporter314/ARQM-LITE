@@ -1,0 +1,318 @@
+[
+  {
+    "sentence": "The system must provide 100% uptime at all times.",
+    "is_feasible": false,
+    "max_score": 0.95,
+    "violation_count": 3,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "100%",
+        "score": 0.95,
+        "suggestion": "100% uptime is unachievable; use 99.9% (three nines, ~8.7h/yr downtime) to 99.999% (five nines, ~5min/yr)",
+        "highlighted": "The system must provide >>100%<< uptime at all times."
+      },
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "100% uptime",
+        "score": 0.9,
+        "suggestion": "100% uptime is physically unachievable; use 99.9% (three nines) to 99.999% (five nines)",
+        "highlighted": "The system must provide >>100% uptime<< at all times."
+      },
+      {
+        "reason": "semantic",
+        "slot": "object",
+        "text": "100 % uptime",
+        "score": 0.8578,
+        "suggestion": null,
+        "highlighted": "The system must provide 100% uptime at all times."
+      }
+    ]
+  },
+  {
+    "sentence": "The API must respond with zero latency.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "zero latency",
+        "score": 0.9,
+        "suggestion": "Zero latency is physically impossible; the speed of light alone imposes a minimum floor",
+        "highlighted": "The API must respond with >>zero latency<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The service must never fail under any circumstances.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 2,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "never fail",
+        "score": 0.9,
+        "suggestion": "'never fail' is an absolute; replace with a maximum failure rate (e.g. MTBF >= N hours)",
+        "highlighted": "The service must >>never fail<< under any circumstances."
+      },
+      {
+        "reason": "semantic",
+        "slot": "condition",
+        "text": "under any circumstances",
+        "score": 0.8564,
+        "suggestion": null,
+        "highlighted": "The service must never fail >>under any circumstances<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The platform must always be available without exception.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "always be available",
+        "score": 0.9,
+        "suggestion": "'always be available' implies 100% availability; replace with an explicit SLA percentage",
+        "highlighted": "The platform must >>always be available<< without exception."
+      }
+    ]
+  },
+  {
+    "sentence": "The pipeline must process data with zero downtime.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "zero downtime",
+        "score": 0.9,
+        "suggestion": "Zero downtime is an absolute no real system can guarantee; specify a maximum rate or MTBF",
+        "highlighted": "The pipeline must process data with >>zero downtime<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The system must offer unlimited throughput.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "unlimited throughput",
+        "score": 0.9,
+        "suggestion": "'unlimited throughput' is unbounded; all real systems have resource limits \u2014 specify a maximum supported value",
+        "highlighted": "The system must offer >>unlimited throughput<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The cache must provide instantaneous retrieval.",
+    "is_feasible": false,
+    "max_score": 0.9,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "impossible_absolute",
+        "slot": "qualifier",
+        "text": "instantaneous retrieval",
+        "score": 0.9,
+        "suggestion": "Instantaneous retrieval ignores physical transmission time, OS scheduling, and processing overhead",
+        "highlighted": "The cache must provide >>instantaneous retrieval<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The service must be synchronous and non-blocking.",
+    "is_feasible": false,
+    "max_score": 0.92,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "internal_contradiction",
+        "slot": "action",
+        "text": "synchronous \u2026 non-blocking",
+        "score": 0.92,
+        "suggestion": "A call cannot be both synchronous (caller blocks) and non-blocking (caller continues); choose one model",
+        "highlighted": "The service must be >>synchronous<< and >>non-blocking<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The component must be stateless and maintain session state.",
+    "is_feasible": false,
+    "max_score": 0.92,
+    "violation_count": 2,
+    "violations": [
+      {
+        "reason": "internal_contradiction",
+        "slot": "action",
+        "text": "stateless \u2026 maintain session",
+        "score": 0.92,
+        "suggestion": "Stateless and stateful are mutually exclusive; a stateless service cannot maintain session state",
+        "highlighted": "The component must be >>stateless<< and >>maintain session<< state."
+      },
+      {
+        "reason": "semantic",
+        "slot": "object",
+        "text": "session state",
+        "score": 0.6441,
+        "suggestion": null,
+        "highlighted": "The component must be stateless and maintain >>session state<<."
+      }
+    ]
+  },
+  {
+    "sentence": "The system must process requests in real-time and via batch processing.",
+    "is_feasible": false,
+    "max_score": 0.92,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "internal_contradiction",
+        "slot": "action",
+        "text": "real-time \u2026 batch processing",
+        "score": 0.92,
+        "suggestion": "Real-time and batch processing are conflicting execution models; split into two separate requirements",
+        "highlighted": "The system must process requests in >>real-time<< and via >>batch processing<<."
+      }
+    ]
+  },
+  {
+    "sentence": "All data must be encrypted and stored in plaintext for auditing.",
+    "is_feasible": false,
+    "max_score": 0.92,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "internal_contradiction",
+        "slot": "action",
+        "text": "encrypted \u2026 plaintext",
+        "score": 0.92,
+        "suggestion": "Data cannot be simultaneously encrypted and stored as plaintext",
+        "highlighted": "All data must be >>encrypted<< and stored in >>plaintext<< for auditing."
+      }
+    ]
+  },
+  {
+    "sentence": "The module must be immutable and allow updates from admin users.",
+    "is_feasible": false,
+    "max_score": 0.821,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "semantic",
+        "slot": "object",
+        "text": "updates admin users",
+        "score": 0.821,
+        "suggestion": null,
+        "highlighted": "The module must be immutable and allow updates from admin users."
+      }
+    ]
+  },
+  {
+    "sentence": "The API must respond within 0.1ms for all requests.",
+    "is_feasible": false,
+    "max_score": 0.8,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "unrealistic_threshold",
+        "slot": "qualifier",
+        "text": "0.1ms",
+        "score": 0.8,
+        "suggestion": "Sub-millisecond network latency is only achievable for local in-process calls; LAN round-trips are typically 1\u20135ms, WAN 10\u2013300ms",
+        "highlighted": "The API must respond within >>0.1ms<< for all requests."
+      }
+    ]
+  },
+  {
+    "sentence": "The system must maintain 99.9999% availability.",
+    "is_feasible": false,
+    "max_score": 0.75,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "unrealistic_threshold",
+        "slot": "qualifier",
+        "text": "99.9999%",
+        "score": 0.75,
+        "suggestion": "Six nines (99.9999%) implies < 32 seconds downtime/year \u2014 verify your infrastructure can sustain this before committing",
+        "highlighted": "The system must maintain >>99.9999%<< availability."
+      }
+    ]
+  },
+  {
+    "sentence": "The service must process 1,000,000 requests per second with 1ms latency.",
+    "is_feasible": false,
+    "max_score": 0.82,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "unrealistic_threshold",
+        "slot": "condition",
+        "text": "1ms at 1,000,000 requests per second",
+        "score": 0.82,
+        "suggestion": "Achieving 1.0ms latency at 1,000,000 RPS requires specialised infrastructure; verify with load testing and clarify whether this applies to p50 or p99 latency",
+        "highlighted": "The service must process >>1,000,000 requests per second<< with >>1ms<< latency."
+      }
+    ]
+  },
+  {
+    "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
+    "is_feasible": true,
+    "max_score": 0.0,
+    "violation_count": 0,
+    "violations": []
+  },
+  {
+    "sentence": "The service must maintain 99.9% uptime with planned maintenance windows.",
+    "is_feasible": true,
+    "max_score": 0.0,
+    "violation_count": 0,
+    "violations": []
+  },
+  {
+    "sentence": "The system must support downloading PDF files to disk.",
+    "is_feasible": false,
+    "max_score": 0.6323,
+    "violation_count": 1,
+    "violations": [
+      {
+        "reason": "semantic",
+        "slot": "object",
+        "text": "PDF files",
+        "score": 0.6323,
+        "suggestion": null,
+        "highlighted": "The system must support downloading >>PDF files<< to disk."
+      }
+    ]
+  },
+  {
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "is_feasible": true,
+    "max_score": 0.0,
+    "violation_count": 0,
+    "violations": []
+  },
+  {
+    "sentence": "User enters their username and password on the login page",
+    "is_feasible": true,
+    "max_score": 0.0,
+    "violation_count": 0,
+    "violations": []
+  }
+]

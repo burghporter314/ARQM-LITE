@@ -116,5 +116,6 @@
   "strong consistency",
   "at-least-once delivery",
   "exactly-once delivery",
-  "at-most-once delivery"
+  "at-most-once delivery",
+  "their item"
 ]

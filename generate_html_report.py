@@ -17,9 +17,44 @@ suitable for direct browser delivery or saving as a .html file.
 from __future__ import annotations
 
 import html
+import json as _json
 import re
 from datetime import datetime
 from typing import Any
+
+# ── Soft-match term loader ────────────────────────────────────────────────────
+# Terms are stored in soft_match/{dimension}.txt — one term per line,
+# lines starting with # or blank lines are ignored.
+
+import pathlib as _pathlib
+
+_SOFT_MATCH_DIR = _pathlib.Path(__file__).parent / "soft_match"
+
+_SOFT_DIM_FILES = {
+    "ambiguity":     "ambiguity.txt",
+    "feasibility":   "feasibility.txt",
+    "singularity":   "singularity.txt",
+    "verifiability": "verifiability.txt",
+}
+
+
+def _load_soft_terms() -> dict[str, list[str]]:
+    result: dict[str, list[str]] = {}
+    for dim, filename in _SOFT_DIM_FILES.items():
+        path = _SOFT_MATCH_DIR / filename
+        terms: list[str] = []
+        if path.exists():
+            for raw in path.read_text(encoding="utf-8").splitlines():
+                line = raw.strip()
+                if line and not line.startswith("#"):
+                    terms.append(line)
+        result[dim] = terms
+    return result
+
+
+def _soft_match_json() -> str:
+    """Return JSON mapping dimension key → list of soft-match terms."""
+    return _json.dumps(_load_soft_terms(), ensure_ascii=False)
 
 
 def _highlight_span_in_sentence(span: str, sentence: str, color: str) -> str:
@@ -315,7 +350,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 24px 48px; }
   font-size: 13px;
 }
 .violation .viol-text { font-weight: 600; margin-bottom: 4px; }
-.violation .viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
+.violation .viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
 .violation .viol-suggestion { margin-top: 6px; font-size: 12px; color: #475569;
                                padding: 6px 10px; background: #f1f5f9; border-radius: 4px; }
 
@@ -391,9 +426,15 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 24px 48px; }
   font-size: 13px;
 }
 .app-viol-sentence { margin-bottom: 5px; line-height: 1.55; }
-.app-viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; }
+.app-viol-meta { font-size: 11px; color: var(--muted); display: flex; gap: 12px; align-items: center; }
 .app-viol-sugg { margin-top: 6px; font-size: 12px; color: #475569;
                  padding: 5px 9px; background: #f1f5f9; border-radius: 4px; }
+.fb-btn { margin-left: auto; background: #fee2e2; border: 1px solid #fca5a5;
+          border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600;
+          padding: 2px 8px; color: #991b1b;
+          transition: background .15s, border-color .15s; line-height: 1.5; white-space: nowrap; }
+.fb-btn:hover { background: #fecaca; border-color: #f87171; }
+.fb-btn.fb-done { background: #dcfce7; border-color: #86efac; color: #166534; cursor: default; }
 .app-no-issues { font-size: 12px; color: #16a34a; padding: 6px 0; }
 
 /* ── Paginator ── */
@@ -418,8 +459,89 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 24px 48px; }
 .pager-btn:disabled { opacity: .35; cursor: default; }
 .pager-info { font-size: 12px; color: var(--muted); min-width: 100px; text-align: center; }
 
+/* ── Named entity section ── */
+#sec-entities .section-header { margin-bottom: 20px; }
+.entity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.entity-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.entity-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.entity-group-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.entity-group-name { font-size: 12px; font-weight: 700; text-transform: uppercase;
+                     letter-spacing: .4px; color: var(--muted); flex: 1; }
+.entity-group-count { font-size: 11px; color: var(--muted); }
+.entity-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px 12px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+.entity-tag {
+  font-size: 12px;
+  padding: 2px 9px;
+  border-radius: 99px;
+  border: 1px solid var(--ent-color, #94a3b8);
+  color: var(--ent-color, #64748b);
+  background: transparent;
+  white-space: nowrap;
+  cursor: default;
+}
+.entity-tag .ent-count {
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 4px;
+  opacity: .7;
+}
+.entity-empty { font-size: 12px; color: var(--muted); padding: 16px; text-align: center; }
+
 /* ── Search highlights ── */
 .search-match { background: #fef08a; border-radius: 2px; }
+
+/* ── Soft-match highlights ── */
+.soft-match {
+  background: #ecfdf5;
+  border-bottom: 2px dashed #059669;
+  border-radius: 2px;
+  padding: 0 1px;
+  color: #065f46;
+  font-weight: 500;
+}
+.badge-soft { background: #d1fae5; color: #065f46; }
+
+/* ── Soft-match toggle button (topbar) ── */
+#soft-btn {
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .15s, border-color .15s, color .15s;
+}
+#soft-btn:hover { border-color: #94a3b8; color: #f1f5f9; }
+#soft-btn.active { background: #059669; border-color: #059669; color: #fff; }
+
+/* ── Soft-count inline label ── */
+.soft-count { font-size: 11px; color: #059669; font-weight: 600; margin-left: 8px; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
@@ -439,6 +561,7 @@ function activateTab(dimKey) {
   currentDim = dimKey;
   var q = document.getElementById('search-input').value;
   if (q) { applySearch(q); } else { initPage(dimKey); }
+  if (typeof softActive !== 'undefined' && softActive) { applySoftMatch(); }
 }
 
 // ── Card expand/collapse ──
@@ -451,7 +574,8 @@ var PAGE_SIZE  = 15;
 var pageState  = {};  // { dimKey: currentPage }
 
 function allCards(dimKey) {
-  return Array.from(document.querySelectorAll('#cards-' + dimKey + ' .req-card'));
+  // Exclude soft-only (passing) cards — pagination only applies to hard-flagged cards
+  return Array.from(document.querySelectorAll('#cards-' + dimKey + ' .req-card:not([data-soft-only])'));
 }
 
 function initPage(dimKey) {
@@ -583,6 +707,281 @@ document.querySelectorAll('.app-dim-header').forEach(function(h) {
 // Initialise pagination for all dims, activate first tab
 ['ambiguity','feasibility','verifiability','singularity'].forEach(function(d) { initPage(d); });
 activateTab(currentDim);
+
+// ── Soft Match ──────────────────────────────────────────────────────────────
+var softActive = false;
+var DIM_COLORS = {
+  ambiguity:     '#d97706',
+  feasibility:   '#dc2626',
+  verifiability: '#2563eb',
+  singularity:   '#7c3aed'
+};
+var DIM_NAMES = {
+  ambiguity:     'Amb',
+  feasibility:   'Feas',
+  verifiability: 'Ver',
+  singularity:   'Sing'
+};
+
+function stripSoftMark(node) {
+  node.querySelectorAll('.soft-match').forEach(function(m) {
+    m.replaceWith(document.createTextNode(m.textContent));
+  });
+  node.normalize();
+}
+
+// Build a regex for a prototype phrase with word boundaries where applicable.
+function buildSoftRe(pattern) {
+  var esc = pattern.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');
+  var pre = /^\\w/.test(pattern) ? '\\\\b' : '';
+  var suf = /\\w$/.test(pattern) ? '\\\\b' : '';
+  return new RegExp(pre + esc + suf, 'gi');
+}
+
+function softMatchesText(text, patterns) {
+  return patterns.some(function(p) {
+    try { return buildSoftRe(p).test(text); }
+    catch(e) { return false; }
+  });
+}
+
+function highlightSoftNode(node, patterns) {
+  if (node.nodeType === 3) {
+    var text = node.nodeValue;
+    var best = null;
+    patterns.forEach(function(p) {
+      try {
+        var re = buildSoftRe(p);
+        var m = re.exec(text);
+        if (m && (best === null || m.index < best.idx ||
+            (m.index === best.idx && m[0].length > best.len))) {
+          best = { idx: m.index, len: m[0].length };
+        }
+      } catch(e) {}
+    });
+    if (!best) return;
+    var frag = document.createDocumentFragment();
+    if (best.idx > 0) frag.appendChild(document.createTextNode(text.slice(0, best.idx)));
+    var span = document.createElement('span');
+    span.className = 'soft-match';
+    span.textContent = text.slice(best.idx, best.idx + best.len);
+    frag.appendChild(span);
+    var restNode = document.createTextNode(text.slice(best.idx + best.len));
+    frag.appendChild(restNode);
+    node.parentNode.replaceChild(frag, node);
+    highlightSoftNode(restNode, patterns);
+  } else if (node.nodeType === 1 && !['SCRIPT','STYLE','MARK'].includes(node.tagName)) {
+    Array.from(node.childNodes).forEach(function(c) { highlightSoftNode(c, patterns); });
+  }
+}
+
+// Build a flat list of all prototype terms across all dimensions (for appendix)
+function allSoftProtos() {
+  return ['ambiguity','feasibility','singularity','verifiability'].reduce(function(acc, d) {
+    return acc.concat(SOFT_PROTOTYPES[d] || []);
+  }, []);
+}
+
+function applySoftMatch() {
+  // Strip any existing soft highlights first (idempotent — safe to call on tab switch)
+  document.querySelectorAll('.req-sentence, .app-req-text').forEach(function(el) {
+    stripSoftMark(el);
+  });
+
+  // ── Dimension card sections ──
+  var dims = ['ambiguity','feasibility','verifiability','singularity'];
+  dims.forEach(function(dim) {
+    var prototypes = (SOFT_PROTOTYPES[dim] || []);
+    if (!prototypes.length) return;
+
+    var softCount = 0;
+    var cards = document.querySelectorAll('#cards-' + dim + ' .req-card');
+
+    cards.forEach(function(card) {
+      var sentEl = card.querySelector('.req-sentence');
+      if (!sentEl) return;
+      var matched = softMatchesText(sentEl.textContent, prototypes);
+
+      if (matched) highlightSoftNode(sentEl, prototypes);
+
+      if (card.dataset.softOnly === 'true') {
+        if (matched) {
+          card.style.display = '';
+          card.dataset.softMatched = 'true';
+          var badge = card.querySelector('.req-badge');
+          if (badge) { badge.textContent = 'Soft Match'; badge.className = 'req-badge badge-soft'; }
+          softCount++;
+        } else {
+          card.style.display = 'none';
+          delete card.dataset.softMatched;
+        }
+      }
+    });
+
+    var countEl = document.getElementById('soft-count-' + dim);
+    if (countEl) countEl.textContent = softCount > 0 ? ' +' + softCount + ' soft' : '';
+  });
+
+  // ── Appendix: per-requirement, per-dimension — all three levels ──
+  var dims = ['ambiguity','feasibility','verifiability','singularity'];
+  document.querySelectorAll('.app-req').forEach(function(reqEl) {
+    var sentEl = reqEl.querySelector('.app-req-text');
+    if (!sentEl) return;
+    var sentText = sentEl.textContent;
+
+    var matchedDims = [];
+    dims.forEach(function(dim) {
+      var protos = SOFT_PROTOTYPES[dim] || [];
+      if (!protos.length) return;
+      if (!softMatchesText(sentText, protos)) return;
+
+      var dimEl = reqEl.querySelector('.app-dim[data-dim="' + dim + '"]');
+      var hardFlagged = dimEl && dimEl.dataset.flagged === 'true';
+      if (!hardFlagged) matchedDims.push(dim);
+
+      if (dimEl) {
+        dimEl.dataset.softMatched = 'true';
+
+        // Level 2: mark passing dim header with a ~Soft label
+        if (!hardFlagged) {
+          var passEl = dimEl.querySelector('.app-dim-pass');
+          if (passEl && !passEl.querySelector('.soft-dim-label')) {
+            var lbl = document.createElement('span');
+            lbl.className = 'soft-dim-label';
+            lbl.style.cssText = 'color:' + DIM_COLORS[dim] + ';margin-left:6px;font-size:10px;'
+              + 'border:1px dashed ' + DIM_COLORS[dim] + ';border-radius:99px;'
+              + 'padding:0 5px;font-weight:700;';
+            lbl.textContent = '~Soft';
+            passEl.appendChild(lbl);
+          }
+        }
+
+        // Level 3: highlight soft terms inside violation sentences for this dim
+        dimEl.querySelectorAll('.app-viol-sentence').forEach(function(vEl) {
+          if (softMatchesText(vEl.textContent, protos)) {
+            highlightSoftNode(vEl, protos);
+          }
+        });
+
+        // Level 3 (passing dim): inject a soft-match block showing the requirement
+        // sentence with matched terms highlighted
+        if (!hardFlagged) {
+          var violsEl = dimEl.querySelector('.app-viols');
+          if (violsEl && !violsEl.querySelector('[data-soft-injected]')) {
+            var infoDiv = document.createElement('div');
+            infoDiv.className = 'app-viol';
+            infoDiv.dataset.softInjected = 'true';
+            infoDiv.style.cssText = '--viol-color:' + DIM_COLORS[dim]
+              + ';border-left:3px dashed ' + DIM_COLORS[dim] + ';margin-top:8px;';
+            var sentSpan = document.createElement('div');
+            sentSpan.className = 'app-viol-sentence';
+            sentSpan.textContent = sentEl.textContent;
+            var metaSpan = document.createElement('div');
+            metaSpan.className = 'app-viol-meta';
+            metaSpan.style.color = DIM_COLORS[dim];
+            metaSpan.textContent = '~ soft match \u2014 no hard violation detected';
+            infoDiv.appendChild(sentSpan);
+            infoDiv.appendChild(metaSpan);
+            violsEl.appendChild(infoDiv);
+            highlightSoftNode(sentSpan, protos);
+          }
+        }
+      }
+    });
+
+    // Level 1: highlight soft terms in requirement text (all dims combined)
+    var allProtos = allSoftProtos();
+    if (softMatchesText(sentText, allProtos)) {
+      highlightSoftNode(sentEl, allProtos);
+    }
+
+    // Idempotent: clear previously injected soft badges for this requirement
+    reqEl.querySelectorAll('.app-flag-badge[data-soft-badge]').forEach(function(el) { el.remove(); });
+    // Level 1: inject per-dimension soft badges into .app-flag-badges
+    if (matchedDims.length) {
+      var badgesEl = reqEl.querySelector('.app-flag-badges');
+      if (badgesEl) {
+        matchedDims.forEach(function(dim) {
+          var span = document.createElement('span');
+          span.className = 'app-flag-badge';
+          span.dataset.softBadge = dim;
+          span.style.background = DIM_COLORS[dim] + '22';
+          span.style.color = DIM_COLORS[dim];
+          span.style.border = '1px dashed ' + DIM_COLORS[dim];
+          span.textContent = '~' + DIM_NAMES[dim];
+          badgesEl.appendChild(span);
+        });
+      }
+    }
+  });
+}
+
+function clearSoftMatch() {
+  document.querySelectorAll('.req-card[data-soft-only="true"]').forEach(function(card) {
+    card.style.display = 'none';
+    delete card.dataset.softMatched;
+    var badge = card.querySelector('.req-badge');
+    if (badge) { badge.textContent = 'Pass'; badge.className = 'req-badge badge-pass'; }
+  });
+  // Level 1 card sentences + appendix requirement texts
+  document.querySelectorAll('.req-sentence, .app-req-text').forEach(function(el) {
+    stripSoftMark(el);
+  });
+  // Level 3: strip soft marks from violation sentences
+  document.querySelectorAll('.app-viol-sentence').forEach(function(el) {
+    stripSoftMark(el);
+  });
+  // Level 2: remove ~Soft labels from passing dim headers
+  document.querySelectorAll('.soft-dim-label').forEach(function(el) { el.remove(); });
+  // Level 3: remove injected soft-match info blocks
+  document.querySelectorAll('[data-soft-injected]').forEach(function(el) { el.remove(); });
+  // Level 1: remove soft badges injected into appendix rows
+  document.querySelectorAll('.app-flag-badge[data-soft-badge]').forEach(function(el) {
+    el.remove();
+  });
+  // Clear soft-matched markers on app-dim rows
+  document.querySelectorAll('.app-dim[data-soft-matched]').forEach(function(el) {
+    delete el.dataset.softMatched;
+  });
+  document.querySelectorAll('[id^="soft-count-"]').forEach(function(el) { el.textContent = ''; });
+}
+
+function toggleSoftMatch() {
+  softActive = !softActive;
+  var btn = document.getElementById('soft-btn');
+  if (softActive) {
+    btn.classList.add('active');
+    applySoftMatch();
+  } else {
+    btn.classList.remove('active');
+    clearSoftMatch();
+  }
+}
+
+// ── Feedback (false-positive suppression) ────────────────────────────────────
+function sendFeedback(btn) {
+  if (btn.classList.contains('fb-done')) return;
+  var term = btn.getAttribute('data-term');
+  btn.disabled = true;
+  btn.textContent = '…';
+  fetch('/api/feedback', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({term: term})
+  }).then(function(r) {
+    if (r.ok) {
+      btn.textContent = 'Suppressed';
+      btn.classList.add('fb-done');
+      btn.title = 'Marked as false positive — takes effect on next server restart';
+    } else {
+      btn.textContent = 'Error';
+      btn.disabled = false;
+    }
+  }).catch(function() {
+    btn.textContent = '✗';
+    btn.disabled = false;
+  });
+}
 """
 
 
@@ -606,19 +1005,21 @@ def _summary_cards(dim_stats: dict[str, dict], total: int) -> str:
 
 
 def _requirement_cards(dim_key: str, dicts: list[dict], color: str) -> str:
-    """Render only flagged requirements as collapsed cards with violations inside."""
+    """Render all requirements as cards.
+
+    Hard-flagged cards are visible by default.
+    Passing cards are rendered with ``data-soft-only`` and hidden; the
+    soft-match toggle makes them visible when they contain prototype terms.
+    """
     cards: list[str] = []
-    card_idx = 0  # 0-based index within flagged cards, used for pagination
+    card_idx = 0  # 0-based index within *flagged* cards, used for pagination
 
     for i, d in enumerate(dicts, 1):
-        flagged = _is_flagged(dim_key, d)
-        if not flagged:
-            continue
-
+        flagged  = _is_flagged(dim_key, d)
         sentence = d.get("sentence", "")
         viols    = _violations(dim_key, d)
 
-        # Build highlighted sentence header
+        # Build highlighted sentence header (hard violations only)
         combined_hl = sentence
         for v in viols:
             hl = v.get("highlighted", "")
@@ -641,29 +1042,46 @@ def _requirement_cards(dim_key: str, dicts: list[dict], color: str) -> str:
                 rendered_v = _highlight_span_in_sentence(vtext_raw, sentence, color)
             sugg_block = (f'<div class="viol-suggestion">💡 {html.escape(vsugg)}</div>'
                           if vsugg else "")
+            fb_term = html.escape(vtext_raw, quote=True)
             viol_html += f"""
             <div class="violation" style="--accent:{color}">
               <div class="viol-text">{rendered_v}</div>
               <div class="viol-meta">
                 <span>reason: {vreason}</span>
                 <span>score: {vscore:.2f}</span>
+                <button class="fb-btn" data-term="{fb_term}" onclick="sendFeedback(this)" title="Mark as false positive — suppress similar future detections">False Positive</button>
               </div>
               {sugg_block}
             </div>"""
 
+        if flagged:
+            badge_html = f'<span class="req-badge badge-flagged">Flagged</span>'
+            extra_attrs = f'data-card-idx="{card_idx}"'
+            body_content = viol_html if viol_html else \
+                '<p style="color:#64748b;padding:8px 0">No detailed violations recorded.</p>'
+            card_idx += 1
+        else:
+            badge_html = f'<span class="req-badge badge-pass">Pass</span>'
+            extra_attrs = 'data-soft-only="true" style="display:none"'
+            body_content = ('<p style="color:#16a34a;padding:8px 0">'
+                            '&#10003; No hard violations in this dimension. '
+                            'Shown because Soft Match found quality-indicator terms above.</p>')
+
         cards.append(f"""
-      <div class="req-card" data-dim="{dim_key}" data-card-idx="{card_idx}">
+      <div class="req-card" data-dim="{dim_key}" {extra_attrs}>
         <div class="req-header">
           <span class="req-num">#{i}</span>
           <span class="req-sentence">{rendered_sentence}</span>
+          {badge_html}
           <span class="chevron">&#9658;</span>
         </div>
-        <div class="req-body">{viol_html}</div>
+        <div class="req-body">{body_content}</div>
       </div>""")
-        card_idx += 1
 
-    if not cards:
-        return '<p style="color:#64748b;padding:16px">No violations detected in this dimension.</p>'
+    flagged_cards = [c for c in cards if 'data-soft-only' not in c]
+    if not flagged_cards:
+        return ('<p style="color:#64748b;padding:16px">No violations detected in this dimension.</p>'
+                + "\n".join(c for c in cards if 'data-soft-only' in c))
     return "\n".join(cards)
 
 
@@ -676,7 +1094,7 @@ def _dim_sections(dicts: dict[str, list[dict]]) -> str:
     <section class="dim-section {active}" id="sec-{dim_key}" style="--accent:{color}">
       <div class="section-header">
         <div class="dot"></div>
-        <h2>{html.escape(dim_name)}</h2>
+        <h2>{html.escape(dim_name)}<span class="soft-count" id="soft-count-{dim_key}"></span></h2>
         <span class="def">{html.escape(definition)}</span>
       </div>
       <div class="cards-container" id="cards-{dim_key}">
@@ -733,12 +1151,16 @@ def _appendix(all_sentences: list[str], dicts: dict[str, list[dict]]) -> str:
                     f'<div class="app-viol-sugg">💡 {html.escape(vsugg)}</div>'
                     if vsugg else ""
                 )
+                fb_term = html.escape(vtext_raw, quote=True)
                 viol_items.append(
                     f'<div class="app-viol" style="--viol-color:{color}">'
                     f'<div class="app-viol-sentence">{rendered}</div>'
                     f'<div class="app-viol-meta">'
                     f'<span>reason: {vreason}</span>'
                     f'<span>score: {vscore:.2f}</span>'
+                    f'<button class="fb-btn" data-term="{fb_term}" '
+                    f'onclick="sendFeedback(this)" '
+                    f'title="Mark as false positive — suppress similar future detections">False Positive</button>'
                     f'</div>'
                     f'{sugg_block}'
                     f'</div>'
@@ -758,7 +1180,7 @@ def _appendix(all_sentences: list[str], dicts: dict[str, list[dict]]) -> str:
             chevron = f'<span class="app-dim-chevron">&#9658;</span>' if flagged else ''
 
             dim_html_parts.append(f"""
-          <div class="app-dim">
+          <div class="app-dim" data-dim="{dim_key}" data-flagged="{'true' if flagged else 'false'}">
             <div class="app-dim-header">
               <span class="app-dim-dot" style="background:{color}"></span>
               <span class="app-dim-name">{html.escape(dim_name)}</span>
@@ -793,7 +1215,51 @@ def _appendix(all_sentences: list[str], dicts: dict[str, list[dict]]) -> str:
   </section>"""
 
 
-def _dim_tabs() -> str:
+def _entity_section(entities: dict[str, list[tuple[str, int]]]) -> str:
+    from util.entity_extraction import LABEL_COLORS
+
+    if not entities:
+        return (
+            '<section class="dim-section" id="sec-entities" style="--accent:#64748b">'
+            '<div class="section-header"><div class="dot"></div>'
+            '<h2>Named Entities</h2>'
+            '<span class="def">No entities were extracted from this document.</span>'
+            '</div></section>'
+        )
+
+    groups: list[str] = []
+    for label, items in entities.items():
+        color   = LABEL_COLORS.get(label, "#64748b")
+        n_unique = len(items)
+        tags = "".join(
+            f'<span class="entity-tag" style="--ent-color:{color}">'
+            f'{html.escape(text)}'
+            f'{"<span class=ent-count>×" + str(count) + "</span>" if count > 1 else ""}'
+            f'</span>'
+            for text, count in items
+        )
+        groups.append(f"""
+        <div class="entity-group">
+          <div class="entity-group-header">
+            <span class="entity-group-dot" style="background:{color}"></span>
+            <span class="entity-group-name">{html.escape(label)}</span>
+            <span class="entity-group-count">{n_unique} unique</span>
+          </div>
+          <div class="entity-tags">{tags}</div>
+        </div>""")
+
+    return f"""
+    <section class="dim-section" id="sec-entities" style="--accent:#64748b">
+      <div class="section-header">
+        <div class="dot"></div>
+        <h2>Named Entities</h2>
+        <span class="def">Entities automatically extracted from the full document text using NLP.</span>
+      </div>
+      <div class="entity-grid">{"".join(groups)}</div>
+    </section>"""
+
+
+def _dim_tabs(has_entities: bool = False) -> str:
     tabs: list[str] = []
     for i, (dim_key, dim_name, color, _) in enumerate(_DIMS):
         active = "active" if i == 0 else ""
@@ -802,10 +1268,20 @@ def _dim_tabs() -> str:
             f'style="--tab-color:{color}" onclick="activateTab(\'{dim_key}\')">'
             f'{html.escape(dim_name)}</button>'
         )
+    if has_entities:
+        tabs.append(
+            '<button class="dim-tab" data-dim="entities" '
+            'style="--tab-color:#64748b" onclick="activateTab(\'entities\')">'
+            'Entities</button>'
+        )
     return "\n".join(tabs)
 
 
-def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
+def _build_html(
+    dicts: dict[str, list[dict]],
+    total: int,
+    entities: dict[str, list[tuple[str, int]]] | None = None,
+) -> str:
     dim_stats: dict[str, dict] = {}
     for dim_key, *_ in _DIMS:
         n_flagged        = sum(1 for d in dicts[dim_key] if _is_flagged(dim_key, d))
@@ -813,6 +1289,8 @@ def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
 
     all_sentences = [d["sentence"] for d in dicts["ambiguity"]]
     timestamp     = datetime.now().strftime("%Y-%m-%d %H:%M")
+    soft_json     = _soft_match_json()
+    has_entities  = bool(entities)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -826,6 +1304,7 @@ def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
 
 <div id="topbar">
   <h1>ARQM-LITE — Software Requirements Quality Report</h1>
+  <button id="soft-btn" onclick="toggleSoftMatch()" title="Highlight requirements containing vague/infeasible/unverifiable/non-singular terms from prototype lists">&#128269; Soft Match</button>
   <span class="ts">Generated {timestamp} &nbsp;·&nbsp; {total} requirements</span>
 </div>
 
@@ -835,7 +1314,7 @@ def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
 </div>
 
 <div id="dim-nav">
-  {_dim_tabs()}
+  {_dim_tabs(has_entities)}
 </div>
 
 <main>
@@ -845,9 +1324,12 @@ def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
 
   {_dim_sections(dicts)}
 
+  {_entity_section(entities or {}) if has_entities else ""}
+
   {_appendix(all_sentences, dicts)}
 </main>
 
+<script>var SOFT_PROTOTYPES={soft_json};</script>
 <script>{_JS}</script>
 </body>
 </html>"""
@@ -855,11 +1337,16 @@ def _build_html(dicts: dict[str, list[dict]], total: int) -> str:
 
 # ── Public API ────────────────────────────────────────────────────────────────
 
-def generate_html_bytes(results: list[dict]) -> bytes:
+def generate_html_bytes(
+    results: list[dict],
+    entities: dict[str, list[tuple[str, int]]] | None = None,
+) -> bytes:
     """
     Accepts the list-of-per-requirement-dicts produced by
     ``util.analyzer.analyze_requirements``, builds a self-contained HTML
     quality report, and returns the raw UTF-8 bytes.
+
+    Optional *entities* dict comes from ``util.entity_extraction.extract_entities``.
     """
     dim_keys = [k for k, *_ in _DIMS]
 
@@ -868,4 +1355,4 @@ def generate_html_bytes(results: list[dict]) -> bytes:
         for k in dim_keys
     }
     total = len(results)
-    return _build_html(dicts, total).encode("utf-8")
+    return _build_html(dicts, total, entities=entities).encode("utf-8")
