@@ -33,34 +33,55 @@ _PURE_TRAIN_CSV = _ROOT / 'datasets' / 'requirement_identification' / 'PURE_trai
 
 _VALID_QUALITIES = {'ambiguity', 'feasibility', 'singularity', 'verifiability'}
 _VALID_SLOTS     = {'subject', 'modal', 'action', 'object', 'condition', 'qualifier'}
-_VALID_SPLITS    = {'train', 'val'}
 
 
 def _calibration_counts() -> dict:
     counts = {}
     for quality, path in _CALIBRATION_FILES.items():
         try:
-            data = json.loads(path.read_text(encoding='utf-8'))
-            counts[quality] = {'train': len(data.get('train', [])),
-                               'val':   len(data.get('val', []))}
+            entries = json.loads(path.read_text(encoding='utf-8'))
+            counts[quality] = {
+                'total':          len(entries),
+                'violations':     sum(1 for e in entries if e.get('label') == 1),
+                'non_violations': sum(1 for e in entries if e.get('label') == 0),
+            }
         except Exception:
-            counts[quality] = {'train': 0, 'val': 0}
+            counts[quality] = {'total': 0, 'violations': 0, 'non_violations': 0}
     return counts
 
 
-def _append_calibration_entry(quality: str, split: str, entry: dict) -> dict:
+def _annotated_sentences() -> dict:
+    """Return sentences annotated per quality attribute: {quality: [sentence, ...]}."""
+    result = {}
+    for quality, path in _CALIBRATION_FILES.items():
+        seen = set()
+        try:
+            entries = json.loads(path.read_text(encoding='utf-8'))
+            for entry in entries:
+                s = entry.get('sentence', '').strip()
+                if s:
+                    seen.add(s)
+        except Exception:
+            pass
+        result[quality] = list(seen)
+    return result
+
+
+def _append_calibration_entry(quality: str, entry: dict) -> dict:
     """Thread-safe append to the appropriate calibration JSON. Returns updated counts."""
     path = _CALIBRATION_FILES[quality]
     with _calibration_lock:
         try:
-            data = json.loads(path.read_text(encoding='utf-8'))
+            entries = json.loads(path.read_text(encoding='utf-8'))
         except Exception:
-            data = {'train': [], 'val': []}
-        data.setdefault('train', [])
-        data.setdefault('val', [])
-        data[split].append(entry)
-        path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding='utf-8')
-    return {'train': len(data['train']), 'val': len(data['val'])}
+            entries = []
+        entries.append(entry)
+        path.write_text(json.dumps(entries, indent=2, ensure_ascii=False), encoding='utf-8')
+    return {
+        'total':          len(entries),
+        'violations':     sum(1 for e in entries if e.get('label') == 1),
+        'non_violations': sum(1 for e in entries if e.get('label') == 0),
+    }
 
 
 @main_bp.route('/')
@@ -207,7 +228,8 @@ def annotate():
 
     return render_template('annotate.html',
                            requirements=requirements,
-                           counts=_calibration_counts())
+                           counts=_calibration_counts(),
+                           annotated_sentences=_annotated_sentences())
 
 
 @main_bp.route('/api/annotate', methods=['POST'])
@@ -215,13 +237,10 @@ def api_annotate():
     """Save a single annotation entry to the appropriate calibration JSON."""
     data    = request.get_json(silent=True) or {}
     quality = data.get('quality', '')
-    split   = data.get('split', '')
     entry   = data.get('entry', {})
 
     if quality not in _VALID_QUALITIES:
         return jsonify({'ok': False, 'error': 'Invalid quality attribute'}), 400
-    if split not in _VALID_SPLITS:
-        return jsonify({'ok': False, 'error': 'split must be train or val'}), 400
     if not isinstance(entry.get('span'), str) or not entry['span'].strip():
         return jsonify({'ok': False, 'error': 'span is required'}), 400
     if not isinstance(entry.get('sentence'), str) or not entry['sentence'].strip():
@@ -231,7 +250,7 @@ def api_annotate():
     if entry.get('label') not in (0, 1):
         return jsonify({'ok': False, 'error': 'label must be 0 or 1'}), 400
 
-    totals = _append_calibration_entry(quality, split, {
+    totals = _append_calibration_entry(quality, {
         'span':     entry['span'].strip(),
         'sentence': entry['sentence'].strip(),
         'slot':     entry['slot'],

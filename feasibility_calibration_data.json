@@ -1,414 +1,614 @@
-{
-  "train": [
-    {
-      "span": "100% uptime",
-      "sentence": "The system must provide 100% uptime at all times.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "zero latency",
-      "sentence": "The API must respond with zero latency.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "never fail",
-      "sentence": "The service must never fail under any circumstances.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "always available",
-      "sentence": "The platform must always be available without exception.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "unlimited throughput",
-      "sentence": "The system must offer unlimited throughput.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "zero downtime",
-      "sentence": "The pipeline must process data with zero downtime.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "instantaneous retrieval",
-      "sentence": "The cache must provide instantaneous retrieval.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "100% accuracy",
-      "sentence": "The classifier must achieve 100% accuracy on all inputs.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "zero errors",
-      "sentence": "The compiler must produce zero errors for all valid inputs.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "infinite scalability",
-      "sentence": "The architecture must support infinite scalability.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "99.9% uptime",
-      "sentence": "The service must maintain 99.9% uptime with planned maintenance windows.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "within 200ms",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "must encrypt",
-      "sentence": "The system must encrypt all data before writing to disk.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "process 1000 requests per second",
-      "sentence": "The service must process 1000 requests per second.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "99.99% availability",
-      "sentence": "The platform must achieve 99.99% availability excluding maintenance.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "synchronous and non-blocking",
-      "sentence": "The service must be synchronous and non-blocking.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "stateless and maintain session",
-      "sentence": "The component must be stateless and maintain session state.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "real-time and batch",
-      "sentence": "The system must process requests in real-time and via batch processing.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "encrypted and stored in plaintext",
-      "sentence": "All data must be encrypted and stored in plaintext for auditing.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "immutable and allow updates",
-      "sentence": "The record must be immutable and allow updates from admin users.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "0.1ms",
-      "sentence": "The API must respond within 0.1ms for all requests.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "1ms latency",
-      "sentence": "The service must process 1,000,000 requests per second with 1ms latency.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "0ms response",
-      "sentence": "The gateway must forward requests with 0ms response time.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "under 500ms",
-      "sentence": "The dashboard must load under 500ms on a standard connection.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "within 30 seconds",
-      "sentence": "The report must be generated within 30 seconds of request.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The system must encrypt all data before writing to disk.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The system",
-      "sentence": "The system must provide 100% uptime at all times.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "The API",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "before transmission",
-      "sentence": "Data must be encrypted before transmission.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "when memory usage exceeds 80%",
-      "sentence": "The service should restart when memory usage exceeds 80%.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "must track events without manual intervention,",
-      "sentence": "Once the audit trail functionality has been activated, the System must track events without manual intervention, and store in the audit trail information about them.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "must ensure that audit trail data is available for inspection on request,",
-      "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "all related data made accessible,",
-      "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "this can be achieved by authorised external personnel who have little or no familiarity with the system.",
-      "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "export audit trails for specified cases (",
-      "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "without affecting the audit trail stored by the System).",
-      "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "must be able to export audit trails",
-      "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
-      "slot": "qualifier",
-      "label": 0
-    }
-  ],
-  "val": [
-    {
-      "span": "100% uptime",
-      "sentence": "The load balancer must guarantee 100% uptime.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "zero latency",
-      "sentence": "The proxy must forward packets with zero latency.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "never crash",
-      "sentence": "The application must never crash in production.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "unlimited storage",
-      "sentence": "The vault must provide unlimited storage for all users.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "always respond",
-      "sentence": "The health endpoint must always respond with 200 OK.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "99.9% uptime",
-      "sentence": "The database must maintain 99.9% uptime per calendar month.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "within 50ms",
-      "sentence": "The auth service must respond within 50ms on the internal network.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "blocking and non-blocking",
-      "sentence": "The queue must support blocking and non-blocking reads.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "stateless and session-aware",
-      "sentence": "The router must be stateless and session-aware.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "0.5ms",
-      "sentence": "The in-process cache must return results within 0.5ms.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "under 10ms",
-      "sentence": "The service mesh must resolve DNS under 10ms.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "must support",
-      "sentence": "The system must support downloading PDF files to disk.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "before writing",
-      "sentence": "The system must encrypt all data before writing to disk.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The pipeline must complete within 5 minutes.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The service",
-      "sentence": "The service must never fail under any circumstances.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "lossless and lossy",
-      "sentence": "The encoder must support lossless and lossy compression simultaneously.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "immutable and writable",
-      "sentence": "The audit log must be immutable and writable by the compliance team.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "within 4 hours",
-      "sentence": "Critical incidents must be resolved within 4 hours of detection.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "99.9999%",
-      "sentence": "The system must achieve 99.9999% availability.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "2ms at 500000 RPS",
-      "sentence": "The gateway must achieve 2ms latency at 500000 RPS.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "error rate below 0.1%",
-      "sentence": "The payment service must maintain an error rate below 0.1%.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "encrypt",
-      "sentence": "The system must encrypt all PII fields before storage.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "maximum 5 retries",
-      "sentence": "The client must attempt maximum 5 retries before failing.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "when load exceeds 1000 RPS",
-      "sentence": "The autoscaler must trigger when load exceeds 1000 RPS.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "zero packet loss",
-      "sentence": "The network layer must guarantee zero packet loss.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "perfect reliability",
-      "sentence": "The storage system must offer perfect reliability.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "within 1 second",
-      "sentence": "The search index must return results within 1 second.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "PDF files",
-      "sentence": "The system must support downloading PDF files to disk.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "configuration files",
-      "sentence": "The installer must copy configuration files to the target directory.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "log files",
-      "sentence": "The system must archive log files after 90 days.",
-      "slot": "object",
-      "label": 0
-    }
-  ]
-}
+[
+  {
+    "span": "100% uptime",
+    "sentence": "The system must provide 100% uptime at all times.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "zero latency",
+    "sentence": "The API must respond with zero latency.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "never fail",
+    "sentence": "The service must never fail under any circumstances.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "always available",
+    "sentence": "The platform must always be available without exception.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "unlimited throughput",
+    "sentence": "The system must offer unlimited throughput.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "zero downtime",
+    "sentence": "The pipeline must process data with zero downtime.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "instantaneous retrieval",
+    "sentence": "The cache must provide instantaneous retrieval.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "100% accuracy",
+    "sentence": "The classifier must achieve 100% accuracy on all inputs.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "zero errors",
+    "sentence": "The compiler must produce zero errors for all valid inputs.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "infinite scalability",
+    "sentence": "The architecture must support infinite scalability.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "99.9% uptime",
+    "sentence": "The service must maintain 99.9% uptime with planned maintenance windows.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "within 200ms",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "must encrypt",
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "process 1000 requests per second",
+    "sentence": "The service must process 1000 requests per second.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "99.99% availability",
+    "sentence": "The platform must achieve 99.99% availability excluding maintenance.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "synchronous and non-blocking",
+    "sentence": "The service must be synchronous and non-blocking.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "stateless and maintain session",
+    "sentence": "The component must be stateless and maintain session state.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "real-time and batch",
+    "sentence": "The system must process requests in real-time and via batch processing.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "encrypted and stored in plaintext",
+    "sentence": "All data must be encrypted and stored in plaintext for auditing.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "immutable and allow updates",
+    "sentence": "The record must be immutable and allow updates from admin users.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "0.1ms",
+    "sentence": "The API must respond within 0.1ms for all requests.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "1ms latency",
+    "sentence": "The service must process 1,000,000 requests per second with 1ms latency.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "0ms response",
+    "sentence": "The gateway must forward requests with 0ms response time.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "under 500ms",
+    "sentence": "The dashboard must load under 500ms on a standard connection.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "within 30 seconds",
+    "sentence": "The report must be generated within 30 seconds of request.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The system",
+    "sentence": "The system must provide 100% uptime at all times.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The API",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "before transmission",
+    "sentence": "Data must be encrypted before transmission.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "when memory usage exceeds 80%",
+    "sentence": "The service should restart when memory usage exceeds 80%.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "must track events without manual intervention,",
+    "sentence": "Once the audit trail functionality has been activated, the System must track events without manual intervention, and store in the audit trail information about them.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "must ensure that audit trail data is available for inspection on request,",
+    "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "all related data made accessible,",
+    "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "export audit trails for specified cases (",
+    "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "without affecting the audit trail stored by the System).",
+    "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "must be able to export audit trails",
+    "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "it must log these in the audit trail.",
+    "sentence": "If the System allows users to make unauthorised attempts to access cases, it must log these in the audit trail.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "Any access to cases,",
+    "sentence": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "all other activities",
+    "sentence": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "All error messages",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "must be meaningful,",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "appropriately acted upon",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "provide a familiar and common look and feel",
+    "sentence": "The System must employ a single set of user interface rules, or a small number of sets to provide a familiar and common look and feel for the application.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "display several entities (",
+    "sentence": "The System must be able to display several entities (cases, suspects) simultaneously.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "made customizable",
+    "sentence": "The interfaces must be made customizable or user-configurable to the extent possible. (e.g., the displayed columns in the table, move, resize, modify the appearance).",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "user-configurable",
+    "sentence": "The interfaces must be made customizable or user-configurable to the extent possible. (e.g., the displayed columns in the table, move, resize, modify the appearance).",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "extent possible. (",
+    "sentence": "The interfaces must be made customizable or user-configurable to the extent possible. (e.g., the displayed columns in the table, move, resize, modify the appearance).",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "suitable for users with special needs;",
+    "sentence": "The System user interface must be suitable for users with special needs; that is, compatible with specialist software that may be used and with appropriate interface guidelines",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "compatible with specialist software",
+    "sentence": "The System user interface must be suitable for users with special needs; that is, compatible with specialist software that may be used and with appropriate interface guidelines",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "may be used",
+    "sentence": "The System user interface must be suitable for users with special needs; that is, compatible with specialist software that may be used and with appropriate interface guidelines",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "appropriate interface guidelines",
+    "sentence": "The System user interface must be suitable for users with special needs; that is, compatible with specialist software that may be used and with appropriate interface guidelines",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "End User",
+    "sentence": "The System must provide End User and Administrator functions which are easy to use and intuitive throughout.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "Administrator functions",
+    "sentence": "The System must provide End User and Administrator functions which are easy to use and intuitive throughout.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "easy to use",
+    "sentence": "The System must provide End User and Administrator functions which are easy to use and intuitive throughout.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "intuitive throughout.",
+    "sentence": "The System must provide End User and Administrator functions which are easy to use and intuitive throughout.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "persistent defaults",
+    "sentence": "The System must allow persistent defaults for data entry where desirable. These defaults should include: user-definable values; values same as previous item; values derived from context, e.g. date, file reference, user identifier;",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "data entry where desirable.",
+    "sentence": "The System must allow persistent defaults for data entry where desirable. These defaults should include: user-definable values; values same as previous item; values derived from context, e.g. date, file reference, user identifier;",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "user-definable values; values same",
+    "sentence": "The System must allow persistent defaults for data entry where desirable. These defaults should include: user-definable values; values same as previous item; values derived from context, e.g. date, file reference, user identifier;",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "previous item; values derived from context,",
+    "sentence": "The System must allow persistent defaults for data entry where desirable. These defaults should include: user-definable values; values same as previous item; values derived from context, e.g. date, file reference, user identifier;",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "completed",
+    "sentence": "Frequently-executed System transactions must be designed so that they can be completed with a small number of interactions (e.g. mouse clicks).",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "small number of interactions (",
+    "sentence": "Frequently-executed System transactions must be designed so that they can be completed with a small number of interactions (e.g. mouse clicks).",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "allow users to customise it.",
+    "sentence": "Where the System employs a graphical user interface, it must allow users to customise it. Customisation should include, but need not be limited to the following changes: menu contents; layout of screens; use of function keys;on-screen colours, fonts and font sizes;",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "not be limited to",
+    "sentence": "Where the System employs a graphical user interface, it must allow users to customise it. Customisation should include, but need not be limited to the following changes: menu contents; layout of screens; use of function keys;on-screen colours, fonts and font sizes;",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "user-intuitive.",
+    "sentence": "The user interfaces should be designed to make them user-intuitive.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "comply",
+    "sentence": "The user interfaces of the system should comply with Standard ISO 9241.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "ISO 9241.",
+    "sentence": "The user interfaces of the system should comply with Standard ISO 9241.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "ISO 9241-171",
+    "sentence": "Software accessibility ISO 9241-171 shall be the standard for guidance on software accessibility. User interfaces should meet its requirements and recommendations. Content accessibility WCAG 1.0 shall be the standard used for guidance on content accessibility.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "its",
+    "sentence": "User interfaces should meet its requirements and recommendations. Content accessibility WCAG 1.0 shall be the standard used for guidance on content accessibility.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "useful content",
+    "sentence": "Splash screens should be avoided unless they provide useful content or feedback about the application state to the user.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "feedback",
+    "sentence": "Splash screens should be avoided unless they provide useful content or feedback about the application state to the user.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "100% uptime",
+    "sentence": "The load balancer must guarantee 100% uptime.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "zero latency",
+    "sentence": "The proxy must forward packets with zero latency.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "never crash",
+    "sentence": "The application must never crash in production.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "unlimited storage",
+    "sentence": "The vault must provide unlimited storage for all users.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "always respond",
+    "sentence": "The health endpoint must always respond with 200 OK.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "99.9% uptime",
+    "sentence": "The database must maintain 99.9% uptime per calendar month.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "within 50ms",
+    "sentence": "The auth service must respond within 50ms on the internal network.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "blocking and non-blocking",
+    "sentence": "The queue must support blocking and non-blocking reads.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "stateless and session-aware",
+    "sentence": "The router must be stateless and session-aware.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "0.5ms",
+    "sentence": "The in-process cache must return results within 0.5ms.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "under 10ms",
+    "sentence": "The service mesh must resolve DNS under 10ms.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "must support",
+    "sentence": "The system must support downloading PDF files to disk.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "before writing",
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The pipeline must complete within 5 minutes.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The service",
+    "sentence": "The service must never fail under any circumstances.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "lossless and lossy",
+    "sentence": "The encoder must support lossless and lossy compression simultaneously.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "immutable and writable",
+    "sentence": "The audit log must be immutable and writable by the compliance team.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "within 4 hours",
+    "sentence": "Critical incidents must be resolved within 4 hours of detection.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "99.9999%",
+    "sentence": "The system must achieve 99.9999% availability.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "2ms at 500000 RPS",
+    "sentence": "The gateway must achieve 2ms latency at 500000 RPS.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "error rate below 0.1%",
+    "sentence": "The payment service must maintain an error rate below 0.1%.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "encrypt",
+    "sentence": "The system must encrypt all PII fields before storage.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "maximum 5 retries",
+    "sentence": "The client must attempt maximum 5 retries before failing.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "when load exceeds 1000 RPS",
+    "sentence": "The autoscaler must trigger when load exceeds 1000 RPS.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "zero packet loss",
+    "sentence": "The network layer must guarantee zero packet loss.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "perfect reliability",
+    "sentence": "The storage system must offer perfect reliability.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "within 1 second",
+    "sentence": "The search index must return results within 1 second.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "PDF files",
+    "sentence": "The system must support downloading PDF files to disk.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "configuration files",
+    "sentence": "The installer must copy configuration files to the target directory.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "log files",
+    "sentence": "The system must archive log files after 90 days.",
+    "slot": "object",
+    "label": 0
+  }
+]

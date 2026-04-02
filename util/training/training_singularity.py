@@ -898,6 +898,54 @@ class ContextualSingularityScorer:
         return [float(1 / (1 + np.exp(-r * 8))) for r in raw]
 
 
+def _auto_split(entries: list) -> tuple[list, list]:
+    """Split a flat entry list into (train, val).
+
+    Stratifies by (slot, label) so that every slot in val has both classes
+    represented wherever possible.  Within each stratum the newest entries
+    (tail) are preferred for val, matching the 'latest 20%' intent.
+
+    Target val size ≈ 20% of total.  Each (slot, label) stratum contributes
+    floor(stratum_size * 0.20) entries (min 1 if stratum has >= 2 entries).
+    """
+    if len(entries) < 5:
+        return entries, []
+
+    from collections import defaultdict
+    strata: dict[tuple, list[tuple[int, dict]]] = defaultdict(list)
+    for idx, e in enumerate(entries):
+        key = (e.get("slot", ""), e.get("label", -1))
+        strata[key].append((idx, e))
+
+    val_indices: set[int] = set()
+    for group in strata.values():
+        n = len(group)
+        if n < 2:
+            continue
+        k = max(1, round(n * 0.20))
+        for idx, _ in group[-k:]:
+            val_indices.add(idx)
+
+    from collections import Counter
+    slot_label_counts: dict[str, Counter] = defaultdict(Counter)
+    for idx in val_indices:
+        e = entries[idx]
+        slot_label_counts[e.get("slot", "")][e.get("label", -1)] += 1
+
+    for slot, counts in slot_label_counts.items():
+        if len(counts) < 2:
+            for idx in list(val_indices):
+                if entries[idx].get("slot") == slot:
+                    val_indices.discard(idx)
+
+    if not val_indices:
+        return entries, []
+
+    train = [e for i, e in enumerate(entries) if i not in val_indices]
+    val   = [entries[i] for i in sorted(val_indices)]
+    return train, val
+
+
 # ─────────────────────────────────────────────
 # Threshold calibrator
 # ─────────────────────────────────────────────
@@ -932,23 +980,15 @@ class SingularityCalibrator:
             return dict(DEFAULT_SLOT_THRESHOLDS)
 
         with open(path) as f:
-            data = json.load(f)
+            entries = json.load(f)
 
-        train_records = data.get("train", [])
-        val_records   = data.get("val",   [])
+        train_records, val_records = _auto_split(entries)
 
         if not val_records:
-            print("[SingularityCalibrator] No val records — using defaults.")
+            print("[SingularityCalibrator] Not enough data for validation — using defaults.")
             return dict(DEFAULT_SLOT_THRESHOLDS)
 
-        train_sents = {r["sentence"] for r in train_records}
-        leaked = [r for r in val_records if r["sentence"] in train_sents]
-        if leaked:
-            print(
-                f"[SingularityCalibrator] WARNING: {len(leaked)} val sentence(s) "
-                f"also in train — results may be optimistic."
-            )
-
+        print(f"[SingularityCalibrator] Split: {len(train_records)} train / {len(val_records)} val")
         print(f"[SingularityCalibrator] Scoring {len(val_records)} val examples...")
         contexts = [f"{r['span']} [SEP] {r['sentence']}" for r in val_records]
         embs = self.encoder.encode(contexts, normalize_embeddings=True)

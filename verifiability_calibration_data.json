@@ -1,360 +1,884 @@
-{
-  "train": [
-    {
-      "span": "appropriately",
-      "sentence": "The system must handle errors appropriately.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "as needed",
-      "sentence": "The module must manage exceptions as needed.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "in a reasonable manner",
-      "sentence": "The service must respond to failures in a reasonable manner.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "properly",
-      "sentence": "The component must deal with edge cases properly.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "easy to use",
-      "sentence": "The interface must be intuitive and easy to use.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "look professional",
-      "sentence": "The dashboard should look professional and visually appealing.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "positive user experience",
-      "sentence": "The application must provide a positive user experience.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "users must be satisfied",
-      "sentence": "Users must be satisfied with the checkout flow.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "never lose user data",
-      "sentence": "The system must never lose user data.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "never crash",
-      "sentence": "The service shall never crash in production.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "not have any security vulnerabilities",
-      "sentence": "The platform must not have any security vulnerabilities.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "within 200ms",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "returns HTTP 400",
-      "sentence": "The service must return HTTP 400 with a validation error body when input is malformed.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "within 60 seconds",
-      "sentence": "The system must send an alert within 60 seconds of a P1 incident.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "returns HTTP 401",
-      "sentence": "The login endpoint must reject requests with an invalid token and return HTTP 401.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "must support",
-      "sentence": "The system must support downloading PDF files to disk.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "errors must be handled",
-      "sentence": "Errors must be handled by the system.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "notifications must be sent",
-      "sentence": "Notifications must be sent when a threshold is breached.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "data must be validated",
-      "sentence": "Data must be validated before processing.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "feel responsive",
-      "sentence": "The UI should feel responsive and clean.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "when input is malformed",
-      "sentence": "The service must return HTTP 400 with a validation error body when input is malformed.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "under 1000 RPS",
-      "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The system must never lose user data.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The system",
-      "sentence": "The system must handle errors appropriately.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "The API",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "more than one group.",
-      "sentence": "The System must allow a user to be a member of more than one group.",
-      "slot": "object",
-      "label": 1
-    }
-  ],
-  "val": [
-    {
-      "span": "suitably",
-      "sentence": "The service must respond suitably to all invalid inputs.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "where applicable",
-      "sentence": "The system must apply encryption where applicable.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "in a timely fashion",
-      "sentence": "Incidents must be resolved in a timely fashion.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "within 500ms",
-      "sentence": "The search endpoint must return results within 500ms for 99% of requests.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "fewer than 5 exceptions",
-      "sentence": "The service must produce fewer than 5 unhandled exceptions per day.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "intuitive",
-      "sentence": "The form must be intuitive and require no training.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "great experience",
-      "sentence": "The onboarding flow must deliver a great experience.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "customers are satisfied",
-      "sentence": "Customers must be satisfied after using the support portal.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "HTTP 200",
-      "sentence": "The health endpoint must return HTTP 200 when all dependencies are reachable.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "task success rate",
-      "sentence": "The wizard must achieve a task success rate of 90% in usability testing.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "exceptions must be managed",
-      "sentence": "Exceptions must be managed by the global error handler.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "alerts must be delivered",
-      "sentence": "Alerts must be delivered to the on-call engineer.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "must return HTTP 422",
-      "sentence": "The API must return HTTP 422 and a field-level error map for schema violations.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "never be slow",
-      "sentence": "The API must never be slow under load.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "shall never drop messages",
-      "sentence": "The queue shall never drop messages.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "MTBF greater than",
-      "sentence": "The sensor module must have an MTBF greater than 10000 hours.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "must not have any bugs",
-      "sentence": "The release must not have any bugs.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "when CPU exceeds 80%",
-      "sentence": "An alert must fire when CPU exceeds 80% for 5 consecutive minutes.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "before persisting",
-      "sentence": "Input must be sanitised before persisting to the database.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The service must never crash in production.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The platform",
-      "sentence": "The platform must not have any security vulnerabilities.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "visually appealing",
-      "sentence": "All charts must be visually appealing and consistent with the brand guide.",
-      "slot": "object",
-      "label": 1
-    },
-    {
-      "span": "to a satisfactory level",
-      "sentence": "The importer must handle large files to a satisfactory level.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "error rate below 0.1%",
-      "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "access must be controlled",
-      "sentence": "Access must be controlled at the API gateway.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "log entry within 1 second",
-      "sentence": "A log entry must be written within 1 second of each authentication event.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "best effort",
-      "sentence": "The sync service must deliver messages on a best effort basis.",
-      "slot": "qualifier",
-      "label": 1
-    },
-    {
-      "span": "all PII fields",
-      "sentence": "The system must encrypt all PII fields before storage.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "when all dependencies are reachable",
-      "sentence": "The health endpoint must return HTTP 200 when all dependencies are reachable.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "in usability testing",
-      "sentence": "The wizard must achieve a task success rate of 90% in usability testing.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "when required",
-      "sentence": "The system must apply security patches when required.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "under certain conditions",
-      "sentence": "The service must restart under certain conditions.",
-      "slot": "condition",
-      "label": 1
-    }
-  ]
-}
+[
+  {
+    "span": "appropriately",
+    "sentence": "The system must handle errors appropriately.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "as needed",
+    "sentence": "The module must manage exceptions as needed.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "in a reasonable manner",
+    "sentence": "The service must respond to failures in a reasonable manner.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "properly",
+    "sentence": "The component must deal with edge cases properly.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "easy to use",
+    "sentence": "The interface must be intuitive and easy to use.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "look professional",
+    "sentence": "The dashboard should look professional and visually appealing.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "positive user experience",
+    "sentence": "The application must provide a positive user experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "users must be satisfied",
+    "sentence": "Users must be satisfied with the checkout flow.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "never lose user data",
+    "sentence": "The system must never lose user data.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "never crash",
+    "sentence": "The service shall never crash in production.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "not have any security vulnerabilities",
+    "sentence": "The platform must not have any security vulnerabilities.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "within 200ms",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "returns HTTP 400",
+    "sentence": "The service must return HTTP 400 with a validation error body when input is malformed.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "within 60 seconds",
+    "sentence": "The system must send an alert within 60 seconds of a P1 incident.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "returns HTTP 401",
+    "sentence": "The login endpoint must reject requests with an invalid token and return HTTP 401.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "must support",
+    "sentence": "The system must support downloading PDF files to disk.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "errors must be handled",
+    "sentence": "Errors must be handled by the system.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "notifications must be sent",
+    "sentence": "Notifications must be sent when a threshold is breached.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "data must be validated",
+    "sentence": "Data must be validated before processing.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "feel responsive",
+    "sentence": "The UI should feel responsive and clean.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "when input is malformed",
+    "sentence": "The service must return HTTP 400 with a validation error body when input is malformed.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "under 1000 RPS",
+    "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The system must never lose user data.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The system",
+    "sentence": "The system must handle errors appropriately.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The API",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "more than one group.",
+    "sentence": "The System must allow a user to be a member of more than one group.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "standard APIs",
+    "sentence": "The XS function shall provide standard APIs as specified in Appendix C.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "specified in Appendix C.",
+    "sentence": "The XS function shall provide standard APIs as specified in Appendix C.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The XS shall internally interface (transparent to the operator) with the existing data elements of the DBIF, DAC, and COTS RDBMS products.",
+    "sentence": "The XS shall internally interface (transparent to the operator) with the existing data elements of the DBIF, DAC, and COTS RDBMS products.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "XS shall internally interface (",
+    "sentence": "The XS shall internally interface (transparent to the operator) with the existing data elements of the DBIF, DAC, and COTS RDBMS products.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "existing data elements",
+    "sentence": "The XS shall internally interface (transparent to the operator) with the existing data elements of the DBIF, DAC, and COTS RDBMS products.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The Registry software shall be portable and required to execute on COE-compliant platforms.",
+    "sentence": "The Registry software shall be portable and required to execute on COE-compliant platforms.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "portable",
+    "sentence": "The Registry software shall be portable and required to execute on COE-compliant platforms.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "COE-compliant platforms.",
+    "sentence": "The Registry software shall be portable and required to execute on COE-compliant platforms.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Personnel requirements shall be determined by the developers of the system in which the XS module is embedded.",
+    "sentence": "Personnel requirements shall be determined by the developers of the system in which the XS module is embedded.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "determined by the developers",
+    "sentence": "Personnel requirements shall be determined by the developers of the system in which the XS module is embedded.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "in which the XS module is embedded.",
+    "sentence": "Personnel requirements shall be determined by the developers of the system in which the XS module is embedded.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The XS software shall be delivered in accordance with DII COE guidelines.",
+    "sentence": "The XS software shall be delivered in accordance with DII COE guidelines.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "accordance",
+    "sentence": "The XS software shall be delivered in accordance with DII COE guidelines.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "DII COE guidelines.",
+    "sentence": "The XS software shall be delivered in accordance with DII COE guidelines.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "create accounts",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "store their customer profiles,",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "contact information,",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "purchase history,",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "confirm orders.",
+    "sentence": "Customers will be able to create accounts to store their customer profiles, configure contact information, view their purchase history, and confirm orders.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "Customers will be able to register, log in, and log out of their accounts.",
+    "sentence": "Customers will be able to register, log in, and log out of their accounts.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "register, log in,",
+    "sentence": "Customers will be able to register, log in, and log out of their accounts.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "log out",
+    "sentence": "Customers will be able to register, log in, and log out of their accounts.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "their accounts.",
+    "sentence": "Customers will be able to register, log in, and log out of their accounts.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "Products will be stored in multi-tiered categories; a category can contain sub categories or products.",
+    "sentence": "Products will be stored in multi-tiered categories; a category can contain sub categories or products.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "multi-tiered categories;",
+    "sentence": "Products will be stored in multi-tiered categories; a category can contain sub categories or products.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "contain sub categories",
+    "sentence": "Products will be stored in multi-tiered categories; a category can contain sub categories or products.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "products.",
+    "sentence": "Products will be stored in multi-tiered categories; a category can contain sub categories or products.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The inventory management will allow for administrators to update the categories, the products placed in categories, and the specific product details.",
+    "sentence": "The inventory management will allow for administrators to update the categories, the products placed in categories, and the specific product details.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "update the categories,",
+    "sentence": "The inventory management will allow for administrators to update the categories, the products placed in categories, and the specific product details.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "products placed in categories,",
+    "sentence": "The inventory management will allow for administrators to update the categories, the products placed in categories, and the specific product details.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "specific product details.",
+    "sentence": "The inventory management will allow for administrators to update the categories, the products placed in categories, and the specific product details.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Customers will also be able to add products into the shopping cart.",
+    "sentence": "Customers will also be able to add products into the shopping cart.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "add products into the shopping cart.",
+    "sentence": "Customers will also be able to add products into the shopping cart.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The shopping cart will clearly display the number of items in the cart, along with the total cost.",
+    "sentence": "The shopping cart will clearly display the number of items in the cart, along with the total cost.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "clearly display",
+    "sentence": "The shopping cart will clearly display the number of items in the cart, along with the total cost.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "number of items",
+    "sentence": "The shopping cart will clearly display the number of items in the cart, along with the total cost.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "total cost.",
+    "sentence": "The shopping cart will clearly display the number of items in the cart, along with the total cost.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "sentence": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "add to",
+    "sentence": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "remove products",
+    "sentence": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "prior to checkout",
+    "sentence": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "order confirmation.",
+    "sentence": "The customer will also be able to add to or remove products from the shopping cart prior to checkout and order confirmation.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Customers will be able to confirm the order after checkout.",
+    "sentence": "Customers will be able to confirm the order after checkout.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "confirm the order",
+    "sentence": "Customers will be able to confirm the order after checkout.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "If the order is incorrect, the customer will be able to revise and update their order.",
+    "sentence": "If the order is incorrect, the customer will be able to revise and update their order.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "revise",
+    "sentence": "If the order is incorrect, the customer will be able to revise and update their order.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "update their order.",
+    "sentence": "If the order is incorrect, the customer will be able to revise and update their order.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The customer will then receive a confirmation email with the specific order details.",
+    "sentence": "The customer will then receive a confirmation email with the specific order details.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "specific order details.",
+    "sentence": "The customer will then receive a confirmation email with the specific order details.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Customers will be presented with an unambiguous interface to assist in browsing the categories and products.",
+    "sentence": "Customers will be presented with an unambiguous interface to assist in browsing the categories and products.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "unambiguous interface",
+    "sentence": "Customers will be presented with an unambiguous interface to assist in browsing the categories and products.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Customers will be able to search for products matching their search criteria.",
+    "sentence": "Customers will be able to search for products matching their search criteria.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "matching",
+    "sentence": "Customers will be able to search for products matching their search criteria.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "search criteria.",
+    "sentence": "Customers will be able to search for products matching their search criteria.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The interface will be compatible with all major web browsers such as Internet Explorer, Mozilla Navigator, Mozilla Firefox, Opera, and Safari.",
+    "sentence": "The interface will be compatible with all major web browsers such as Internet Explorer, Mozilla Navigator, Mozilla Firefox, Opera, and Safari.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "compatible",
+    "sentence": "The interface will be compatible with all major web browsers such as Internet Explorer, Mozilla Navigator, Mozilla Firefox, Opera, and Safari.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "all major web browsers such as",
+    "sentence": "The interface will be compatible with all major web browsers such as Internet Explorer, Mozilla Navigator, Mozilla Firefox, Opera, and Safari.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system will implement an Application Interface to allow for various plug-ins to interact with the system.",
+    "sentence": "The system will implement an Application Interface to allow for various plug-ins to interact with the system.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "Application Interface",
+    "sentence": "The system will implement an Application Interface to allow for various plug-ins to interact with the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "various plug-ins",
+    "sentence": "The system will implement an Application Interface to allow for various plug-ins to interact with the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The plug-in API will be well documented and specifications will be provided to plug-in developers.",
+    "sentence": "The plug-in API will be well documented and specifications will be provided to plug-in developers.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "The order database of WebOrder will communicate with the account system through a programmatic interface for the billing operations.",
+    "sentence": "The order database of WebOrder will communicate with the account system through a programmatic interface for the billing operations.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "programmatic interface",
+    "sentence": "The order database of WebOrder will communicate with the account system through a programmatic interface for the billing operations.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "billing operations.",
+    "sentence": "The order database of WebOrder will communicate with the account system through a programmatic interface for the billing operations.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Through programmatic interface, WebOrder will transmit information of items ordered by customers to the Inventory management system.",
+    "sentence": "Through programmatic interface, WebOrder will transmit information of items ordered by customers to the Inventory management system.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "information of items",
+    "sentence": "Through programmatic interface, WebOrder will transmit information of items ordered by customers to the Inventory management system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall be able to email customer and vendor in less than 1 second.",
+    "sentence": "The system shall be able to email customer and vendor in less than 1 second.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The system shall be able to validate credit card in less than 2 seconds.",
+    "sentence": "The system shall be able to validate credit card in less than 2 seconds.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "The system shall be able to restore 1000 records per second.",
+    "sentence": "The system shall be able to restore 1000 records per second.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The system will do periodic backups through a live internet connection.",
+    "sentence": "The system will do periodic backups through a live internet connection.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "periodic backups",
+    "sentence": "The system will do periodic backups through a live internet connection.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "live internet connection.",
+    "sentence": "The system will do periodic backups through a live internet connection.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall validate credit cards against fraud.",
+    "sentence": "The system shall validate credit cards against fraud.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "validate credit cards",
+    "sentence": "The system shall validate credit cards against fraud.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "fraud.",
+    "sentence": "The system shall validate credit cards against fraud.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall encrypt all sensitive information via https.",
+    "sentence": "The system shall encrypt all sensitive information via https.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "all sensitive information",
+    "sentence": "The system shall encrypt all sensitive information via https.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall encrypt all customer data in database.",
+    "sentence": "The system shall encrypt all customer data in database.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "database.",
+    "sentence": "The system shall encrypt all customer data in database.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall auto detect IP DOS attacks and block IP automatically.",
+    "sentence": "The system shall auto detect IP DOS attacks and block IP automatically.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "auto detect IP DOS attacks",
+    "sentence": "The system shall auto detect IP DOS attacks and block IP automatically.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "block IP automatically.",
+    "sentence": "The system shall auto detect IP DOS attacks and block IP automatically.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "consecutive failed login attempts.",
+    "sentence": "The system shall detect consecutive failed login attempts.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall be protected by open source firewall called Firestarter. http://www.fs-security.com/",
+    "sentence": "The system shall be protected by open source firewall called Firestarter. http://www.fs-security.com/",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "protected",
+    "sentence": "The system shall be protected by open source firewall called Firestarter. http://www.fs-security.com/",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system shall have an availability of 99.99%.",
+    "sentence": "The system shall have an availability of 99.99%.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "availability of 99.",
+    "sentence": "The system shall have an availability of 99.99%.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "suitably",
+    "sentence": "The service must respond suitably to all invalid inputs.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "where applicable",
+    "sentence": "The system must apply encryption where applicable.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "in a timely fashion",
+    "sentence": "Incidents must be resolved in a timely fashion.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "within 500ms",
+    "sentence": "The search endpoint must return results within 500ms for 99% of requests.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "fewer than 5 exceptions",
+    "sentence": "The service must produce fewer than 5 unhandled exceptions per day.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "intuitive",
+    "sentence": "The form must be intuitive and require no training.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "great experience",
+    "sentence": "The onboarding flow must deliver a great experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "customers are satisfied",
+    "sentence": "Customers must be satisfied after using the support portal.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "HTTP 200",
+    "sentence": "The health endpoint must return HTTP 200 when all dependencies are reachable.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "task success rate",
+    "sentence": "The wizard must achieve a task success rate of 90% in usability testing.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "exceptions must be managed",
+    "sentence": "Exceptions must be managed by the global error handler.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "alerts must be delivered",
+    "sentence": "Alerts must be delivered to the on-call engineer.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "must return HTTP 422",
+    "sentence": "The API must return HTTP 422 and a field-level error map for schema violations.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "never be slow",
+    "sentence": "The API must never be slow under load.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "shall never drop messages",
+    "sentence": "The queue shall never drop messages.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "MTBF greater than",
+    "sentence": "The sensor module must have an MTBF greater than 10000 hours.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "must not have any bugs",
+    "sentence": "The release must not have any bugs.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "when CPU exceeds 80%",
+    "sentence": "An alert must fire when CPU exceeds 80% for 5 consecutive minutes.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "before persisting",
+    "sentence": "Input must be sanitised before persisting to the database.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The service must never crash in production.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The platform",
+    "sentence": "The platform must not have any security vulnerabilities.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "visually appealing",
+    "sentence": "All charts must be visually appealing and consistent with the brand guide.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "to a satisfactory level",
+    "sentence": "The importer must handle large files to a satisfactory level.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "error rate below 0.1%",
+    "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "access must be controlled",
+    "sentence": "Access must be controlled at the API gateway.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "log entry within 1 second",
+    "sentence": "A log entry must be written within 1 second of each authentication event.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "best effort",
+    "sentence": "The sync service must deliver messages on a best effort basis.",
+    "slot": "qualifier",
+    "label": 1
+  },
+  {
+    "span": "all PII fields",
+    "sentence": "The system must encrypt all PII fields before storage.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "when all dependencies are reachable",
+    "sentence": "The health endpoint must return HTTP 200 when all dependencies are reachable.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "in usability testing",
+    "sentence": "The wizard must achieve a task success rate of 90% in usability testing.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "when required",
+    "sentence": "The system must apply security patches when required.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "under certain conditions",
+    "sentence": "The service must restart under certain conditions.",
+    "slot": "condition",
+    "label": 1
+  }
+]

@@ -242,7 +242,7 @@
     <div id="controls">
       <div class="ctrl-group">
         <span class="ctrl-label">Quality Attribute</span>
-        <select id="quality-sel">
+        <select id="quality-sel" onchange="render()">
           <option value="ambiguity">Ambiguity</option>
           <option value="feasibility">Feasibility</option>
           <option value="singularity">Singularity</option>
@@ -265,13 +265,6 @@
         <div class="radio-group">
           <label><input type="radio" name="label" value="1" checked> Violation (1)</label>
           <label><input type="radio" name="label" value="0"> Not a violation (0)</label>
-        </div>
-      </div>
-      <div class="ctrl-group">
-        <span class="ctrl-label">Split</span>
-        <div class="radio-group">
-          <label><input type="radio" name="split" value="train" checked> train</label>
-          <label><input type="radio" name="split" value="val"> val</label>
         </div>
       </div>
     </div>
@@ -297,9 +290,10 @@
       <thead>
         <tr>
           <th>Attribute</th>
-          <th>Train</th>
-          <th>Val</th>
           <th>Total</th>
+          <th>Violations</th>
+          <th>Not Violations</th>
+          <th>Viol %</th>
         </tr>
       </thead>
       <tbody id="counts-body"></tbody>
@@ -322,21 +316,25 @@ const DIM_COLORS = {
 };
 
 var currentIndex = 0;
-var queue = [];  // [{span, sentence, quality, slot, label, split}, ...]
+var queue = [];  // [{span, sentence, quality, slot, label}, ...]
 
-// ── Annotated tracking (persisted in localStorage) ──────────────────────────
-var LS_KEY = 'arqm_annotated_v1';
+// ── Annotated tracking (per quality attribute) ───────────────────────────────
+// Seeded from server so skip works across sessions/restarts.
+var _annotatedRaw = {{ annotated_sentences | tojson }};
+var annotatedByQuality = {};
+Object.keys(_annotatedRaw).forEach(function(q) {
+  annotatedByQuality[q] = new Set(_annotatedRaw[q]);
+});
 
-function loadAnnotated() {
-  try { return new Set(JSON.parse(localStorage.getItem(LS_KEY) || '[]')); }
-  catch(e) { return new Set(); }
+function isAnnotated(sentence) {
+  var quality = document.getElementById('quality-sel').value;
+  return (annotatedByQuality[quality] || new Set()).has(sentence);
 }
 
-function saveAnnotated() {
-  localStorage.setItem(LS_KEY, JSON.stringify(Array.from(annotatedSet)));
+function markAnnotated(sentence, quality) {
+  if (!annotatedByQuality[quality]) annotatedByQuality[quality] = new Set();
+  annotatedByQuality[quality].add(sentence);
 }
-
-var annotatedSet = loadAnnotated();
 
 // ── Tokenizer ───────────────────────────────────────────────────────────────
 // Split text into alternating [word, whitespace/punct] tokens.
@@ -374,19 +372,20 @@ function render() {
   document.getElementById('prev-btn').disabled = skip ? !hasPrevUnannotated() : currentIndex <= 0;
   document.getElementById('next-btn').disabled = skip ? !hasNextUnannotated() : currentIndex >= REQUIREMENTS.length - 1;
 
-  var isAnnotated = annotatedSet.has(req);
+  var ann = isAnnotated(req);
   var badge = document.getElementById('annotated-badge');
-  badge.classList.toggle('visible', isAnnotated);
-  document.getElementById('req-box').classList.toggle('annotated', isAnnotated);
+  badge.classList.toggle('visible', ann);
+  document.getElementById('req-box').classList.toggle('annotated', ann);
 
   updateSpansDisplay();
 }
 
 function renderProgress() {
-  var n = annotatedSet.size;
+  var quality = document.getElementById('quality-sel').value;
+  var n = (annotatedByQuality[quality] || new Set()).size;
   document.getElementById('progress-label').textContent =
     (currentIndex + 1) + ' / ' + REQUIREMENTS.length +
-    (n ? '  \u2022  ' + n + ' annotated' : '');
+    (n ? '  \u2022  ' + n + ' annotated (' + quality + ')' : '');
 }
 
 
@@ -466,7 +465,7 @@ function navigate(delta) {
   if (skip) {
     var i = currentIndex + delta;
     while (i >= 0 && i < REQUIREMENTS.length) {
-      if (!annotatedSet.has(REQUIREMENTS[i])) { currentIndex = i; render(); return; }
+      if (!isAnnotated(REQUIREMENTS[i])) { currentIndex = i; render(); return; }
       i += delta;
     }
     return; // no unannotated in that direction
@@ -477,14 +476,14 @@ function navigate(delta) {
 
 function hasNextUnannotated() {
   for (var i = currentIndex + 1; i < REQUIREMENTS.length; i++) {
-    if (!annotatedSet.has(REQUIREMENTS[i])) return true;
+    if (!isAnnotated(REQUIREMENTS[i])) return true;
   }
   return false;
 }
 
 function hasPrevUnannotated() {
   for (var i = currentIndex - 1; i >= 0; i--) {
-    if (!annotatedSet.has(REQUIREMENTS[i])) return true;
+    if (!isAnnotated(REQUIREMENTS[i])) return true;
   }
   return false;
 }
@@ -492,7 +491,7 @@ function hasPrevUnannotated() {
 function onSkipChange() {
   // If skip is now on and current req is annotated, jump to next unannotated
   var skip = document.getElementById('skip-annotated-chk').checked;
-  if (skip && annotatedSet.has(REQUIREMENTS[currentIndex] || '')) {
+  if (skip && isAnnotated(REQUIREMENTS[currentIndex] || '')) {
     if (hasNextUnannotated()) { navigate(1); return; }
   }
   render(); // refresh button states
@@ -518,17 +517,14 @@ function addToQueue() {
   if (!spans.length) { showToast('Select at least one word', 'err'); return; }
 
   var labelEl = document.querySelector('input[name="label"]:checked');
-  var splitEl = document.querySelector('input[name="split"]:checked');
   var quality = document.getElementById('quality-sel').value;
   var slot    = document.getElementById('slot-sel').value;
   var label   = parseInt(labelEl.value, 10);
-  var split   = splitEl.value;
   var sentence = REQUIREMENTS[currentIndex];
 
   spans.forEach(function(span) {
-    // Auto-detect slot per span; fall back to selector value if detection returns the same as current
     var detectedSlot = detectSlot(span, sentence);
-    queue.push({ span: span, sentence: sentence, quality: quality, slot: detectedSlot, label: label, split: split });
+    queue.push({ span: span, sentence: sentence, quality: quality, slot: detectedSlot, label: label });
   });
 
   renderQueue();
@@ -559,7 +555,7 @@ function renderQueue() {
     html += '<div class="queue-item">' +
       '<span class="qi-span">\u201c' + escHtml(item.span) + '\u201d</span>' +
       '<span class="qi-tag" style="background:' + color + '22;color:' + color + '">' + item.quality + '</span>' +
-      '<span class="qi-meta">' + item.slot + ' &middot; ' + labelStr + ' &middot; ' + item.split + '</span>' +
+      '<span class="qi-meta">' + item.slot + ' &middot; ' + labelStr + '</span>' +
       '<button class="qi-remove" onclick="removeFromQueue(' + i + ')">&#10005;</button>' +
       '</div>';
   });
@@ -580,7 +576,6 @@ function saveAll() {
       headers: {'Content-Type': 'application/json'},
       body:    JSON.stringify({
         quality: item.quality,
-        split:   item.split,
         entry: { span: item.span, sentence: item.sentence, slot: item.slot, label: item.label }
       }),
     }).then(function(r) { return r.json(); });
@@ -598,15 +593,14 @@ function saveAll() {
     var saved = results.filter(function(r) { return r.ok; }).length;
     showToast('Saved ' + saved + ' of ' + queue.length + ' annotations', allOk ? 'ok' : 'err');
 
-    // Mark saved sentences as annotated
+    // Mark saved sentences as annotated per quality
     if (saved > 0) {
       results.forEach(function(r, i) {
-        if (r.ok) annotatedSet.add(queue[i].sentence);
+        if (r.ok) markAnnotated(queue[i].sentence, queue[i].quality);
       });
-      saveAnnotated();
       var curReq = REQUIREMENTS[currentIndex] || '';
-      document.getElementById('annotated-badge').classList.toggle('visible', annotatedSet.has(curReq));
-      document.getElementById('req-box').classList.toggle('annotated', annotatedSet.has(curReq));
+      document.getElementById('annotated-badge').classList.toggle('visible', isAnnotated(curReq));
+      document.getElementById('req-box').classList.toggle('annotated', isAnnotated(curReq));
       renderProgress();
     }
 
@@ -628,13 +622,17 @@ function renderCounts() {
   var dims = ['ambiguity', 'feasibility', 'singularity', 'verifiability'];
   var html = '';
   dims.forEach(function(dim) {
-    var c = counts[dim] || {train: 0, val: 0};
-    var total = c.train + c.val;
+    var c = counts[dim] || {total: 0, violations: 0, non_violations: 0};
+    var total   = c.total          || 0;
+    var viol    = c.violations     || 0;
+    var nonViol = c.non_violations || 0;
+    var pct = total > 0 ? Math.round(viol / total * 100) + '%' : '\u2014';
     html += '<tr>' +
       '<td><span class="dim-dot" style="background:' + DIM_COLORS[dim] + '"></span>' + dim + '</td>' +
-      '<td>' + c.train + '</td>' +
-      '<td>' + c.val + '</td>' +
       '<td>' + total + '</td>' +
+      '<td style="color:var(--red)">' + viol + '</td>' +
+      '<td style="color:var(--green)">' + nonViol + '</td>' +
+      '<td>' + pct + '</td>' +
       '</tr>';
   });
   document.getElementById('counts-body').innerHTML = html;
@@ -671,13 +669,10 @@ function quickMark(label) {
   var sentence = REQUIREMENTS[currentIndex];
   if (!sentence) return;
 
-  var labelEl = document.querySelector('input[name="label"]:checked');
-  var splitEl = document.querySelector('input[name="split"]:checked');
-  var quality  = document.getElementById('quality-sel').value;
-  var split    = splitEl.value;
-  var slot     = detectSlot(sentence, sentence); // use full sentence for detection
+  var quality = document.getElementById('quality-sel').value;
+  var slot    = detectSlot(sentence, sentence);
 
-  queue.push({ span: sentence, sentence: sentence, quality: quality, slot: slot, label: label, split: split });
+  queue.push({ span: sentence, sentence: sentence, quality: quality, slot: slot, label: label });
   renderQueue();
 
   var labelStr = label === 1 ? 'Violation' : 'Not a Violation';

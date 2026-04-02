@@ -1,264 +1,626 @@
-{
-  "train": [
-    {
-      "span": "validate and encrypt and log",
-      "sentence": "The system must validate input and encrypt the data and log the result.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "authenticate and apply and return",
-      "sentence": "The service must authenticate the user and apply rate limiting and return a token.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "back up and notify",
-      "sentence": "The system must back up the database and notify the admin.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "admin and user",
-      "sentence": "The admin and the user must both confirm the deletion.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "frontend and backend",
-      "sentence": "The frontend and the backend must validate the input.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "when login fails or session expires",
-      "sentence": "When login fails or the session expires, the user must be redirected.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "if unauthenticated or unauthorised",
-      "sentence": "If the user is unauthenticated or unauthorised, the system must return HTTP 403.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "encrypt and respond within 200ms",
-      "sentence": "The system must encrypt all data and respond within 200ms.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "authenticate and maintain 99.9%",
-      "sentence": "The service must authenticate the user and maintain 99.9% uptime.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "within 200ms",
-      "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "encrypt all data",
-      "sentence": "The system must encrypt all data before writing to disk.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "HTTP 400",
-      "sentence": "The service must return HTTP 400 for invalid input.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "when the session expires",
-      "sentence": "When the session expires, the user must be redirected to the login page.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "must support",
-      "sentence": "The system must support downloading PDF files to disk.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The API must respond within 200ms for 95% of requests.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The system",
-      "sentence": "The system must encrypt all data before writing to disk.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
-      "sentence": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "The help should be accessible to the users both in the offline and online mode.",
-      "sentence": "The help should be accessible to the users both in the offline and online mode.",
-      "slot": "subject",
-      "label": 1
-    }
-  ],
-  "val": [
-    {
-      "span": "parse and validate and store",
-      "sentence": "The API must parse the request, validate the schema, and store the record.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "validate and log",
-      "sentence": "The gateway must validate the token and log each request.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "compress and encrypt",
-      "sentence": "The pipeline must compress the payload and encrypt it before sending.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "admin and operator",
-      "sentence": "The admin and the operator must approve changes before deployment.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "users and administrators",
-      "sentence": "Users and administrators must have access to the audit log.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "when memory high or CPU high",
-      "sentence": "When memory usage is high or CPU usage is high, the service must scale out.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "if missing or malformed or duplicate",
-      "sentence": "If the request is missing or malformed or duplicate, the system must reject it.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "validate and use no more than 256MB",
-      "sentence": "The API must validate the token and use no more than 256MB of memory.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "sign and complete within 100ms",
-      "sentence": "The service must sign the payload and complete within 100ms.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "must respond within 500ms",
-      "sentence": "The search endpoint must return results within 500ms for 99% of requests.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "HTTP 401",
-      "sentence": "The login endpoint must return HTTP 401 for invalid tokens.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "when input is invalid",
-      "sentence": "When input is invalid, the system must return a 400 error.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "after payment is confirmed",
-      "sentence": "After payment is confirmed, the order must be created within 5 seconds.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "encrypt before writing",
-      "sentence": "The system must encrypt all records before writing to the audit log.",
-      "slot": "action",
-      "label": 0
-    },
-    {
-      "span": "must",
-      "sentence": "The service must never crash in production.",
-      "slot": "modal",
-      "label": 0
-    },
-    {
-      "span": "The service",
-      "sentence": "The service must return HTTP 400 for invalid input.",
-      "slot": "subject",
-      "label": 0
-    },
-    {
-      "span": "notify and update",
-      "sentence": "The scheduler must notify the admin and update the job status.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "if expired or revoked",
-      "sentence": "If the token is expired or revoked, the system must reject the request.",
-      "slot": "condition",
-      "label": 1
-    },
-    {
-      "span": "hash and store",
-      "sentence": "The service must hash the password and store the digest.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "generate and return within 50ms",
-      "sentence": "The report service must generate the PDF and return it within 50ms.",
-      "slot": "action",
-      "label": 1
-    },
-    {
-      "span": "before the deadline",
-      "sentence": "The batch job must complete before the deadline each night.",
-      "slot": "condition",
-      "label": 0
-    },
-    {
-      "span": "error rate below 0.1%",
-      "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",
-      "slot": "qualifier",
-      "label": 0
-    },
-    {
-      "span": "client and server",
-      "sentence": "The client and the server must both support TLS 1.3.",
-      "slot": "subject",
-      "label": 1
-    },
-    {
-      "span": "download PDF files",
-      "sentence": "The system must support downloading PDF files to disk.",
-      "slot": "object",
-      "label": 0
-    },
-    {
-      "span": "audit and report",
-      "sentence": "The compliance module must audit all access events and report weekly.",
-      "slot": "action",
-      "label": 1
-    }
-  ]
-}
+[
+  {
+    "span": "validate and encrypt and log",
+    "sentence": "The system must validate input and encrypt the data and log the result.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "authenticate and apply and return",
+    "sentence": "The service must authenticate the user and apply rate limiting and return a token.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "back up and notify",
+    "sentence": "The system must back up the database and notify the admin.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "admin and user",
+    "sentence": "The admin and the user must both confirm the deletion.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "frontend and backend",
+    "sentence": "The frontend and the backend must validate the input.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "when login fails or session expires",
+    "sentence": "When login fails or the session expires, the user must be redirected.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "if unauthenticated or unauthorised",
+    "sentence": "If the user is unauthenticated or unauthorised, the system must return HTTP 403.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "encrypt and respond within 200ms",
+    "sentence": "The system must encrypt all data and respond within 200ms.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "authenticate and maintain 99.9%",
+    "sentence": "The service must authenticate the user and maintain 99.9% uptime.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "within 200ms",
+    "sentence": "The API must respond within 200ms for 95% of requests under 1000 RPS.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "encrypt all data",
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "HTTP 400",
+    "sentence": "The service must return HTTP 400 for invalid input.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "when the session expires",
+    "sentence": "When the session expires, the user must be redirected to the login page.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "must support",
+    "sentence": "The system must support downloading PDF files to disk.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The API must respond within 200ms for 95% of requests.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The system",
+    "sentence": "The system must encrypt all data before writing to disk.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
+    "sentence": "The solution should provide detailed context-sensitive help material for all the possible actions and scenarios on all user interfaces in the application.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "The help should be accessible to the users both in the offline and online mode.",
+    "sentence": "The help should be accessible to the users both in the offline and online mode.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "or enhancement requests category-wise, status-wise, and age- wise.",
+    "sentence": "The solution should enable the help-desk user to view the reports on the submitted defects or enhancement requests category-wise, status-wise, and age- wise.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "and also outside the application",
+    "sentence": "The support solution should be accessible to the users both from within the application and also outside the application through a browser interface.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "both from",
+    "sentence": "The support solution should be accessible to the users both from within the application and also outside the application through a browser interface.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "should be accessible to the users",
+    "sentence": "The support solution should be accessible to the users both from within the application and also outside the application through a browser interface.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "must track events without manual intervention,",
+    "sentence": "Once the audit trail functionality has been activated, the System must track events without manual intervention, and store in the audit trail information about them.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "and store",
+    "sentence": "Once the audit trail functionality has been activated, the System must track events without manual intervention, and store in the audit trail information about them.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "maintain the audit trail",
+    "sentence": "The System must maintain the audit trail for as long as required, which will be at least for the life of the case to which it refers.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "available for inspection on request,",
+    "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "can be achieved by authorised external personnel",
+    "sentence": "The System must ensure that audit trail data is available for inspection on request, so that a specific event can be identified and all related data made accessible, and that this can be achieved by authorised external personnel who have little or no familiarity with the system.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "export audit trails",
+    "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "If a user performs a quick or advanced search, the System must never include in the search result list any record which the user does not have the right to access.",
+    "sentence": "If a user performs a quick or advanced search, the System must never include in the search result list any record which the user does not have the right to access.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "specified cases (",
+    "sentence": "The System must be able to export audit trails for specified cases (without affecting the audit trail stored by the System).",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "it must log these in the audit trail.",
+    "sentence": "If the System allows users to make unauthorised attempts to access cases, it must log these in the audit trail.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "sentence": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "Any access to cases,",
+    "sentence": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "need to be stored",
+    "sentence": "Any access to cases, and all other activities involving the cases and related documents or data should also need to be stored in the audit trail to ensure legal admissibility and to assist in data recovery.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "All error messages",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "must be meaningful,",
+    "sentence": "All error messages produced by the System must be meaningful, so that they can be appropriately acted upon by the users who are likely to see them.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "If a splash screen is used, a navigation option to skip it should be offered.",
+    "sentence": "If a splash screen is used, a navigation option to skip it should be offered.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "a navigation option to skip it should be offered.",
+    "sentence": "If a splash screen is used, a navigation option to skip it should be offered.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The System must be able to perform a simple search within 5-8 seconds and a advanced search (multiple search criteria) within 10-15 seconds regardless of the storage capacity or number of cases in the system.",
+    "sentence": "The System must be able to perform a simple search within 5-8 seconds and a advanced search (multiple search criteria) within 10-15 seconds regardless of the storage capacity or number of cases in the system.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "regardless of the storage capacity or number of cases",
+    "sentence": "The System must be able to perform a simple search within 5-8 seconds and a advanced search (multiple search criteria) within 10-15 seconds regardless of the storage capacity or number of cases in the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "and a advanced search (",
+    "sentence": "The System must be able to perform a simple search within 5-8 seconds and a advanced search (multiple search criteria) within 10-15 seconds regardless of the storage capacity or number of cases in the system.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should work even in an offline mode with the critical functionality",
+    "sentence": "The system should work even in an offline mode with the critical functionality",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "The system should be implemented using Service Oriented Architecture (SOA) and have a modular design",
+    "sentence": "The system should be implemented using Service Oriented Architecture (SOA) and have a modular design",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "Service Oriented Architecture (",
+    "sentence": "The system should be implemented using Service Oriented Architecture (SOA) and have a modular design",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "modular design",
+    "sentence": "The system should be implemented using Service Oriented Architecture (SOA) and have a modular design",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should be developed on Open Standards",
+    "sentence": "The system should be developed on Open Standards",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "Open Standards",
+    "sentence": "The system should be developed on Open Standards",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should be built on a common User Access and Authentication Service to ensure Single-Sign on for the end-user",
+    "sentence": "The system should be built on a common User Access and Authentication Service to ensure Single-Sign on for the end-user",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "common User Access",
+    "sentence": "The system should be built on a common User Access and Authentication Service to ensure Single-Sign on for the end-user",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Authentication Service",
+    "sentence": "The system should be built on a common User Access and Authentication Service to ensure Single-Sign on for the end-user",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system must support multiple types of communication services for remote access",
+    "sentence": "The system must support multiple types of communication services for remote access",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "support multiple types of communication services",
+    "sentence": "The system must support multiple types of communication services for remote access",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "The system should have capability to support public access to a subset of data and functionality",
+    "sentence": "The system should have capability to support public access to a subset of data and functionality",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "public access",
+    "sentence": "The system should have capability to support public access to a subset of data and functionality",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "subset of data",
+    "sentence": "The system should have capability to support public access to a subset of data and functionality",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "functionality",
+    "sentence": "The system should have capability to support public access to a subset of data and functionality",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should support multi-tier authentication where required",
+    "sentence": "The system should support multi-tier authentication where required",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "multi-tier authentication",
+    "sentence": "The system should support multi-tier authentication where required",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should support SSL encrypted connections",
+    "sentence": "The system should support SSL encrypted connections",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "SSL encrypted connections",
+    "sentence": "The system should support SSL encrypted connections",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The system should support secure virtual private network connections",
+    "sentence": "The system should support secure virtual private network connections",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "secure virtual private network connections",
+    "sentence": "The system should support secure virtual private network connections",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "use HTTPS",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "HTTPS",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "communication protocol,",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "HTTP",
+    "sentence": "The system should use HTTPS as the communication protocol, i.e., HTTP over an encrypted secure socket layer (SSL)",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "sentence": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "high scalability",
+    "sentence": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "performance",
+    "sentence": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Use of cache",
+    "sentence": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "Use of AJAX",
+    "sentence": "The system should ensure high scalability and performance through: a) Use of cache for storing frequent data, b) Use of AJAX based technology to improve user experience.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "COE sponsors shall adhere to compliance level requirements described in the I&RTS.",
+    "sentence": "COE sponsors shall adhere to compliance level requirements described in the I&RTS.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "adhere to compliance level requirements",
+    "sentence": "COE sponsors shall adhere to compliance level requirements described in the I&RTS.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "In addition, maintenance also shall pertain to shutdown, open not-mounted and online/off-line implementations, modifications, upgrade, or other related actions.",
+    "sentence": "In addition, maintenance also shall pertain to shutdown, open not-mounted and online/off-line implementations, modifications, upgrade, or other related actions.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "also",
+    "sentence": "In addition, maintenance also shall pertain to shutdown, open not-mounted and online/off-line implementations, modifications, upgrade, or other related actions.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "shutdown, open not-mounted and online/off-line implementations, modifications, upgrade, or other related actions.",
+    "sentence": "In addition, maintenance also shall pertain to shutdown, open not-mounted and online/off-line implementations, modifications, upgrade, or other related actions.",
+    "slot": "object",
+    "label": 1
+  },
+  {
+    "span": "parse and validate and store",
+    "sentence": "The API must parse the request, validate the schema, and store the record.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "validate and log",
+    "sentence": "The gateway must validate the token and log each request.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "compress and encrypt",
+    "sentence": "The pipeline must compress the payload and encrypt it before sending.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "admin and operator",
+    "sentence": "The admin and the operator must approve changes before deployment.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "users and administrators",
+    "sentence": "Users and administrators must have access to the audit log.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "when memory high or CPU high",
+    "sentence": "When memory usage is high or CPU usage is high, the service must scale out.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "if missing or malformed or duplicate",
+    "sentence": "If the request is missing or malformed or duplicate, the system must reject it.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "validate and use no more than 256MB",
+    "sentence": "The API must validate the token and use no more than 256MB of memory.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "sign and complete within 100ms",
+    "sentence": "The service must sign the payload and complete within 100ms.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "must respond within 500ms",
+    "sentence": "The search endpoint must return results within 500ms for 99% of requests.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "HTTP 401",
+    "sentence": "The login endpoint must return HTTP 401 for invalid tokens.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "when input is invalid",
+    "sentence": "When input is invalid, the system must return a 400 error.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "after payment is confirmed",
+    "sentence": "After payment is confirmed, the order must be created within 5 seconds.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "encrypt before writing",
+    "sentence": "The system must encrypt all records before writing to the audit log.",
+    "slot": "action",
+    "label": 0
+  },
+  {
+    "span": "must",
+    "sentence": "The service must never crash in production.",
+    "slot": "modal",
+    "label": 0
+  },
+  {
+    "span": "The service",
+    "sentence": "The service must return HTTP 400 for invalid input.",
+    "slot": "subject",
+    "label": 0
+  },
+  {
+    "span": "notify and update",
+    "sentence": "The scheduler must notify the admin and update the job status.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "if expired or revoked",
+    "sentence": "If the token is expired or revoked, the system must reject the request.",
+    "slot": "condition",
+    "label": 1
+  },
+  {
+    "span": "hash and store",
+    "sentence": "The service must hash the password and store the digest.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "generate and return within 50ms",
+    "sentence": "The report service must generate the PDF and return it within 50ms.",
+    "slot": "action",
+    "label": 1
+  },
+  {
+    "span": "before the deadline",
+    "sentence": "The batch job must complete before the deadline each night.",
+    "slot": "condition",
+    "label": 0
+  },
+  {
+    "span": "error rate below 0.1%",
+    "sentence": "The payment gateway must maintain an error rate below 0.1% of transactions.",
+    "slot": "qualifier",
+    "label": 0
+  },
+  {
+    "span": "client and server",
+    "sentence": "The client and the server must both support TLS 1.3.",
+    "slot": "subject",
+    "label": 1
+  },
+  {
+    "span": "download PDF files",
+    "sentence": "The system must support downloading PDF files to disk.",
+    "slot": "object",
+    "label": 0
+  },
+  {
+    "span": "audit and report",
+    "sentence": "The compliance module must audit all access events and report weekly.",
+    "slot": "action",
+    "label": 1
+  }
+]
